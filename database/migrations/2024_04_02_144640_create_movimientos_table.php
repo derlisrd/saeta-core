@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('movimientos', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned()->nullable();
-            $table->integer('caja_id')->unsigned()->nullable();
+            $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->bigInteger('caja_id')->unsigned()->nullable();
             $table->text('descripcion');
             $table->float('valor');
             $table->tinyInteger('forma_transaccion')->default(1);
