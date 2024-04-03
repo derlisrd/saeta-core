@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('factura_items', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('factura_id')->unsigned();
+            $table->bigInteger('product_id')->unsigned();
+            
+            
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('factura_id')->references('id')->on('facturas');
             $table->timestamps();
         });
     }

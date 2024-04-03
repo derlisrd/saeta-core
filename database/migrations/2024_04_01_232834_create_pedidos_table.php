@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('cliente_id')->nullable();
-            
+            $table->float('total',20,2);
             $table->timestamps();
         });
     }

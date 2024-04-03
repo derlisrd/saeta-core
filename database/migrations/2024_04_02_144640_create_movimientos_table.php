@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('movimientos', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->integer('caja_id')->unsigned()->nullable();
+            $table->text('descripcion');
+            $table->float('valor');
+            $table->tinyInteger('forma_transaccion')->default(1);
+            $table->tinyInteger('tipo')->default(0);
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('caja_id')->references('id')->on('cajas');
             $table->timestamps();
         });
     }
