@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pedido_items', function (Blueprint $table) {
+        Schema::create('formas_pagos', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('pedido_id')->unsigned();
-            $table->bigInteger('product_id')->unsigned();
-            
-            
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('pedido_id')->references('id')->on('pedidos');
+            $table->string('descripcion');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pedido_items');
+        Schema::dropIfExists('formas_pagos');
     }
 };
