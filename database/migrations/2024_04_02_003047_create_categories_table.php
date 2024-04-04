@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
+            $table->boolean('publicado')->default(1);
             $table->timestamps();
         });
     }
