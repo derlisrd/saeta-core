@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('empresa_id');
             $table->string('nombre');
+            $table->text('descripcion')->nullable();
             $table->timestamps();
         });
     }
