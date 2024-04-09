@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('ruc');
             $table->string('telefono');
             $table->string('direccion');
+            $table->date('licencia');
             $table->string('propietario')->nullable();
             $table->tinyInteger('sucursal')->default(1);
             $table->timestamps();
