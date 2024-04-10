@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('cliente_id')->unsigned() ->nullable();
             $table->bigInteger('formas_pago_id')->unsigned() ->nullable();
+            $table->tinyInteger('tipo')->default(1); // 1 venta normal 2 presupuesto
             $table->float('total',20,2);
             $table->timestamps();
             $table->foreign('formas_pago_id')->references('id')->on('formas_pagos');

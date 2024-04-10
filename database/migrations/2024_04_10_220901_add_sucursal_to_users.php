@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('formas_pagos', function (Blueprint $table) {
-            $table->id();
-            $table->enum('tipo',['efectivo','noefectivo']);
-            $table->string('descripcion');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->bigInteger('sucursal_id')->after('id')->unsigned();
+            $table->foreign('sucursal_id')->references('id')->on('sucursales');
         });
     }
 
@@ -24,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('formas_pagos');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('sucursal_id');
+        });
     }
 };

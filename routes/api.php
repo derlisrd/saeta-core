@@ -1,10 +1,25 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Product\ProductsController;
 
+use Illuminate\Support\Facades\Route;
 Route::post('/login',[AuthController::class,'login']);
 
-Route::any('/',function(){return response()->json(['success'=>false],404);});
 
+
+
+Route::middleware(['auth:sanctum'])->group(function(){
+
+    Route::get('/products',[ProductsController::class,'index']);
+
+});
+
+
+
+
+
+
+
+Route::any('/',function(){return response()->json(['success'=>false],404);});
 Route::fallback(function () {return response()->json(['success'=>false],404);});

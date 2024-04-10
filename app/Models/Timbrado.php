@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Medida extends Model
+class Timbrado extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'empresa_id',
+        'inicio_vigencia',
+        'fin_vigencia',
+        'numero_timbrado',
         'descripcion',
-        'abreviatura'
+        'autoimpresor',
+        'descripcion_autoimpresor'
     ];
 }

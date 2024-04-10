@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Providers;
-
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +18,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        /* if(!Auth::check()){
+            return response()->json([
+                'success'=>false,
+                'message'=>'Sin autorizacion',
+            ],401);
+        } */
     }
 }

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('telefono');
             $table->string('direccion');
             $table->string('propietario')->nullable();
-            $table->tinyInteger('sucursal')->default(1);
             $table->timestamps();
         });
     }

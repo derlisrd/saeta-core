@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Medida extends Model
+class Sucursal extends Model
 {
     use HasFactory;
+    protected $table = 'sucursales';
     protected $fillable = [
+        'empresa_id',
+        'nombre',
         'descripcion',
-        'abreviatura'
+        'numero'
     ];
 }

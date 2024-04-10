@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\UserController;
+
 use Illuminate\Support\Facades\Route;
 
-Route::get('/',[UserController::class,'login']);
+Route::get('/',function(){return response()->json(['success'=>false],404);});
+Route::fallback(function () {return response()->json(['success'=>false],404);});
