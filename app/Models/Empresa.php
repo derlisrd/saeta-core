@@ -15,4 +15,5 @@ class Empresa extends Model
         'direccion',
         'propietario'
     ];
+    
 }
