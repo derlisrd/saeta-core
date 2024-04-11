@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureTokenIsValid
+class XapiKeyTokenIsValid
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,14 @@ class EnsureTokenIsValid
      */
     public function handle(Request $request, Closure $next): Response
     {
-        
+        $key = $request->header('x-api-key');
+
+        if ( !$key || $key !== config('app.x_api_key')) {
+            return response()->json([
+                'success'=>false,
+                'message'=>'Api key invalid',
+            ],401);
+        }
         return $next($request);
     }
 }

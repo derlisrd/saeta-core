@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    'x_api_key'=> env('X_API_KEY',0),
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -12,6 +12,7 @@ return [
     | other UI elements where an application name needs to be displayed.
     |
     */
+    
 
     'name' => env('APP_NAME', 'Laravel'),
 
@@ -66,6 +67,7 @@ return [
     */
 
     'timezone' => env('APP_TIMEZONE', 'UTC'),
+
 
     /*
     |--------------------------------------------------------------------------

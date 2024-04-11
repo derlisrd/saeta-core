@@ -43,9 +43,11 @@ class AuthController extends Controller
 
 
         } catch (\Throwable $th) {
-            Errores::create([
-                'descripcion'=>'Error en el login'
-            ]);
+            Errores::create(['descripcion'=>'Error en el login']);
+            return response()->json([
+                'success'=>false,
+                'message'=>"Error de servidor"
+            ],500);
         }
     }
 
