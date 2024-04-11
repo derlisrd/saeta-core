@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('factura_items', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('factura_id')->unsigned();
-            $table->bigInteger('product_id')->unsigned();
+            $table->bigInteger('producto_id')->unsigned();
             
-            
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->float('precio_vendido')->default(0);
+            $table->foreign('producto_id')->references('id')->on('productos');
             $table->foreign('factura_id')->references('id')->on('facturas');
             $table->timestamps();
         });

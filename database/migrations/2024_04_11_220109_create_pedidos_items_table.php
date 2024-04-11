@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('pedidos_items', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('pedido_id')->unsigned();
-            $table->bigInteger('product_id')->unsigned();
+            $table->bigInteger('producto_id')->unsigned();
+            $table->float('precio_vendido');
             
-            
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('producto_id')->references('id')->on('productos');
             $table->foreign('pedido_id')->references('id')->on('pedidos');
             $table->timestamps();
         });

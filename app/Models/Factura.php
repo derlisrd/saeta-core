@@ -16,6 +16,7 @@ class Factura extends Model
        'caja_id',
        'codido_control',
        'descripcion',
+       'numero',
        'total_con_impuestos',
        'total_de_impuestos',
        'total',

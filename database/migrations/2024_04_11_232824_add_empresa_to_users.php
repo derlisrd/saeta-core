@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('depositos', function (Blueprint $table) {
-            $table->id();
-            $table->integer('empresa_id');
-            $table->string('nombre');
-            $table->text('descripcion')->nullable();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->bigInteger('empresa_id')->after('id')->unsigned()->nullable();
+            $table->foreign('empresa_id')->references('id')->on('empresas');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('depositos');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('empresa_id');
+        });
     }
 };

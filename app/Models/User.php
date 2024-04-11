@@ -19,10 +19,14 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'empresa_id',
         'sucursal_id',
         'username',
         'email',
         'password',
+        'tipo',
+        'activo',
+        'cambiar_password'
     ];
 
     /**
@@ -33,6 +37,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verified_at',
+        'created_at',
+        'updated_at'
     ];
 
     /**
@@ -46,5 +53,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function sucursal(){
+        return $this->belongsTo(Sucursal::class,'sucursal_id');
     }
 }

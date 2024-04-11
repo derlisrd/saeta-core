@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-            $table->integer('deposito_id');
+            $table->bigInteger('deposito_id')->unsigned();
             $table->float('cantidad',20.3);
             $table->timestamps();
+            $table->foreign('deposito_id')->references('id')->on('depositos');
         });
     }
 

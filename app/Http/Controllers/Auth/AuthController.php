@@ -1,39 +1,42 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Empresa;
 use App\Models\Errores;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
     public function login(Request $request){
         try {
-            $email = $request->user;
+
+            $username = $request->username;
             $password = $request->password;
-            $intento = filter_var($email, FILTER_VALIDATE_EMAIL) ?
-            ['email' => $email, 'password' => $password, 'active' => 1] :
-            ['username' => $email, 'password' => $password, 'active' => 1];
+            $intento = filter_var($username, FILTER_VALIDATE_EMAIL) ?
+            ['email' => $username, 'password' => $password] :
+            ['username' => $username, 'password' => $password];
     
             if (Auth::attempt($intento)) {
-                $user = User::where('email',$email)->orWhere('username',$email)->firstOrFail();
+                $user = User::where('email',$username)->orWhere('username',$username)->firstOrFail();
 
                 if($user){
                     $token = $user->createToken('auth_token')->plainTextToken;
-
+                    $user->sucursal;
+                    $empresa = Empresa::find($user->sucursal->empresa_id);
                     return response()->json([
                         'success'=>true,
                         'results'=>[
-                            'username'=>$user->username,
-                            'email'=>$user->email,
+                            'user'=>$user,
                             'token'=>$token,
-                            'id'=>$user->id
+                            'empresa'=>$empresa
                         ]
                     ]);
-                }
+                } 
             }
 
             return response()->json([
@@ -43,6 +46,7 @@ class AuthController extends Controller
 
 
         } catch (\Throwable $th) {
+            Log::error($th);
             Errores::create(['descripcion'=>'Error en el login']);
             return response()->json([
                 'success'=>false,

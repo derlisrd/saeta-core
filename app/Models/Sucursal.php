@@ -13,6 +13,8 @@ class Sucursal extends Model
         'empresa_id',
         'nombre',
         'descripcion',
+        'direccion',
+        'telefono',
         'numero'
     ];
 }
