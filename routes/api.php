@@ -2,14 +2,14 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Product\ProductsController;
-
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 Route::post('/login',[AuthController::class,'login']);
 
 
 
 
-Route::middleware(['auth:sanctum'])->group(function(){
+Route::middleware(Authenticate::using('sanctum'))->group(function(){
 
     Route::get('/products',[ProductsController::class,'index']);
 

@@ -12,18 +12,28 @@ class AuthController extends Controller
 {
     public function login(Request $request){
         try {
-            $user = $request->user;
+            $email = $request->user;
             $password = $request->password;
+            $intento = filter_var($email, FILTER_VALIDATE_EMAIL) ?
+            ['email' => $email, 'password' => $password, 'active' => 1] :
+            ['username' => $email, 'password' => $password, 'active' => 1];
+    
+            if (Auth::attempt($intento)) {
+                $user = User::where('email',$email)->orWhere('username',$email)->firstOrFail();
 
-            if (Auth::attempt(['username' => $user, 'password' => $password])) {
-                //$user = User::where('username',$user)->first();
-                $results = [
-                    'token'=> 'a'
-                ];
-                return response()->json([
-                    'success'=>true,
-                    'results'=>$results
-                ]);
+                if($user){
+                    $token = $user->createToken('auth_token')->plainTextToken;
+
+                    return response()->json([
+                        'success'=>true,
+                        'results'=>[
+                            'username'=>$user->username,
+                            'email'=>$user->email,
+                            'token'=>$token,
+                            'id'=>$user->id
+                        ]
+                    ]);
+                }
             }
 
             return response()->json([
