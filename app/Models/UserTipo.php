@@ -5,7 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FacturaItems extends Model
+class UserTipo extends Model
 {
     use HasFactory;
+    protected $table = 'users_tipos';
+    protected $fillable = [
+        'descripcion'
+    ];
 }

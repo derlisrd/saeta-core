@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pedido extends Model
+class FacturaItem extends Model
 {
     use HasFactory;
+    protected $table = 'facturas_items';
     protected $fillable = [
-        'cliente_id',
-        'formas_pago_id',
-        'aplicar_impuesto',
-        'tipo',
-        'porcentaje_descuento',
+        'factura_id',
+        'producto_id',
+        'impuesto_id',
+        'cantidad',
+        'precio',
         'descuento',
         'total'
     ];

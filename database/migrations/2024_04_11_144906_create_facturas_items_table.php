@@ -11,14 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('factura_items', function (Blueprint $table) {
+        Schema::create('facturas_items', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('factura_id')->unsigned();
             $table->bigInteger('producto_id')->unsigned();
-            
-            $table->float('precio_vendido')->default(0);
+            $table->bigInteger('impuesto_id')->unsigned();
+            $table->float('cantidad');
+            $table->float('precio');
+            $table->float('descuento');
+            $table->float('total');
             $table->foreign('producto_id')->references('id')->on('productos');
             $table->foreign('factura_id')->references('id')->on('facturas');
+            $table->foreign('impuesto_id')->references('id')->on('impuestos');
             $table->timestamps();
         });
     }

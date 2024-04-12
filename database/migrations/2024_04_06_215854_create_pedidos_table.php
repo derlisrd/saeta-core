@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('cliente_id')->unsigned() ->nullable();
-            $table->bigInteger('formas_pago_id')->unsigned() ->nullable();
+            $table->bigInteger('cliente_id')->unsigned()->nullable();
+            $table->bigInteger('sucursal_id')->unsigned()->nullable();
+            $table->bigInteger('formas_pago_id')->unsigned()->nullable();
+            $table->boolean('aplicar_impuesto')->default(1);
             $table->tinyInteger('tipo')->default(1); // 1 venta normal 2 presupuesto
+            $table->float('porcentaje_descuento')->default(0);
+            $table->float('descuento')->default(0);
             $table->float('total',20,2);
             $table->timestamps();
+            $table->foreign('sucursal_id')->references('id')->on('sucursales');
             $table->foreign('formas_pago_id')->references('id')->on('formas_pagos');
             $table->foreign('cliente_id')->references('id')->on('clientes');
         });

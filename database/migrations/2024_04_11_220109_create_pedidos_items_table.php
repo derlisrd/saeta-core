@@ -15,10 +15,14 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('pedido_id')->unsigned();
             $table->bigInteger('producto_id')->unsigned();
-            $table->float('precio_vendido');
-            
+            $table->bigInteger('impuesto_id')->unsigned();
+            $table->float('cantidad');
+            $table->float('precio');
+            $table->float('descuento');
+            $table->float('total');
             $table->foreign('producto_id')->references('id')->on('productos');
             $table->foreign('pedido_id')->references('id')->on('pedidos');
+            $table->foreign('impuesto_id')->references('id')->on('impuestos');
             $table->timestamps();
         });
     }

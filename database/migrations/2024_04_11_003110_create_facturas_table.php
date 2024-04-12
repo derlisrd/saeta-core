@@ -25,6 +25,7 @@ return new class extends Migration
             $table->float('total_sin_impuestos');
             $table->float('total');
             $table->tinyInteger('condicion_venta')->default(1);
+            $table->boolean('aplicar_impuestos')->default(1);
             $table->timestamps();
             $table->foreign('empresa_id')->references('id')->on('empresas');
             $table->foreign('sucursal_id')->references('id')->on('sucursales');
