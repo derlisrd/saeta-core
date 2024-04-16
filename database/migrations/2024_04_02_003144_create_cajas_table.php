@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('nombre');
             $table->string('descripcion')->nullable();
+            $table->float('monto_inicial',20,2)->nullable();
             $table->float('monto_efectivo',20,2)->nullable();
             $table->float('monto_sin_efectivo',20,2)->nullable();
             $table->boolean('estado')->default(0);
