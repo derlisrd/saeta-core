@@ -15,7 +15,16 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('cerrado_por')->unsigned()->nullable();
             $table->bigInteger('caja_id')->unsigned();
-            
+            $table->float('inicial')->default(0);
+            $table->float('efectivo',2)->default(0);
+            $table->float('digital',2)->default(0);
+            $table->float('sobrantes',2)->default(0);
+            $table->float('faltantes',2)->default(0);
+            $table->float('ventas',2)->default(0);
+            $table->float('pagos',2)->default(0);
+            $table->float('otros',2)->default(0);
+            $table->float('total')->default(0);
+            $table->text('descripcion')->nullable();
             $table->foreign('caja_id')->references('id')->on('cajas');
             $table->timestamps();
         });

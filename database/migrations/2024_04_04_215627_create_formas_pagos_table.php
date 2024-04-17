@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('formas_pagos', function (Blueprint $table) {
             $table->id();
-            $table->enum('tipo',['efectivo','noefectivo']);
+            $table->enum('tipo',['efectivo','digital']);
             $table->string('descripcion');
             $table->timestamps();
         });
