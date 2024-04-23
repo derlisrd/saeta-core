@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('tipo',['efectivo','digital']);
             $table->string('descripcion');
-            $table->bigInteger('porcentaje_descuento');
+            $table->bigInteger('porcentaje_descuento')->default(0);
             $table->timestamps();
         });
     }
