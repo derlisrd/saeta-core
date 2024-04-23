@@ -20,6 +20,7 @@ return new class extends Migration
             $table->bigInteger('caja_id')->unsigned()->nullable();
             $table->text('codido_control')->nullable(); // electronico
             $table->text('descripcion')->nullable(); // electronico
+            $table->bigInteger('descuento')->default(0);
             $table->bigInteger('numero');
             $table->float('total_de_impuestos');
             $table->float('total_sin_impuestos');
