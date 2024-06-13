@@ -10,6 +10,7 @@ class Stock extends Model
     use HasFactory;
     protected $fillable = [
         'deposito_id',
+        'medida_id',
         'cantidad'
     ];
 }

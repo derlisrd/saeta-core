@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\Errores;
+use App\Models\Permiso;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,14 +21,15 @@ class AuthController extends Controller
             $intento = filter_var($username, FILTER_VALIDATE_EMAIL) ?
             ['email' => $username, 'password' => $password] :
             ['username' => $username, 'password' => $password];
-    
-            if (Auth::attempt($intento)) {
+            
+            if (! $token = auth()->attempt($intento)) {
                 $user = User::where('email',$username)->orWhere('username',$username)->firstOrFail();
 
                 if($user){
-                    $token = $user->createToken('auth_token')->plainTextToken;
+                    //$token = $user->createToken('auth_token')->plainTextToken;
                     $user->sucursal;
                     $empresa = Empresa::find($user->sucursal->empresa_id);
+                    $permisos = Permiso::where('u')->get();
                     return response()->json([
                         'success'=>true,
                         'results'=>[
