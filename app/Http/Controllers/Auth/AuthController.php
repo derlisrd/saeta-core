@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -29,8 +30,8 @@ class AuthController extends Controller
 
                 if($user){
                     //$token = $user->createToken('auth_token')->plainTextToken;
-                    //$user->sucursal;
-                    $empresa = null;//Empresa::find($user->sucursal->empresa_id);
+                    $user->sucursal;
+                    $empresa = Empresa::find($user->sucursal->empresa_id);
                     
                     return response()->json([
                         'success'=>true,
@@ -60,7 +61,18 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request){
-        $request->user()->currentAccessToken()->delete();
-        return response()->json(['success'=>true]);
+        //$request->user()->currentAccessToken()->delete();   
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+            return response()->json(['success'=>true]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['success'=>true],500);
+        }
+    }
+
+    public function refreshToken(){
+         $token = JWTAuth::refresh(JWTAuth::getToken());
+         return response()->json(['token'=>$token]);
     }
 }

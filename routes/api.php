@@ -10,12 +10,18 @@ Route::post('/login',[AuthController::class,'login']);
 
 
 
-Route::middleware(Authenticate::using('sanctum'))->group(function(){
+//Route::middleware(Authenticate::using('sanctum'))->group(function(){
 
+
+//});
+
+
+Route::middleware(Authenticate::using('api'))->group(function(){
     Route::get('/products',[ProductosController::class,'index']);
 
-});
+    Route::post('/refresh-token',[AuthController::class,'refreshToken']);
 
+});
 
 
 Route::get('/products/public',[ProductosController::class,'index']);
