@@ -18,18 +18,20 @@ class AuthController extends Controller
 
             $username = $request->username;
             $password = $request->password;
-            $intento = filter_var($username, FILTER_VALIDATE_EMAIL) ?
+            $credentials = filter_var($username, FILTER_VALIDATE_EMAIL) ?
             ['email' => $username, 'password' => $password] :
             ['username' => $username, 'password' => $password];
+        
+            $token = auth('api')->attempt($credentials);
             
-            if (! $token = auth()->attempt($intento)) {
+            if ($token) {
                 $user = User::where('email',$username)->orWhere('username',$username)->firstOrFail();
 
                 if($user){
                     //$token = $user->createToken('auth_token')->plainTextToken;
-                    $user->sucursal;
-                    $empresa = Empresa::find($user->sucursal->empresa_id);
-                    $permisos = Permiso::where('u')->get();
+                    //$user->sucursal;
+                    $empresa = null;//Empresa::find($user->sucursal->empresa_id);
+                    
                     return response()->json([
                         'success'=>true,
                         'results'=>[
@@ -40,7 +42,7 @@ class AuthController extends Controller
                     ]);
                 } 
             }
-
+            
             return response()->json([
                 'success'=>false,
                 'message'=>"Error de credenciales"
