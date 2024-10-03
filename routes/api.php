@@ -8,12 +8,17 @@ use Illuminate\Support\Facades\Route;
 Route::post('login',[AuthController::class,'login']);
 
 Route::middleware(Authenticate::using('api'))->group(function(){
-    Route::get('products',[ProductosController::class,'index']);
-    Route::get('producto',[ProductosController::class,'store']);
-    
+   
+    Route::prefix('productos')->group(function(){
+        Route::get('/',[ProductosController::class,'index']);
+        Route::get('/{id}',[ProductosController::class,'find']);
+        Route::post('/',[ProductosController::class,'store']);
+        Route::put('/{id}',[ProductosController::class,'update']);
+        Route::delete('/{id}',[ProductosController::class,'destroy']);
+    });
+
     
     Route::get('/refresh-token',[AuthController::class,'refreshToken']);
-
 });
 
 
