@@ -9,11 +9,6 @@ use Illuminate\Http\Request;
 class ProductosController extends Controller
 {
     public function index(Request $request){
-        
-        
-        
-        
-        
         $count = Producto::count();
         $result = Producto::limite(120)->sortBy(['id','desc']) ->get();
 
@@ -22,5 +17,19 @@ class ProductosController extends Controller
             'total'=>$count,
             'results'=>$result
         ]);
+    }
+
+
+    public function store(Request $req){
+
+    }
+
+    public function update($id, Request $req){
+
+        
+    }
+
+    public function destroy($id){
+
     }
 }
