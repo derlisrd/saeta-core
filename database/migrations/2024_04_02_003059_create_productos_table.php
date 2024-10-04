@@ -37,6 +37,8 @@ return new class extends Migration
             $table->softDeletes();
             $table->foreign('category_id')->references('id')->on('categories');
             $table->foreign('medida_id')->references('id')->on('medidas');
+            $table->foreign('modificado_por')->references('id')->on('users');
+            $table->foreign('creado_por')->references('id')->on('users');
         });
     }
 
