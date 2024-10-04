@@ -16,7 +16,7 @@ return new class extends Migration
             $table->bigInteger('category_id')->unsigned()->nullable();
             $table->bigInteger('creado_por')->unsigned();
             $table->bigInteger('modificado_por')->unsigned();
-            $table->bigInteger('medida_id')->unsigned();
+            $table->bigInteger('medida_id')->unsigned()->nullable();
             $table->string('codigo')->unique();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
