@@ -16,6 +16,8 @@ class FacturaItem extends Model
         'cantidad',
         'precio',
         'descuento',
+        'total_sin_descuento',
+        'total_impuesto',
         'total'
     ];
 }

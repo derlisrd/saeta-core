@@ -19,6 +19,8 @@ return new class extends Migration
             $table->float('cantidad');
             $table->float('precio');
             $table->float('descuento');
+            $table->float('total_sin_descuento');
+            $table->float('total_impuesto');
             $table->float('total');
             $table->foreign('producto_id')->references('id')->on('productos');
             $table->foreign('factura_id')->references('id')->on('facturas');

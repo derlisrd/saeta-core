@@ -17,9 +17,6 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::delete('/{id}',[ProductosController::class,'destroy']);
     });
 
-    
     Route::get('/refresh-token',[AuthController::class,'refreshToken']);
 });
 
-
-Route::get('/products/public',[ProductosController::class,'index']);

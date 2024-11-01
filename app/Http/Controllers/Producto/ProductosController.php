@@ -5,17 +5,23 @@ namespace App\Http\Controllers\Producto;
 use App\Http\Controllers\Controller;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductosController extends Controller
 {
     public function index(Request $request){
         try {
+
             $count = Producto::count();
             $limit = $request->query('limit', 120); 
             $page = $request->query('page', 1); 
             $offset = ($page - 1) * $limit; 
 
-            $results = Producto::orderBy('nombre', 'asc')->offset($offset)->limit($limit)->get();
+            $results = Producto::orderBy('nombre', 'asc')
+            ->where('like','%'.$request->q.'%')
+            ->offset($offset)
+            ->limit($limit)
+            ->get();
 
             return response()->json([
                 'success'=>true,
@@ -48,6 +54,14 @@ class ProductosController extends Controller
     }
 
     public function store(Request $req){
+        $validator = Validator::make($req->all(),[
+            'impuesto_id'=>'required',
+            'codigo'=>'required|unique:productos,codigo',
+            'nombre'=>'required'
+        ]);
+        if($validator->fails())
+            return response()->json(['success'=>false,'message'=>$validator->errors()->first() ], 400);
+
         $user = $req->user();
         $datos = [
             'category_id' =>$req->category_id,

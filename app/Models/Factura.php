@@ -17,9 +17,14 @@ class Factura extends Model
        'codido_control',
        'descripcion',
        'numero',
+       'descuento',
+       'total_con_descuento',
        'total_con_impuestos',
        'total_de_impuestos',
+       'total_sin_impuestos',
        'total',
        'codicion_venta',
+       'aplicar_impuestos',
+       'estado'
     ];
 }

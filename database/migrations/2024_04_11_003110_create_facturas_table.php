@@ -20,12 +20,14 @@ return new class extends Migration
             $table->bigInteger('caja_id')->unsigned()->nullable();
             $table->text('codido_control')->nullable(); // electronico
             $table->text('descripcion')->nullable(); // electronico
-            $table->bigInteger('descuento')->default(0);
             $table->bigInteger('numero');
+            $table->bigInteger('descuento')->default(0);
+            $table->bigInteger('total_con_descuento')->default(0);
             $table->float('total_de_impuestos');
             $table->float('total_sin_impuestos');
             $table->float('total');
             $table->tinyInteger('condicion_venta')->default(1);
+            $table->tinyInteger('estado')->default(1);
             $table->boolean('aplicar_impuestos')->default(1);
             $table->timestamps();
             $table->foreign('empresa_id')->references('id')->on('empresas');
