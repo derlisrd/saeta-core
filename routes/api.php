@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login',[AuthController::class,'login']);
 
+Route::middleware([])->get('/', function () {
+    return response()->json([
+        'success' => true
+    ]);
+});
 Route::middleware(Authenticate::using('api'))->group(function(){
    
     Route::prefix('productos')->group(function(){
@@ -17,6 +22,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::put('/{id}',[ProductosController::class,'update']);
         Route::delete('/{id}',[ProductosController::class,'destroy']);
     });
+    
     Route::prefix('facturas')->group(function(){
         Route::get('/',[FacturasController::class,'index']);
         Route::get('/{id}',[FacturasController::class,'find']);

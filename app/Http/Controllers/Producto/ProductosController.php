@@ -57,7 +57,12 @@ class ProductosController extends Controller
         $validator = Validator::make($req->all(),[
             'impuesto_id'=>'required',
             'codigo'=>'required|unique:productos,codigo',
-            'nombre'=>'required'
+            'nombre'=>'required',
+            'costo'=>'required|numeric',
+            'precio_normal'=>'required|numeric',
+            'precio_minimo'=>'required|numeric',
+            'disponible'=>'required',
+            'tipo'=>'required'
         ]);
         if($validator->fails())
             return response()->json(['success'=>false,'message'=>$validator->errors()->first() ], 400);
@@ -82,8 +87,8 @@ class ProductosController extends Controller
             'porcentaje_impuesto' => $req->porcentaje_impuesto,
             'disponible' =>$req->disponible,
             'tipo' =>$req->tipo,
-            'preguntar_precio' => $req->preguntar_precio,
-            'notificar_minimo' =>$req->notificar_minimo,
+            'preguntar_precio' => $req->preguntar_precio ?? 1,
+            'notificar_minimo' =>$req->notificar_minimo ?? 0,
             'cantidad_minima' =>$req->cantidad_minima
         ];
 

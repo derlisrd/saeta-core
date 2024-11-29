@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('direccion')->nullable();
             $table->string('telefono')->nullable();
             $table->integer('numero')->default(1);
-            $table->foreign('empresa_id')->references('id')->on('empresas');
+            $table->foreign('empresa_id')->references('id')->on('empresa');
             $table->timestamps();
         });
     }

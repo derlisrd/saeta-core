@@ -30,7 +30,7 @@ return new class extends Migration
             $table->tinyInteger('estado')->default(1);
             $table->boolean('aplicar_impuestos')->default(1);
             $table->timestamps();
-            $table->foreign('empresa_id')->references('id')->on('empresas');
+            $table->foreign('empresa_id')->references('id')->on('empresa');
             $table->foreign('sucursal_id')->references('id')->on('sucursales');
             $table->foreign('cliente_id')->references('id')->on('clientes');
         });

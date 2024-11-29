@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('empresas', function (Blueprint $table) {
+        Schema::create('empresa', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
             $table->string('ruc');
@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('direccion');
             $table->date('licencia');
             $table->string('propietario')->nullable();
+            $table->boolean('configurado')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('empresas');
+        Schema::dropIfExists('empresa');
     }
 };
