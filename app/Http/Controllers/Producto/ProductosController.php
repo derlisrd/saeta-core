@@ -18,7 +18,7 @@ class ProductosController extends Controller
             $offset = ($page - 1) * $limit; 
 
             $results = Producto::orderBy('nombre', 'asc')
-            ->where('like','%'.$request->q.'%')
+            //->where('like','%'.$request->q ?? ''.'%')
             ->offset($offset)
             ->limit($limit)
             ->get();
