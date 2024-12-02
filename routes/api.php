@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Producto\ProductosController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
@@ -32,5 +33,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     });
 
     Route::get('/refresh-token',[AuthController::class,'refreshToken']);
+
+    Route::get('/me',[UserController::class,'me']);
 });
 
