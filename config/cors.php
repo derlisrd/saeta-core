@@ -16,8 +16,9 @@
     */
 
     return [
-        'paths' => ['api/*', 'sanctum/csrf-cookie'],
-        'allowed_methods' => ['*'], // Permitir todos los métodos HTTP
+        //'paths' => ['api/*', 'sanctum/csrf-cookie'],
+        'paths' =>['api/*'],
+        'allowed_methods' => ['GET','POST','PUT','OPTIONS','DELETE'], // Permitir todos los métodos HTTP
         'allowed_origins' => ['*'], // Permitir cualquier origen
         'allowed_origins_patterns' => [],
         'allowed_headers' => ['*'], // Permitir todos los encabezados
