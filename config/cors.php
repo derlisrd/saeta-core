@@ -1,6 +1,6 @@
 <?php
 
-return [
+
 
     /*
     |--------------------------------------------------------------------------
@@ -15,20 +15,13 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
-
-    'allowed_methods' => ['*'], // Permite todos los métodos (GET, POST, PUT, DELETE, etc.)
-
-    'allowed_origins' => ['*'], // Origen permitido
-
-    'allowed_origins_patterns' => [],
-
-    'allowed_headers' => ['*'], // Permite todos los encabezados
-
-    'exposed_headers' => [],
-
-    'max_age' => 0,
-
-    'supports_credentials' => true, 
-
-];
+    return [
+        'paths' => ['api/*', 'sanctum/csrf-cookie'],
+        'allowed_methods' => ['*'], // Permitir todos los métodos HTTP
+        'allowed_origins' => ['*'], // Permitir cualquier origen
+        'allowed_origins_patterns' => [],
+        'allowed_headers' => ['*'], // Permitir todos los encabezados
+        'exposed_headers' => [],
+        'max_age' => 0,
+        'supports_credentials' => false, // Establecer en false si no necesitas cookies o autenticación basada en sesiones
+    ];
