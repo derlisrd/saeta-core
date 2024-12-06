@@ -15,9 +15,10 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie','auth/steam'],
+    //'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['GET','POST','PUT','DELETE'],
 
     'allowed_origins' => ['*'],
 
