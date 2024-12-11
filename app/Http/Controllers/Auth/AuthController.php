@@ -37,7 +37,8 @@ class AuthController extends Controller
                         'success'=>true,
                         'results'=>[
                             'user'=>$user,
-                            'token'=>$token,
+                            'tokenRaw'=>$token,
+                            'token'=>'Bearer ' . $token,
                             'empresa'=>$empresa
                         ]
                     ]);
