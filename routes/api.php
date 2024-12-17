@@ -37,3 +37,4 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     Route::get('/me',[UserController::class,'me']);
 });
 
+Route::get('/recuperar',[UserController::class,'recuperar']);
