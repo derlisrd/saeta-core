@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\Errores;
-use App\Models\Permiso;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
@@ -73,7 +71,12 @@ class AuthController extends Controller
     }
 
     public function refreshToken(){
-         $token = JWTAuth::refresh(JWTAuth::getToken());
-         return response()->json(['token'=>$token]);
+         try {
+            $token = JWTAuth::refresh(JWTAuth::getToken());
+            return response()->json(['success'=>true, 'results'=>$token]);
+         } catch (\Throwable $th) {
+            throw $th;
+            return response()->json(['success'=>false, 'results'=>null, 'message'=> 'Error de refresh' ],500);
+         }
     }
 }
