@@ -6,8 +6,10 @@ use App\Models\Category;
 use App\Models\Cliente;
 use App\Models\Deposito;
 use App\Models\Empresa;
+use App\Models\FormasPago;
 use App\Models\Impuesto;
 use App\Models\Medida;
+use App\Models\Producto;
 use App\Models\Sucursal;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -55,6 +57,11 @@ class ExampleSeeder extends Seeder
             'sucursal_id'=>$sucursal->id,
             'nombre'=>'Principal'
         ]);
+        FormasPago::create([
+            'tipo'=>1,
+            'descripcion'=>'Efectivo'
+        ]);
+        
         User::factory()->create([
             'name' => 'Derlis',
             'username'=>env('USER_SEED','user'),

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Factura\FacturasController;
+use App\Http\Controllers\Pedido\PedidosController;
 use App\Http\Controllers\Producto\ProductosController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -30,6 +31,11 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::post('/',[FacturasController::class,'store']);
         Route::put('/{id}',[FacturasController::class,'update']);
         Route::delete('/{id}',[FacturasController::class,'destroy']);
+    });
+    Route::prefix('pedidos')->group(function(){
+        Route::get('/',[PedidosController::class,'index']);
+        Route::get('/{id}',[PedidosController::class,'find']);
+        Route::post('/',[PedidosController::class,'store']);
     });
 
     Route::get('/refresh-token',[AuthController::class,'refreshToken']);
