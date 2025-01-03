@@ -112,7 +112,7 @@ class PedidosController extends Controller
         if($estado == 2){
             $message = 'Pedido ha sido pagado.';
         }
-        if($estado == 3 && $pedido->tipo == 1 && $pedido->estado == 2){
+        if($estado == 3 && $pedido->tipo == 1 && $pedido->estado > 2){
          $pedido->items->each(function($item){
             $item->producto->stock->where('deposito_id',$item->deposito_id)->first()->update([
                 'cantidad'=>$item->producto->stock->where('deposito_id',$item->deposito_id)->first()->cantidad - $item->cantidad
