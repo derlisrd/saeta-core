@@ -23,8 +23,19 @@ class ExampleSeeder extends Seeder
     public function run(): void
     {
         Impuesto::create([
-            'descripcion'=>'Ninguno',
-            'valor'=>0
+            'descripcion'=>'Exenta',
+            'valor'=>0,
+            'porcentaje'=>'0%'
+        ]);
+        Impuesto::create([
+            'descripcion'=>'5%',
+            'valor'=>5,
+            'porcentaje'=>'5%'
+        ]);
+        Impuesto::create([
+            'descripcion'=>'10%',
+            'valor'=>10,
+            'porcentaje'=>'10%'
         ]);
         Category::create([
             'nombre'=>'Ninguna'

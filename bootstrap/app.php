@@ -49,24 +49,24 @@ return Application::configure(basePath: dirname(__DIR__))
             if (request()->is('api/*')) {
                 return response()->json([
                     'success'=>false,
-                    'message' =>'Route not found. ' . $e->getMessage(),
+                    'message' =>'Route not found. ' //. $e->getMessage()
                 ], 404);
             }
             return response()->json([
                 'success'=>false,
-                'message'=> 'No encontrado. ' . $e->getMessage(),
+                'message'=> 'No encontrado. ' // . $e->getMessage(),
             ],404);
         });
         $exceptions->renderable(function (RouteNotFoundException $e){
             if (request()->is('api/*')) {
                 return response()->json([
                     'success'=>false,
-                    'message' =>'Route not found. ' . $e->getMessage(),
+                    'message' =>'Route not found. ' // . $e->getMessage(),
                 ], 404);
             }
             return response()->json([
                 'success'=>false,
-                'message'=> $e->getMessage(),
+                'message'=>'Not found. ' // . $e->getMessage(),
             ],404);
         });
         $exceptions->renderable(function (MethodNotAllowedHttpException $e){

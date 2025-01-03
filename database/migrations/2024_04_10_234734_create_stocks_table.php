@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('deposito_id')->unsigned();
-            $table->bigInteger('medida_id')->unsigned();
             $table->foreignId('producto_id')->constrained('productos');
             $table->float('cantidad',20.3);
             $table->timestamps();
-            $table->foreign('medida_id')->references('id')->on('medidas');
             $table->foreign('deposito_id')->references('id')->on('depositos');
         });
     }

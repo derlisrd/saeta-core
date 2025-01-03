@@ -56,6 +56,8 @@ class ProductosController extends Controller
     public function store(Request $req){
         $validator = Validator::make($req->all(),[
             'impuesto_id'=>'required',
+            'category_id'=>'nullable|exists:category,id',
+            'medida_id'=>'nullable|exists:medidas,id',
             'codigo'=>'required|unique:productos,codigo',
             'nombre'=>'required',
             'costo'=>'required|numeric',
@@ -65,7 +67,6 @@ class ProductosController extends Controller
             'tipo'=>'required',
             'stock'=>'nullable|array',
             'stock.*.deposito_id' => 'exists:depositos,id',
-            'stock.*.medida_id' => 'exists:medidas,id',
             'stock.*.cantidad' => 'numeric|min:0',
         ]);
         if($validator->fails())
@@ -102,7 +103,6 @@ class ProductosController extends Controller
                 $producto->stock()->create([
                     'producto_id' => $producto->id,
                     'deposito_id' => $stock['deposito_id'],
-                    'medida_id' => $stock['medida_id'],
                     'cantidad' => $stock['cantidad']
                 ]);
             }

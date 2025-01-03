@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('depositos', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('sucursal_id')->unsigned();
+            // $table->bigInteger('sucursal_id')->unsigned();
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursales');
             $table->string('nombre');
             $table->text('descripcion')->nullable();
             $table->timestamps();
-            $table->foreign('sucursal_id')->references('id')->on('sucursales');
+            // $table->foreign('sucursal_id')->references('id')->on('sucursales');
         });
     }
 

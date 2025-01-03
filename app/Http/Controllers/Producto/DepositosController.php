@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Validator;
 
 class DepositosController extends Controller
 {
+    public function index()
+    {
+        $depositos = Deposito::all();
+        return response()->json([
+            'success' => true,
+            'results' => $depositos
+        ]);
+    }
     public function productosPorDeposito(Request $req)
     {
         $validator = Validator::make($req->all(), [
