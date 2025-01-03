@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Pedido;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pedido;
-use App\Models\PedidoItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PedidosController extends Controller
