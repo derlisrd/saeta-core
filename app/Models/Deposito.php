@@ -14,4 +14,9 @@ class Deposito extends Model
         'nombre',
         'descripcion'
     ];
+
+    public function stock(){
+        return $this->hasMany(Stock::class);
+    }
+    
 }

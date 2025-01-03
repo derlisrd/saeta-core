@@ -16,6 +16,7 @@ return new class extends Migration
             $table->bigInteger('pedido_id')->unsigned();
             $table->bigInteger('producto_id')->unsigned();
             $table->bigInteger('impuesto_id')->unsigned();
+            $table->foreignId('deposito_id')->constrained('depositos');
             $table->float('cantidad');
             $table->float('precio');
             $table->float('descuento');

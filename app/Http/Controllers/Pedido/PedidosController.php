@@ -7,6 +7,7 @@ use App\Models\Pedido;
 use App\Models\PedidoItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PedidosController extends Controller
@@ -44,9 +45,9 @@ class PedidosController extends Controller
             'descuento' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'items'=>'required|array',
-            'items' => 'required|array',
             'items.*.producto_id' => 'required|exists:productos,id',
             'items.*.impuesto_id' => 'required|exists:impuestos,id',
+            'items.*.deposito_id' => 'required|exists:depositos,id',
             'items.*.cantidad' => 'required|numeric|min:1',
             'items.*.precio' => 'required|numeric|min:0',
             'items.*.descuento' => 'required|numeric|min:0',
@@ -75,15 +76,52 @@ class PedidosController extends Controller
             $pedido->items()->create([
                 'producto_id' => $item['producto_id'],
                 'impuesto_id' => $item['impuesto_id'],
+                'deposito_id' => $item['deposito_id'],
                 'cantidad' => $item['cantidad'],
                 'precio' => $item['precio'],
                 'descuento' => $item['descuento'],
                 'total' => $item['total'],
             ]);
         }
+        return response()->json(['success' => true, 'message' => 'Pedido creado con éxito', 'results' => $pedido->load('items')], 201);
+    }
+
+
+    public function cambiarEstado($id, Request $req) {
+        $validator = Validator::make($req->all(), [
+            'estado' => 'required|in:1,2,3,4,5'
+        ]);
+        $estado = $req->estado;
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        }
+
+        if($estado == 1){
+            return response()->json(['success' => false, 'message' => 'No se puede cambiar el estado a pendiente'], 400);
+        }
 
         
 
-        return response()->json(['success' => true, 'message' => 'Pedido creado con éxito', 'results' => $pedido->load('items')], 201);
+        $pedido = Pedido::find($id);
+        if (!$pedido)
+            return response()->json(['success' => false, 'message' => 'Pedido no encontrado'], 404);
+        $pedido->estado = $estado;
+        $pedido->save();
+        $pedido->load('items');
+        $message = 'Pedido procesado con éxito.';
+        if($estado == 2){
+            $message = 'Pedido ha sido pagado.';
+        }
+        if($estado == 3 && $pedido->tipo == 1 && $pedido->estado == 2){
+         $pedido->items->each(function($item){
+            $item->producto->stock->where('deposito_id',$item->deposito_id)->first()->update([
+                'cantidad'=>$item->producto->stock->where('deposito_id',$item->deposito_id)->first()->cantidad - $item->cantidad
+            ]);
+         });
+         $message = 'Pedido ha sido entregado.';   
+        }
+
+        return response()->json(['success' => true, 'message' => $message, 'results' => $pedido]);
     }
+
 }

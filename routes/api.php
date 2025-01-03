@@ -3,7 +3,9 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Pedido\PedidosController;
+use App\Http\Controllers\Producto\DepositosController;
 use App\Http\Controllers\Producto\ProductosController;
+use App\Http\Controllers\Producto\StockController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +26,16 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::put('/{id}',[ProductosController::class,'update']);
         Route::delete('/{id}',[ProductosController::class,'destroy']);
     });
+
+    Route::prefix('stock')->group(function(){
+        Route::post('/',[StockController::class,'add']);
+    });
+
+    Route::prefix('depositos')->group(function(){
+        Route::post('/',[DepositosController::class,'addDeposito']);
+        Route::put('/{id}',[DepositosController::class,'update']);
+        Route::get('/productos',[DepositosController::class,'productosPorDeposito']);
+    });
     
     Route::prefix('facturas')->group(function(){
         Route::get('/',[FacturasController::class,'index']);
@@ -32,10 +44,13 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::put('/{id}',[FacturasController::class,'update']);
         Route::delete('/{id}',[FacturasController::class,'destroy']);
     });
+
+    
     Route::prefix('pedidos')->group(function(){
         Route::get('/',[PedidosController::class,'index']);
         Route::get('/{id}',[PedidosController::class,'find']);
         Route::post('/',[PedidosController::class,'store']);
+        Route::put('/cambiar-estado/{id}',[PedidosController::class,'cambiarEstado']);
     });
 
     Route::get('/refresh-token',[AuthController::class,'refreshToken']);

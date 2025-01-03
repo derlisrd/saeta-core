@@ -62,7 +62,11 @@ class ProductosController extends Controller
             'precio_normal'=>'required|numeric',
             'precio_minimo'=>'required|numeric',
             'disponible'=>'required',
-            'tipo'=>'required'
+            'tipo'=>'required',
+            'stock'=>'nullable|array',
+            'stock.*.deposito_id' => 'exists:depositos,id',
+            'stock.*.medida_id' => 'exists:medidas,id',
+            'stock.*.cantidad' => 'numeric|min:0',
         ]);
         if($validator->fails())
             return response()->json(['success'=>false,'message'=>$validator->errors()->first() ], 400);
@@ -92,12 +96,22 @@ class ProductosController extends Controller
             'cantidad_minima' =>$req->cantidad_minima
         ];
 
-        $store = Producto::create($datos);
-
+        $producto = Producto::create($datos);
+        if(!empty($req->stock)){
+            foreach ($req->stock as $stock) {
+                $producto->stock()->create([
+                    'producto_id' => $producto->id,
+                    'deposito_id' => $stock['deposito_id'],
+                    'medida_id' => $stock['medida_id'],
+                    'cantidad' => $stock['cantidad']
+                ]);
+            }
+        }
+        
         return response()->json([
             'success'=>true,
             'message'=>'Producto creado',
-            'results' =>$store
+            'results' =>$producto
         ]);
     }
 

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->tinyInteger('tipo')->default(1); // 1 venta normal 2 presupuesto
             $table->float('porcentaje_descuento')->default(0);
             $table->float('descuento')->default(0);
-            $table->tinyInteger('estado')->default(1); // 1 pendiente 2 pagado 3 cancelado
+            $table->tinyInteger('estado')->default(1); // 1 pendiente 2 pagado 3 entregado 4 cancelado
             $table->float('total',20,2);
             $table->timestamps();
             $table->foreign('sucursal_id')->references('id')->on('sucursales');
