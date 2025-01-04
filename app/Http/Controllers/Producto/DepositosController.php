@@ -63,6 +63,12 @@ class DepositosController extends Controller
             'nombre' => 'required',
             'descripcion' => 'nullable'
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
         $deposito = Deposito::find($id);
         if (!$deposito) {
             return response()->json([
