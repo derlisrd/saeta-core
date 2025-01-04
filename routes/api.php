@@ -35,6 +35,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
 
     Route::prefix('medidas')->group(function(){
         Route::get('/',[MedidasController::class,'index']);
+        Route::post('/',[MedidasController::class,'store']);
     });
 
     Route::prefix('stock')->group(function(){
