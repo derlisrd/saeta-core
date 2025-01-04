@@ -20,6 +20,6 @@ class Cliente extends Model
         'email',
         'nacimiento',
         'tipo',
-        'extrangero'
+        'extranjero'
     ];
 }

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->date('nacimiento')->nullable();
             $table->boolean('tipo')->default(0);
-            $table->boolean('extrangero')->default(0);
+            $table->boolean('extranjero')->default(0);
             $table->timestamps();
         });
     }

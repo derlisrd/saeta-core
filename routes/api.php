@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Cliente\ClientesController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\ImpuestosController;
 use App\Http\Controllers\Pedido\PedidosController;
@@ -53,6 +54,11 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::post('/',[FacturasController::class,'store']);
         Route::put('/{id}',[FacturasController::class,'update']);
         Route::delete('/{id}',[FacturasController::class,'destroy']);
+    });
+
+    Route::prefix('clientes')->group(function(){
+        Route::get('/',[ClientesController::class,'index']);
+        Route::post('/',[ClientesController::class,'store']);
     });
 
     Route::get('/impuestos',[ImpuestosController::class,'index']);
