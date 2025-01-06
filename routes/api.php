@@ -26,6 +26,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     });
 
     Route::prefix('productos')->group(function(){
+        Route::get('/verificar-codigo-disponible',[ProductosController::class,'verificarCodigoDisponible']);
         Route::get('/',[ProductosController::class,'index']);
         Route::get('/{id}',[ProductosController::class,'find']);
         Route::post('/',[ProductosController::class,'store']);

@@ -9,6 +9,27 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductosController extends Controller
 {
+
+    public function verificarCodigoDisponible(Request $req){
+        $validator = Validator::make($req->all(),[
+            'codigo'=>'required'
+        ]);
+        if($validator->fails())
+            return response()->json(['success'=>false,'message'=>$validator->errors()->first() ], 400);
+
+        $producto = Producto::where('codigo',$req->codigo)->first();
+        if($producto){
+            return response()->json([
+                'success'=>false,
+                'message'=>'Código no disponible'
+            ],400);
+        }
+        return response()->json([
+            'success'=>true,
+            'message'=>'Código disponible'
+        ]);
+    }
+
     public function index(Request $request){
         try {
 
