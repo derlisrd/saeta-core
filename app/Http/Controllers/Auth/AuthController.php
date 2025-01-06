@@ -70,6 +70,20 @@ class AuthController extends Controller
         }
     }
 
+    public function check(Request $request){
+        try {
+            $user = auth('api')->user();
+            if ($user) {
+                return response()->json(['success'=>true, 'user'=>$user]);
+            } else {
+                return response()->json(['success'=>false, 'message'=>'Token inválido']);
+            }
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json(['success'=>false, 'message'=>'Error de servidor'], 500);
+        }
+    }
+
     public function refreshToken(){
          try {
             $token = JWTAuth::refresh(JWTAuth::getToken());

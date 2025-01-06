@@ -75,6 +75,9 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     Route::get('/refresh-token',[AuthController::class,'refreshToken']);
 
     Route::get('/me',[UserController::class,'me']);
+
+    Route::get('/logout',[AuthController::class,'logout']);
+    Route::get('/check',[AuthController::class,'check']);
 });
 
 Route::get('/recuperar',[UserController::class,'recuperar']);
