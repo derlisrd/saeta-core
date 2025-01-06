@@ -56,7 +56,7 @@ class ProductosController extends Controller
     public function store(Request $req){
         $validator = Validator::make($req->all(),[
             'impuesto_id'=>'required',
-            'category_id'=>'nullable|exists:category,id',
+            'category_id'=>'nullable|exists:categories,id',
             'medida_id'=>'nullable|exists:medidas,id',
             'codigo'=>'required|unique:productos,codigo',
             'nombre'=>'required',
