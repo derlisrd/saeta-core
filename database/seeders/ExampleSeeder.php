@@ -47,7 +47,8 @@ class ExampleSeeder extends Seeder
         ]);
         Medida::create([
             'descripcion'=>'Unidad',
-            'abreviatura' =>'u'
+            'abreviatura' =>'u',
+            'default'=>true
         ]);
         $empresa = Empresa::create([
             'nombre'=>'Nombre de empresa',
