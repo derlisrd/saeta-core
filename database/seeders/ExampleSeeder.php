@@ -38,7 +38,7 @@ class ExampleSeeder extends Seeder
             'porcentaje'=>'10%'
         ]);
         Category::create([
-            'nombre'=>'Ninguna'
+            'nombre'=>'Sin categoría'
         ]);
         
         Cliente::create([
