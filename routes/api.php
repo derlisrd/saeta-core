@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Cliente\ClientesController;
+use App\Http\Controllers\Config\EmpresaController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\ImpuestosController;
 use App\Http\Controllers\Pedido\PedidosController;
@@ -72,10 +73,13 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::put('/cambiar-estado/{id}',[PedidosController::class,'cambiarEstado']);
     });
 
+    Route::prefix('config')->group(function(){
+        Route::get('/empresa',[EmpresaController::class,'index']);
+        Route::put('/empresa',[EmpresaController::class,'update']);
+    });
+
     Route::get('/refresh-token',[AuthController::class,'refreshToken']);
-
     Route::get('/me',[UserController::class,'me']);
-
     Route::get('/logout',[AuthController::class,'logout']);
     Route::get('/check',[AuthController::class,'check']);
 });
