@@ -9,11 +9,75 @@ use Illuminate\Support\Facades\Validator;
 
 class ClientesController extends Controller
 {
+
+    public function show($id){
+        $cliente = Cliente::find($id);
+        if(!$cliente){
+            return response()->json([
+                'success' => false,
+                'results' => null,
+                'message' => 'Cliente no encontrado'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'results' => $cliente
+        ]);
+    }
+
     public function index(){
         $clientes = Cliente::all();
         return response()->json([
             'success' => true,
             'results' => $clientes
+        ]);
+    }
+
+    public function update($id, Request $req){
+        $cliente = Cliente::find($id);
+        if(!$cliente){
+            return response()->json([
+                'success' => false,
+                'results' => null,
+                'message' => 'Cliente no encontrado'
+            ], 404);
+        }
+        $validator = Validator::make($req->all(),[
+            'doc' => 'required|unique:clientes,doc,'.$id,
+            'nombres' => 'required',
+            'apellidos' => 'nullable',
+            'nombre_fantasia' => 'nullable',
+            'direccion' => 'nullable',
+            'telefono' => 'nullable',
+            'email' => 'nullable|email',
+            'nacimiento' => 'nullable|date',
+            'tipo' => 'in:0,1',
+            'extranjero' => 'in:0,1'
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+
+        $cliente->update([
+            'doc' => $req->doc,
+            'nombres' => $req->nombres,
+            'apellidos' => $req->apellidos,
+            'nombre_fantasia' => $req->nombre_fantasia,
+            'direccion' => $req->direccion,
+            'telefono' => $req->telefono,
+            'email' => $req->email,
+            'nacimiento' => $req->nacimiento,
+            'tipo' => $req->tipo,
+            'extranjero' => $req->extranjero
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Cliente actualizado correctamente',
+            'results' => $cliente
         ]);
     }
 
@@ -30,6 +94,14 @@ class ClientesController extends Controller
             'tipo' => 'in:0,1',
             'extranjero' => 'in:0,1'
         ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+
         $cliente = Cliente::create([
             'doc' => $request->doc,
             'nombres' => $request->nombres,
@@ -48,4 +120,6 @@ class ClientesController extends Controller
             'results' => $cliente
         ]);
     }
+
+    
 }

@@ -16,7 +16,5 @@ class FacturasController extends Controller
        $validator = Validator::make($req->all(),[]);
        if($validator->fails())
             return response()->json(['success'=>false,'message'=>$validator->errors()->first() ], 400);
-        
-        
     }
 }

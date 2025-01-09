@@ -84,6 +84,7 @@ class ProductosController extends Controller
             'costo'=>'required|numeric',
             'precio_normal'=>'required|numeric',
             'precio_minimo'=>'required|numeric',
+            'preguntar_precio'=>'nullable|boolean',
             'disponible'=>'required',
             'tipo'=>'required',
             'stock'=>'nullable|array',
@@ -110,10 +111,10 @@ class ProductosController extends Controller
             'precio_normal' => $req->precio_normal,
             'precio_descuento' =>$req->precio_descuento,
             'precio_minimo' =>$req->precio_minimo,
+            'preguntar_precio' => $req->preguntar_precio,
             'porcentaje_impuesto' => $req->porcentaje_impuesto,
             'disponible' =>$req->disponible,
             'tipo' =>$req->tipo,
-            'preguntar_precio' => $req->preguntar_precio ?? 1,
             'notificar_minimo' =>$req->notificar_minimo ?? 0,
             'cantidad_minima' =>$req->cantidad_minima
         ];
