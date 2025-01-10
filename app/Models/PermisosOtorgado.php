@@ -14,4 +14,15 @@ class PermisosOtorgado extends Model
         'permiso_id',
         'otorgado'
     ];
+
+    protected $hidden = [
+        'created_at',
+        'user_id',
+        'updated_at'
+    ];
+
+    public function permiso()
+    {
+        return $this->belongsTo(Permiso::class);
+    }
 }

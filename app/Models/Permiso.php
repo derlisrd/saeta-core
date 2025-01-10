@@ -12,4 +12,5 @@ class Permiso extends Model
         'nombre',
         'descripcion'
     ];
+
 }

@@ -9,6 +9,7 @@ use App\Models\Empresa;
 use App\Models\FormasPago;
 use App\Models\Impuesto;
 use App\Models\Medida;
+use App\Models\PermisosOtorgado;
 use App\Models\Producto;
 use App\Models\Sucursal;
 use App\Models\User;
@@ -80,7 +81,13 @@ class ExampleSeeder extends Seeder
             'email' => env('EMAIL_SEED','demo@demo.com'),
             'password'=>env('PASSWORD_SEED',123456),
             'empresa_id'=> $empresa->id,
-            'sucursal_id'=> $sucursal->id
+            'sucursal_id'=> $sucursal->id,
+            'tipo'=>10
+        ]);
+        PermisosOtorgado::create([
+            'user_id'=>1,
+            'permiso_id'=>1,
+            'otorgado'=>true
         ]);
     }
 }

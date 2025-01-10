@@ -13,6 +13,8 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasApiTokens;
 
+    const TIPO_SUPER_ADMIN = 10;
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -60,7 +62,17 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
         ];
     }
+
+
     public function sucursal(){
         return $this->belongsTo(Sucursal::class,'sucursal_id');
+    }
+    public function permisos(){
+        return $this->hasMany(PermisosOtorgado::class,'user_id');
+    }
+   
+    public function esSuperAdmin()
+    {
+        return $this->tipo === self::TIPO_SUPER_ADMIN;
     }
 }

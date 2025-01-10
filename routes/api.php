@@ -21,6 +21,10 @@ Route::post('login',[AuthController::class,'login']);
 
 
 Route::middleware(Authenticate::using('api'))->group(function(){
+
+    Route::prefix('/users')->group(function(){
+        Route::post('/create',[UserController::class,'create']);
+    });
    
     Route::prefix('/categorias')->group(function(){
         Route::get('/',[CategoriasController::class,'index']);
