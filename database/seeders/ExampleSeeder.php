@@ -9,6 +9,7 @@ use App\Models\Empresa;
 use App\Models\FormasPago;
 use App\Models\Impuesto;
 use App\Models\Medida;
+use App\Models\Permiso;
 use App\Models\PermisosOtorgado;
 use App\Models\Producto;
 use App\Models\Sucursal;
@@ -83,6 +84,10 @@ class ExampleSeeder extends Seeder
             'empresa_id'=> $empresa->id,
             'sucursal_id'=> $sucursal->id,
             'tipo'=>10
+        ]);
+        Permiso::create([
+            'nombre' => 'Usuarios',
+            'descripcion'=>'Administrar usuarios'
         ]);
         PermisosOtorgado::create([
             'user_id'=>1,

@@ -6,6 +6,7 @@ use App\Http\Controllers\Config\EmpresaController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\ImpuestosController;
 use App\Http\Controllers\Pedido\PedidosController;
+use App\Http\Controllers\Permiso\PermisosController;
 use App\Http\Controllers\Producto\CategoriasController;
 use App\Http\Controllers\Producto\DepositosController;
 use App\Http\Controllers\Producto\MedidasController;
@@ -24,6 +25,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
 
     Route::prefix('/users')->group(function(){
         Route::post('/create',[UserController::class,'create']);
+        Route::post('/otorgar-permisos',[PermisosController::class,'otorgarPermisos']);
     });
    
     Route::prefix('/categorias')->group(function(){
