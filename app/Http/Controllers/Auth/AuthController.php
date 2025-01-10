@@ -8,13 +8,24 @@ use App\Models\Errores;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+//use PHPOpenSourceSaver\JWTAuth\JWT;
 
 class AuthController extends Controller
 {
     public function login(Request $request){
         try {
-
+            $validator = Validator::make($request->all(),[
+                'username'=>'required',
+                'password'=>'required'
+            ]);
+            if($validator->fails()){
+                return response()->json([
+                    'success'=>false,
+                    'message'=>$validator->errors()->first()
+                ],400);
+            }
             $username = $request->username;
             $password = $request->password;
             $credentials = filter_var($username, FILTER_VALIDATE_EMAIL) ?
@@ -23,6 +34,7 @@ class AuthController extends Controller
         
             $token = auth('api')->attempt($credentials);
             
+
             if ($token) {
                 $user = User::where('email',$username)->orWhere('username',$username)->firstOrFail();
 
@@ -37,6 +49,7 @@ class AuthController extends Controller
                             'user'=>$user,
                             'tokenRaw'=>$token,
                             'token'=>'Bearer ' . $token,
+                            'refresh_token' => JWTAuth::claims(['type' => 'refresh'])->fromUser($user),
                             'empresa'=>$empresa
                         ]
                     ]);
