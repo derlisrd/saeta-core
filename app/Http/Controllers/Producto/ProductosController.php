@@ -13,10 +13,11 @@ class ProductosController extends Controller
     public function consultarPorDeposito(Request $req)
     {
         $validator = Validator::make($req->all(), [
-            'deposito_id' => 'nullable',
+            'deposito_id' => 'nullable|exists:depositos,id',
             'codigo' => 'required|exists:productos,codigo'
         ], [
-            'codigo.exists' => 'El codigo de producto no existe'
+            'codigo.exists' => 'El codigo de producto no existe',
+            'deposito_id.exists' => 'El depósito seleccionado no existe'
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first(), 'results'=>null], 400);
@@ -60,7 +61,7 @@ class ProductosController extends Controller
                     'success' => false,
                     'message' => 'El producto existe, pero no tiene stock en el depósito seleccionado.',
                     'results'=>null
-                ]);
+                ],400);
             }
 
             if ($stockDisponible->cantidad <= 0) {
