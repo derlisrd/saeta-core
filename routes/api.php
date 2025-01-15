@@ -33,6 +33,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     });
 
     Route::prefix('productos')->group(function(){
+        Route::get('/consultar/{codigo}',[ProductosController::class,'consultarCodigo']);
         Route::get('/verificar/{codigo}',[ProductosController::class,'verificarCodigoDisponible']);
         Route::get('/',[ProductosController::class,'index']);
         Route::get('/{id}',[ProductosController::class,'find']);
