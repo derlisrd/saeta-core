@@ -34,6 +34,7 @@ class ProductosController extends Controller
         if ($producto->tipo == 2) {
             return response()->json([
                 'success' => true,
+                'message'=>'',
                 'results' => [
                     'id' => $producto->id,
                     'deposito_id' => null,
@@ -76,6 +77,7 @@ class ProductosController extends Controller
         // Retornar producto con stock
         return response()->json([
             'success' => true,
+            'message'=>'',
             'results' => [
                 'id' => $producto->id,
                 'producto_id' => $producto->id,
