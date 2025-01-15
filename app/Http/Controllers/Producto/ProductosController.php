@@ -10,26 +10,24 @@ use Illuminate\Support\Facades\Validator;
 class ProductosController extends Controller
 {
 
-    public function consultarCodigo(string $codigo){
-        $validator = Validator::make(['codigo'=>$codigo],[
+    public function consultarPorDeposito(Request $request){
+        $validator = Validator::make($request->all(),[
+            'deposito_id'=>'required|exists:depositos,id',
             'codigo'=>'required'
         ]);
         if($validator->fails())
             return response()->json(['success'=>false,'message'=>$validator->errors()->first() ], 400);
 
-        $producto = Producto::where('codigo',$codigo)->first();
-        if(!$producto){
-            return response()->json([
-                'success'=>false,
-                'message'=>'Código no encontrado'
-            ],404);
-        }
+        $deposito_id = $request->deposito_id;
+        $productos = Producto::whereHas('stock',function($q) use($deposito_id){
+            $q->where('deposito_id',$deposito_id);
+        })->get();
         return response()->json([
             'success'=>true,
-            'message'=>'Código encontrado',
-            'results'=>$producto
+            'results'=>$productos
         ]);
     }
+    
 
     public function verificarCodigoDisponible(string $codigo){
         $validator = Validator::make(['codigo'=>$codigo],[
