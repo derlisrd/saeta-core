@@ -14,11 +14,12 @@ class ProductosController extends Controller
     {
         $validator = Validator::make($req->all(), [
             'deposito_id' => 'nullable|exists:depositos,id',
-            'cantidad' => 'numeric',
+            'cantidad' => 'numeric|gt:0',
             'codigo' => 'required|exists:productos,codigo'
         ], [
             'codigo.exists' => 'El codigo de producto no existe',
-            'deposito_id.exists' => 'El depósito seleccionado no existe'
+            'deposito_id.exists' => 'El depósito seleccionado no existe',
+            'cantidad.gt' => 'La cantidad debe ser mayor a cero'
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first(), 'results'=>null], 400);
@@ -65,13 +66,7 @@ class ProductosController extends Controller
                     'results'=>null
                 ],400);
             }
-            if ( $req->cantidad <= 0){
-                return response()->json([
-                    'success' => false,
-                    'message' => 'La cantidad debe ser mayor a 0.',
-                    'results'=>null
-                ], 400);
-            }
+            
             if ($stockDisponible->cantidad <= 0 || $stockDisponible->cantidad < $req->cantidad) {
                 return response()->json([
                     'success' => false,
