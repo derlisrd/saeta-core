@@ -65,7 +65,13 @@ class ProductosController extends Controller
                     'results'=>null
                 ],400);
             }
-
+            if ( $req->cantidad <= 0){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La cantidad debe ser mayor a 0.',
+                    'results'=>null
+                ], 400);
+            }
             if ($stockDisponible->cantidad <= 0 || $stockDisponible->cantidad < $req->cantidad) {
                 return response()->json([
                     'success' => false,
