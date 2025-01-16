@@ -14,6 +14,7 @@ class ProductosController extends Controller
     {
         $validator = Validator::make($req->all(), [
             'deposito_id' => 'nullable|exists:depositos,id',
+            'cantidad' => 'numeric',
             'codigo' => 'required|exists:productos,codigo'
         ], [
             'codigo.exists' => 'El codigo de producto no existe',
@@ -65,7 +66,7 @@ class ProductosController extends Controller
                 ],400);
             }
 
-            if ($stockDisponible->cantidad <= 0) {
+            if ($stockDisponible->cantidad <= 0 || $stockDisponible->cantidad < $req->cantidad) {
                 return response()->json([
                     'success' => false,
                     'message' => 'El producto no tiene stock disponible.',
