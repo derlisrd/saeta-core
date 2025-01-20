@@ -27,4 +27,8 @@ class Factura extends Model
        'aplicar_impuestos',
        'estado'
     ];
+
+    public function items(){
+        return $this->hasMany(FacturaItem::class);
+    }
 }

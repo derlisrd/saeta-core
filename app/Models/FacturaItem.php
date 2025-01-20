@@ -11,6 +11,7 @@ class FacturaItem extends Model
     protected $table = 'facturas_items';
     protected $fillable = [
         'factura_id',
+        'pedido_id',
         'producto_id',
         'impuesto_id',
         'cantidad',
@@ -20,4 +21,8 @@ class FacturaItem extends Model
         'total_impuesto',
         'total'
     ];
+
+    public function factura(){
+        return $this->belongsTo(Factura::class);
+    }
 }
