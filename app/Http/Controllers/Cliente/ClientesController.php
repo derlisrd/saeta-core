@@ -10,8 +10,23 @@ use Illuminate\Support\Facades\Validator;
 class ClientesController extends Controller
 {
 
+    public function porDocumento($doc){
+        $cliente = Cliente::where('doc',$doc)->first();
+        if(!$cliente){
+            return response()->json([
+                'success' => false,
+                'results' => null,
+                'message' => 'Cliente no encontrado'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'results' => $cliente
+        ]);
+    }
+
     public function search($q){
-        
         if($q == ''){
             return response()->json([
                 'success' => false,
