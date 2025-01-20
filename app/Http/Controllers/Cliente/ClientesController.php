@@ -10,6 +10,27 @@ use Illuminate\Support\Facades\Validator;
 class ClientesController extends Controller
 {
 
+    public function search($q){
+        
+        if($q == ''){
+            return response()->json([
+                'success' => false,
+                'results' => [],
+                'message' => 'Debe ingresar un valor a buscar'
+            ], 400);
+        }
+
+        $clientes = Cliente::where('doc', 'like', '%'.$q.'%')
+            ->orWhere('nombres', 'like', '%'.$q.'%')
+            ->orWhere('apellidos', 'like', '%'.$q.'%')
+            ->get();
+        return response()->json([
+            'success' => true,
+            'results' => $clientes,
+            'message' => ''
+        ]);
+    }
+
     public function show($id){
         $cliente = Cliente::find($id);
         if(!$cliente){

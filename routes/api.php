@@ -75,6 +75,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
 
     Route::prefix('clientes')->group(function(){
         Route::get('/',[ClientesController::class,'index']);
+        Route::get('/search',[ClientesController::class,'search']);
         Route::post('/',[ClientesController::class,'store']);
     });
 
