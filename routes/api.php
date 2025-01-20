@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Cliente\ClientesController;
 use App\Http\Controllers\Config\EmpresaController;
 use App\Http\Controllers\Factura\FacturasController;
+use App\Http\Controllers\Factura\FormasPagosController;
 use App\Http\Controllers\Factura\ImpuestosController;
 use App\Http\Controllers\Pedido\PedidosController;
 use App\Http\Controllers\Permiso\PermisosController;
@@ -41,6 +42,12 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::put('/{id}',[ProductosController::class,'update']);
         Route::delete('/{id}',[ProductosController::class,'destroy']);
     });
+
+    Route::prefix('formas-pago')->group(function(){
+        Route::get('/',[FormasPagosController::class,'index']);
+        Route::post('/',[FormasPagosController::class,'store']);
+    });
+
 
     Route::prefix('medidas')->group(function(){
         Route::get('/',[MedidasController::class,'index']);
