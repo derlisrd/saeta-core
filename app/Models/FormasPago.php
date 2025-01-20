@@ -10,6 +10,7 @@ class FormasPago extends Model
     use HasFactory;
     protected $fillable = [
         'tipo',
-        'descripcion'
+        'descripcion',
+        'porcentaje_descuento'
     ];
 }
