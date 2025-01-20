@@ -14,7 +14,7 @@ class FormasPagosController extends Controller
         $results = FormasPago::all();
         return response()->json([
             'success' => true,
-            'resutls' => $results
+            'results' => $results
         ]);
     }
 
