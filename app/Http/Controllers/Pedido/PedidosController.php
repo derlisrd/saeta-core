@@ -35,7 +35,7 @@ class PedidosController extends Controller
     {
         $user = $req->user();
         $validatorPedido = Validator::make($req->all(), [
-            'cliente_id' => 'required|exists:clientes,id',
+            //'cliente_id' => 'required|exists:clientes,id',
             'formas_pago_id' => 'required|exists:formas_pagos,id',
             'aplicar_impuesto' => 'required|boolean',
             'tipo' => 'required',
@@ -51,6 +51,7 @@ class PedidosController extends Controller
             'items.*.descuento' => 'required|numeric|min:0',
             'items.*.total' => 'required|numeric|min:0',
         ]);
+
         if ($validatorPedido->fails()) {
             return response()->json(['success' => false, 'message' => $validatorPedido->errors()->first()], 400);
         }
@@ -58,7 +59,7 @@ class PedidosController extends Controller
 
         $datas = [
             'user_id' => $user->id,
-            'cliente_id' => $req->cliente_id,
+            'cliente_id' => $req->cliente_id === 0 ? 1 : $req->cliente_id,
             'formas_pago_id' => $req->formas_pago_id,
             'aplicar_impuesto' => $req->aplicar_impuesto,
             'tipo' => $req->tipo,
