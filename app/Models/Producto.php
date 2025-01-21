@@ -39,4 +39,9 @@ class Producto extends Model
     {
         return $this->hasMany(Stock::class, 'producto_id');
     }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'producto_id');
+    }
 }

@@ -183,6 +183,7 @@ class ProductosController extends Controller
             'stock' => 'nullable|array',
             'stock.*.deposito_id' => 'exists:depositos,id',
             'stock.*.cantidad' => 'numeric|min:0',
+            'images' => 'nullable|array',
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
@@ -219,6 +220,15 @@ class ProductosController extends Controller
                     'producto_id' => $producto->id,
                     'deposito_id' => $stock['deposito_id'],
                     'cantidad' => $stock['cantidad']
+                ]);
+            }
+        }
+        if (!empty($req->images)) {
+            foreach ($req->images as $image) {
+                $producto->images()->create([
+                    'producto_id' => $image->id,
+                    'miniatura'=>$image->miniatura,
+                    'url'=>$image->url
                 ]);
             }
         }
