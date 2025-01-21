@@ -32,4 +32,8 @@ class Pedido extends Model
     {
         return $this->belongsTo(FormasPago::class, 'formas_pago_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

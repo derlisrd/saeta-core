@@ -81,7 +81,7 @@ class PedidosController extends Controller
                 'total' => $item['total'],
             ]);
         }
-        $results = $pedido->load('items','cliente','formaPago');
+        $results = $pedido->load('items','cliente','formaPago','user');
         return response()->json(['success' => true, 'message' => 'Pedido creado con éxito', 'results' => $results], 201);
     }
 
