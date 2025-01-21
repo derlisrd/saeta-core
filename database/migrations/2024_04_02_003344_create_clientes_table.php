@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('telefono')->nullable();
             $table->string('email')->nullable();
             $table->date('nacimiento')->nullable();
-            $table->boolean('tipo')->default(0);
-            $table->boolean('extranjero')->default(0);
+            $table->boolean('tipo')->nullable()->default(0);
+            $table->boolean('extranjero')->nullable()->default(0);
             $table->timestamps();
         });
     }

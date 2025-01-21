@@ -75,7 +75,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
 
     Route::prefix('clientes')->group(function(){
         Route::get('/',[ClientesController::class,'index']);
-        Route::get('/{doc}',[ClientesController::class,'porDocumento']);
+        Route::get('/documento/{doc}',[ClientesController::class,'porDocumento']);
         Route::get('/search',[ClientesController::class,'search']);
         Route::post('/',[ClientesController::class,'store']);
     });

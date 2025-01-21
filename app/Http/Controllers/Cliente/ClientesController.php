@@ -26,7 +26,9 @@ class ClientesController extends Controller
         ]);
     }
 
-    public function search($q){
+    public function search(Request $req){
+
+        $q = $req->q;
         if($q == ''){
             return response()->json([
                 'success' => false,
@@ -127,7 +129,7 @@ class ClientesController extends Controller
             'telefono' => 'nullable',
             'email' => 'nullable|email',
             'nacimiento' => 'nullable|date',
-            'tipo' => 'in:0,1',
+            'tipo' => 'required|in:0,1',
             'extranjero' => 'in:0,1'
         ]);
 
