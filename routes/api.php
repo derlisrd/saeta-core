@@ -66,6 +66,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     });
     
     Route::prefix('facturas')->group(function(){
+        Route::post('/pedido/{id}',[FacturasController::class,'generarFacturaPedido']);
         Route::get('/',[FacturasController::class,'index']);
         Route::get('/{id}',[FacturasController::class,'find']);
         Route::post('/',[FacturasController::class,'store']);
