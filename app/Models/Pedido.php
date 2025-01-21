@@ -24,4 +24,12 @@ class Pedido extends Model
     {
         return $this->hasMany(PedidoItems::class, 'pedido_id');
     }
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'cliente_id');
+    }
+    public function formaPago()
+    {
+        return $this->belongsTo(FormasPago::class, 'formas_pago_id');
+    }
 }
