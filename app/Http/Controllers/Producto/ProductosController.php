@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Producto;
 
 use App\Http\Controllers\Controller;
 use App\Models\Producto;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -184,6 +185,7 @@ class ProductosController extends Controller
             'stock.*.deposito_id' => 'exists:depositos,id',
             'stock.*.cantidad' => 'numeric|min:0',
             'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
@@ -223,15 +225,19 @@ class ProductosController extends Controller
                 ]);
             }
         }
-        if (!empty($req->images)) {
-            foreach ($req->images as $image) {
+       
+        if ($req->hasFile('images')) {
+            $imageUploadService = new ImageUploadService();
+            foreach ($req->file('images') as $image) {
+                $url = $imageUploadService->subir($image, $producto->id); // Guarda en /public/{id}/time.jpg
                 $producto->images()->create([
-                    'producto_id' => $image->id,
-                    'miniatura'=>$image->miniatura,
-                    'url'=>$image->url
+                    'producto_id' => $producto->id,
+                    'miniatura' => $url, // Puedes procesar miniaturas si lo necesitas
+                    'url' => $url
                 ]);
             }
         }
+    
 
         return response()->json([
             'success' => true,
