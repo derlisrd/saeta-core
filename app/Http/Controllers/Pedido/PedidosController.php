@@ -67,7 +67,7 @@ class PedidosController extends Controller
             'porcentaje_descuento' => $req->porcentaje_descuento,
             'descuento' => $req->descuento,
             'total' => $req->total,
-            'estado'=>1
+            'estado'=> $req->entregado ? 3 : 1
         ];
        
 
