@@ -39,6 +39,7 @@ class PedidosController extends Controller
             'formas_pago_id' => 'required|exists:formas_pagos,id',
             'aplicar_impuesto' => 'required|boolean',
             'tipo' => 'required',
+            'entregado' => 'required|boolean',
             'porcentaje_descuento' => 'required|numeric|min:0',
             'descuento' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
@@ -81,6 +82,14 @@ class PedidosController extends Controller
                 'descuento' => $item['descuento'],
                 'total' => $item['total'],
             ]);
+        }
+        if($req->entregado){
+            $pedido->items->each(function($item){
+                $item->producto->stock()
+                ->where('deposito_id', $item->deposito_id)
+                ->first()
+                ?->decrement('cantidad', $item->cantidad);
+             });
         }
         $results = $pedido->load('items','cliente','formaPago','user');
         return response()->json(['success' => true, 'message' => 'Pedido creado con éxito', 'results' => $results], 201);

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pedido extends Model
 {
     use HasFactory;
+    const ESTADOS = ['generado', 'impreso', 'rendido', 'entregado', 'cancelado'];
     protected $fillable = [
         'cliente_id',
         'user_id',
