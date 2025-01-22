@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Producto extends Model
 {
     use HasFactory;
+    const TIPOS = ['producto', 'servicio'];
     protected $fillable = [
         'category_id',
         'medida_id',

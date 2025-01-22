@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pedido;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PedidosController extends Controller
@@ -33,6 +34,7 @@ class PedidosController extends Controller
 
     public function store(Request $req)
     {
+        
         $user = $req->user();
         $validatorPedido = Validator::make($req->all(), [
             //'cliente_id' => 'required|exists:clientes,id',
@@ -57,46 +59,53 @@ class PedidosController extends Controller
             return response()->json(['success' => false, 'message' => $validatorPedido->errors()->first()], 400);
         }
         
-
-        $datas = [
-            'user_id' => $user->id,
-            'cliente_id' => $req->cliente_id === 0 ? 1 : $req->cliente_id,
-            'formas_pago_id' => $req->formas_pago_id,
-            'aplicar_impuesto' => $req->aplicar_impuesto,
-            'tipo' => $req->tipo,
-            'porcentaje_descuento' => $req->porcentaje_descuento,
-            'descuento' => $req->descuento,
-            'total' => $req->total,
-            'estado'=> $req->entregado ? 3 : 1
-        ];
-       
-
-        $pedido = Pedido::create($datas);
-        foreach ($req->items as $item) {
-            $pedido->items()->create([
-                'producto_id' => $item['producto_id'],
-                'impuesto_id' => $item['impuesto_id'],
-                'deposito_id' => $item['deposito_id'],
-                'cantidad' => $item['cantidad'],
-                'precio' => $item['precio'],
-                'descuento' => $item['descuento'],
-                'total' => $item['total'],
-            ]);
+        DB::beginTransaction();
+        try {
+            $datas = [
+                'user_id' => $user->id,
+                'cliente_id' => $req->cliente_id === 0 ? 1 : $req->cliente_id,
+                'formas_pago_id' => $req->formas_pago_id,
+                'aplicar_impuesto' => $req->aplicar_impuesto,
+                'tipo' => $req->tipo,
+                'porcentaje_descuento' => $req->porcentaje_descuento,
+                'descuento' => $req->descuento,
+                'total' => $req->total,
+                'estado'=> $req->entregado ? 3 : 1
+            ];
+            
+    
+            $pedido = Pedido::create($datas);
+            foreach ($req->items as $item) {
+                $pedido->items()->create([
+                    'producto_id' => $item['producto_id'],
+                    'impuesto_id' => $item['impuesto_id'],
+                    'deposito_id' => $item['deposito_id'],
+                    'cantidad' => $item['cantidad'],
+                    'precio' => $item['precio'],
+                    'descuento' => $item['descuento'],
+                    'total' => $item['total'],
+                ]);
+            }
+            
+            if($req->entregado){
+                $pedido->items->each(function($item){
+                    if($item->producto->tipo == 1){
+                        $stock = $item->producto->stock()->where('deposito_id', $item->deposito_id)->first();
+                        if (!$stock || $stock->cantidad < $item->cantidad) {
+                            DB::rollBack();
+                            throw new \Exception("No se encontró stock suficiente para el producto {$item->producto_id} en el depósito {$item->deposito_id}");
+                        } 
+                        $stock->decrement('cantidad', $item->cantidad);
+                    }
+                 });
+            }
+            DB::commit();
+            $results = $pedido->load('items','cliente','formaPago','user');
+            return response()->json(['success' => true, 'message' => 'Pedido creado con éxito', 'results' => $results], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
-        if($req->entregado){
-            $pedido->items->each(function($item){
-
-                $stock = $item->producto->stock()->where('deposito_id', $item->deposito_id)->first();
-
-                if ($stock) {
-                    $stock->decrement('cantidad', $item->cantidad);
-                } else {
-                    throw new \Exception("No se encontró stock para el producto {$item->producto_id} en el depósito {$item->deposito_id}");
-                }
-             });
-        }
-        $results = $pedido->load('items','cliente','formaPago','user');
-        return response()->json(['success' => true, 'message' => 'Pedido creado con éxito', 'results' => $results], 201);
     }
 
 
