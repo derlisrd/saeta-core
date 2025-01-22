@@ -12,14 +12,18 @@ class RucParaguayService{
 
     public function infoRuc($ruc)
     {
-        $apikey = env('API_KEY_RUC_PARAGUAY');
-        $url = env('URL_API_RUC_PARAGUAY');
-        $url = $url . '/' .$ruc;
-        $res = Http::get($url);
-        $json = $res->json();
-        // aqui modelar
-        $data = (object) $json['data'];
-        return $this->dto($data);
+        try {
+            $apikey = env('API_KEY_RUC_PARAGUAY');
+            $url = env('URL_API_RUC_PARAGUAY');
+            $url = $url . '/' .$ruc;
+            $res = Http::get($url);
+            $json = $res->json();
+            // aqui modelar
+            $data = (object) $json['data'];
+            return $this->dto($data);
+        } catch (\Throwable $th) {
+            return null;
+        }
     }
 
 
