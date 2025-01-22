@@ -16,13 +16,15 @@ return new class extends Migration
             $table->string('doc')->unique();
             $table->string('nombres');
             $table->string('apellidos')->nullable();
-            $table->string('nombre_fantasia')->nullable();
+            $table->string('razon_social');
             $table->string('direccion')->nullable();
             $table->string('telefono')->nullable();
             $table->string('email')->nullable();
             $table->date('nacimiento')->nullable();
             $table->boolean('tipo')->nullable()->default(0);
             $table->boolean('extranjero')->nullable()->default(0);
+            $table->boolean('juridica')->nullable()->default(0);
+            $table->boolean('web')->nullable()->default(0);
             $table->timestamps();
         });
     }

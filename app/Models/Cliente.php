@@ -14,12 +14,14 @@ class Cliente extends Model
         'doc',
         'nombres',
         'apellidos',
-        'nombre_fantasia',
+        'razon_social',
         'direccion',
         'telefono',
         'email',
         'nacimiento',
         'tipo',
-        'extranjero'
+        'extranjero',
+        'juridica',
+        'web'
     ];
 }

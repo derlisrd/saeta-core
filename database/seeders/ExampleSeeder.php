@@ -45,7 +45,8 @@ class ExampleSeeder extends Seeder
         
         Cliente::create([
             'doc'=>'x',
-            'nombres'=>'Sin nombre'
+            'nombres'=>'Sin nombre',
+            'razon_social'=>'Sin nombre',
         ]);
         Medida::create([
             'descripcion'=>'Unidad',

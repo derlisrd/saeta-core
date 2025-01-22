@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cliente;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
+use App\Services\RucParaguayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,12 +13,19 @@ class ClientesController extends Controller
 
     public function porDocumento($doc){
         $cliente = Cliente::where('doc',$doc)->first();
+        
         if(!$cliente){
-            return response()->json([
-                'success' => false,
-                'results' => null,
-                'message' => 'Cliente no encontrado'
-            ], 404);
+            $rucService = new RucParaguayService();
+            $info = $rucService->infoRuc($doc);
+            if($info){
+                $cliente = Cliente::create([
+                    'doc' => $info['ruc'],
+                    'nombres' => $info['nombre'],
+                    'razon_social' => $info['nombre'],
+                    'tipo' => 1,
+                    'juridica' => $info['juridico']
+                ]);
+            }
         }
 
         return response()->json([
@@ -40,6 +48,7 @@ class ClientesController extends Controller
         $clientes = Cliente::where('doc', 'like', '%'.$q.'%')
             ->orWhere('nombres', 'like', '%'.$q.'%')
             ->orWhere('apellidos', 'like', '%'.$q.'%')
+            ->orWhere('razon_social', 'like', '%'.$q.'%')
             ->get();
         return response()->json([
             'success' => true,
@@ -85,11 +94,12 @@ class ClientesController extends Controller
             'doc' => 'required|unique:clientes,doc,'.$id,
             'nombres' => 'required',
             'apellidos' => 'nullable',
-            'nombre_fantasia' => 'nullable',
+            'razon_social' => 'nullable',
             'direccion' => 'nullable',
             'telefono' => 'nullable',
             'email' => 'nullable|email',
             'nacimiento' => 'nullable|date',
+            'juridica' => 'boolean',
             'tipo' => 'in:0,1',
             'extranjero' => 'in:0,1'
         ]);
@@ -99,18 +109,24 @@ class ClientesController extends Controller
                 'message' => $validator->errors()->first()
             ], 400);
         }
+        $razon_social = $req->razon_social;
+        if($razon_social == '' || $razon_social == null){
+            $razon_social = $req->nombre . ' ' . $req->apellidos;
+        }
 
         $cliente->update([
             'doc' => $req->doc,
             'nombres' => $req->nombres,
             'apellidos' => $req->apellidos,
-            'nombre_fantasia' => $req->nombre_fantasia,
+            'razon_social' => $razon_social,
             'direccion' => $req->direccion,
             'telefono' => $req->telefono,
             'email' => $req->email,
             'nacimiento' => $req->nacimiento,
             'tipo' => $req->tipo,
-            'extranjero' => $req->extranjero
+            'juridica' => $req->juridica,
+            'extranjero' => $req->extranjero,
+            'web'=>$req->web
         ]);
         return response()->json([
             'success' => true,
@@ -119,12 +135,12 @@ class ClientesController extends Controller
         ]);
     }
 
-    public function store(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function store(Request $req){
+        $validator = Validator::make($req->all(),[
             'doc' => 'required|unique:clientes',
             'nombres' => 'required',
             'apellidos' => 'nullable',
-            'nombre_fantasia' => 'nullable',
+            'razon_social' => 'nullable',
             'direccion' => 'nullable',
             'telefono' => 'nullable',
             'email' => 'nullable|email',
@@ -140,17 +156,23 @@ class ClientesController extends Controller
             ], 400);
         }
 
+        $razon_social = $req->razon_social;
+        if($razon_social == '' || $razon_social == null){
+            $razon_social = $req->nombre . ' ' . $req->apellidos;
+        }
+
+
         $cliente = Cliente::create([
-            'doc' => $request->doc,
-            'nombres' => $request->nombres,
-            'apellidos' => $request->apellidos,
-            'nombre_fantasia' => $request->nombre_fantasia,
-            'direccion' => $request->direccion,
-            'telefono' => $request->telefono,
-            'email' => $request->email,
-            'nacimiento' => $request->nacimiento,
-            'tipo' => $request->tipo,
-            'extranjero' => $request->extranjero
+            'doc' => $req->doc,
+            'nombres' => $req->nombres,
+            'apellidos' => $req->apellidos,
+            'razon_social' => $razon_social,
+            'direccion' => $req->direccion,
+            'telefono' => $req->telefono,
+            'email' => $req->email,
+            'nacimiento' => $req->nacimiento,
+            'tipo' => $req->tipo,
+            'extranjero' => $req->extranjero
         ]);
         return response()->json([
             'success' => true,
