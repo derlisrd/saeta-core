@@ -85,10 +85,14 @@ class PedidosController extends Controller
         }
         if($req->entregado){
             $pedido->items->each(function($item){
-                $item->producto->stock()
-                ->where('deposito_id', $item->deposito_id)
-                ->first()
-                ?->decrement('cantidad', $item->cantidad);
+
+                $stock = $item->producto->stock()->where('deposito_id', $item->deposito_id)->first();
+
+                if ($stock) {
+                    $stock->decrement('cantidad', $item->cantidad);
+                } else {
+                    throw new \Exception("No se encontró stock para el producto {$item->producto_id} en el depósito {$item->deposito_id}");
+                }
              });
         }
         $results = $pedido->load('items','cliente','formaPago','user');
