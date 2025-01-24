@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class ImageUploadService
 {
@@ -16,7 +17,8 @@ class ImageUploadService
 
     public function subir(UploadedFile $image, int $id, string $directoryBase = 'public'): string
     {
-        // Define la carpeta basada en el ID del producto
+        try {
+            // Define la carpeta basada en el ID del producto
         $directory = "{$directoryBase}/{$id}";
 
         // Nombre de la imagen con la marca de tiempo
@@ -27,5 +29,10 @@ class ImageUploadService
 
         // Retorna la URL pública de la imagen
         return asset('storage/' . $path);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            throw $th;
+            return null;
+        }
     }
 }

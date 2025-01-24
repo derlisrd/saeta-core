@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Producto;
 use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ProductosController extends Controller
@@ -215,7 +216,8 @@ class ProductosController extends Controller
             'cantidad_minima' => $req->cantidad_minima
         ];
 
-        $producto = Producto::create($datos);
+        try {
+            $producto = Producto::create($datos);
         if (!empty($req->stock)) {
             foreach ($req->stock as $stock) {
                 $producto->stock()->create([
@@ -244,6 +246,10 @@ class ProductosController extends Controller
             'message' => 'Producto creado',
             'results' => $producto
         ]);
+        } catch (\Throwable $th) {
+            throw $th;
+            Log::error($th);
+        }
     }
 
     public function update(Request $req, $id)
