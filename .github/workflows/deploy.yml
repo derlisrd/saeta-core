@@ -26,3 +26,4 @@ jobs:
           cd /var/www/html/saeta-core-dev/
           git pull origin dev
           php artisan migrate
+          php artisan cache:clear
