@@ -9,6 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 use App\Http\Middleware\XapiKeyTokenIsValid;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -17,15 +18,25 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',
         //commands: __DIR__.'/../routes/console.php',
         health: '/up',
-        //apiPrefix:'/api'
+        //apiPrefix:'/api',
+        then: function ($router) {
+            
+            Route::prefix('ecommerce')
+            ->middleware('x-api-key')
+            ->name('ecommerce')
+            ->group(base_path('routes/ecommerce.php'));
+        }
     )
     ->withMiddleware(function (Middleware $middleware) {
-        /* $middleware->alias([
-            'xapikey'=> \App\Http\Middleware\XapiKeyTokenIsValid::class
-        ]); */
-        $middleware->append([XapiKeyTokenIsValid::class]);
-       /*  $middleware->use([
-            XapiKeyTokenIsValid::class
+        $middleware->api(append: [
+            XapiKeyTokenIsValid::class,
+        ]);
+        $middleware->alias([
+            'x-api-key' => XapiKeyTokenIsValid::class
+        ]);
+        /* $middleware->append([XapiKeyTokenIsValid::class]);
+        $middleware->alias([
+            'x-api-key' => XapiKeyTokenIsValid::class
         ]); */
     })
     ->withExceptions(function (Exceptions $exceptions) {
