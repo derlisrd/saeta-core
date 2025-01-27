@@ -38,11 +38,18 @@ class AuthController extends Controller
                     'message' => "Usuario inactivo"
                 ], 401);
             }
+            $userData = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'username' => $user->username,
+                'cliente_id' => $user->cliente_id
+            ];
             if ($user) {
                 return response()->json([
                     'success' => true,
                     'results' => [
-                        'user' => $user,
+                        'user' => $userData,
                         'tokenRaw' => $token,
                         'token' => 'Bearer ' . $token,
                         'refresh_token' => JWTAuth::claims(['type' => 'refresh'])->fromUser($user),
@@ -99,17 +106,54 @@ class AuthController extends Controller
             'password' => bcrypt($req->password),
             'cliente_id' => $cliente->id,
             'tipo' => 0,
-            'activo' => 1
+            'activo' => 1,
+            'cambiar_password' => 1
         ]);
         $token = JWTAuth::fromUser($user);
+
+        $userData = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'username' => $user->username,
+            'cliente_id' => $user->cliente_id
+        ];
         return response()->json([
             'success' => true,
             'results' => [
-                'user' => $user,
+                'user' => $userData,
                 'tokenRaw' => $token,
                 'token' => 'Bearer ' . $token,
             ],
             'message' => 'User registered successfully'
         ], 201);
+    }
+
+    public function logout(Request $req){
+        auth('api')->logout();
+        return response()->json([
+            'success' => true,
+            'results' => null,
+            'message' => 'User logged out successfully'
+        ]);
+    }
+
+    public function me(Request $req){
+        $user = auth('api')->user();
+
+        $userData = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'username' => $user->username,
+            'cliente_id' => $user->cliente_id
+        ];
+
+        return response()->json([
+            'success' => true,
+            'results' => $userData,
+            'message' => 'User data'
+        ]);
+
     }
 }

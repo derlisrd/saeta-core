@@ -29,6 +29,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'empresa_id',
         'sucursal_id',
+        'cliente_id',
         'username',
         'email',
         'password',
@@ -63,6 +64,9 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    public function cliente(){
+        return $this->belongsTo(Cliente::class,'cliente_id');
+    }
 
     public function sucursal(){
         return $this->belongsTo(Sucursal::class,'sucursal_id');
