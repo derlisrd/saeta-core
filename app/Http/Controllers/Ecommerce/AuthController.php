@@ -62,6 +62,7 @@ class AuthController extends Controller
     }
 
 
+
     public function register(Request $req)
     {
         // Validar los datos de entrada
@@ -116,6 +117,7 @@ class AuthController extends Controller
             'message' => 'Registro exitoso'
         ]);
     }
+
 
     public function logout(Request $req){
         auth('api')->logout();
