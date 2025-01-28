@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
@@ -83,6 +84,10 @@ class AuthController extends Controller
                 'message' => $validator->errors()->first()
             ], 400);
         }
+        $ip = $req->ip();
+        $executed = RateLimiter::attempt($ip,$perTwoMinutes = 3,function() {});
+        if (!$executed)
+            return response()->json(['success'=>false, 'message'=>'Demasiadas peticiones. Espere 1 minuto.' ],500);
 
         // Crear un nuevo cliente
         $razonSocial = $req->nombres . ' ' . $req->apellidos;
