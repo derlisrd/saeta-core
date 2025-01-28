@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Ecommerce\AuthController;
 use App\Http\Controllers\Ecommerce\PedidosController;
+use App\Http\Controllers\Ecommerce\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Middleware\Authenticate;
 
@@ -19,11 +20,14 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     Route::prefix('pedidos')->group(function(){
         Route::get('/',[PedidosController::class,'misPedidos']);
         Route::get('/items/{id}',[PedidosController::class,'itemsDeMiPedido']);
-
+        Route::post('/',[PedidosController::class,'crearPedido']);
     });
 
+    Route::prefix('user')->group(function(){
+        Route::put('/',[UserController::class,'update']);
+        Route::get('me', [UserController::class, 'me']);
+    });
 
-    Route::get('me', [AuthController::class, 'me']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
 

@@ -9,6 +9,7 @@ class Pedido extends Model
 {
     use HasFactory;
     const ESTADOS = ['generado', 'impreso', 'rendido', 'entregado', 'cancelado'];
+    const TIPOS = ['mostrador', 'presupuesto', 'ecommerce'];
     protected $fillable = [
         'cliente_id',
         'user_id',

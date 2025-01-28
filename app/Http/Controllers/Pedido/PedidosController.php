@@ -12,17 +12,29 @@ use Illuminate\Support\Facades\Validator;
 class PedidosController extends Controller
 {
     public function index(Request $req) {
-        // $pedidos = Pedido::with('items')->get();
-        $today = date('Y-m-d');
-        $inicialHour = '00:00:00';
-        $finalHour = '23:59:59';
-        $start = $req->start_date ? $req->start_date : $today;
-        $end = $req->end_date ? $req->end_date : $today;
-        $start_date = Carbon::parse($start . ' ' . $inicialHour);
-        $end_date = Carbon::parse($end . ' ' . $finalHour);
+        // Validar las fechas de entrada
+        $validator = Validator::make($req->all(), [
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
 
-        $pedidos = Pedido::whereBetween('created_at', [$start_date, $end_date])->get();
-        return response()->json(['success' => true, 'results' => $pedidos], 200);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        }
+
+        // Utilizar Carbon para manejar las fechas
+        $today = Carbon::today();
+        $start = $req->start_date ? Carbon::parse($req->start_date)->startOfDay() : $today->startOfDay();
+        $end = $req->end_date ? Carbon::parse($req->end_date)->endOfDay() : $today->endOfDay();
+
+        // Obtener los pedidos en el rango de fechas
+        $pedidos = Pedido::whereBetween('created_at', [$start, $end])->get();
+
+        if ($pedidos->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'No se encontraron pedidos en el rango de fechas especificado'], 404);
+        }
+
+        return response()->json(['success' => true, 'results' => $pedidos]);
     }
 
     public function find($id) {
@@ -34,21 +46,20 @@ class PedidosController extends Controller
 
     public function store(Request $req)
     {
-        
-        $user = $req->user();
+        // Validar los datos de entrada
         $validatorPedido = Validator::make($req->all(), [
-            //'cliente_id' => 'required|exists:clientes,id',
-            'formas_pago_id' => 'required|exists:formas_pagos,id',
+            'cliente_id' => 'required|integer|exists:clientes,id',
+            'formas_pago_id' => 'required|integer|exists:formas_pago,id',
             'aplicar_impuesto' => 'required|boolean',
-            'tipo' => 'required',
-            'entregado' => 'required|boolean',
+            'tipo' => 'required|string',
             'porcentaje_descuento' => 'required|numeric|min:0',
             'descuento' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
-            'items'=>'required|array',
-            'items.*.producto_id' => 'required|exists:productos,id',
-            'items.*.impuesto_id' => 'required|exists:impuestos,id',
-            'items.*.deposito_id' => 'required|exists:depositos,id',
+            'entregado' => 'required|boolean',
+            'items' => 'required|array|min:1',
+            'items.*.producto_id' => 'required|integer|exists:productos,id',
+            'items.*.impuesto_id' => 'required|integer|exists:impuestos,id',
+            'items.*.deposito_id' => 'required|integer|exists:depositos,id',
             'items.*.cantidad' => 'required|numeric|min:1',
             'items.*.precio' => 'required|numeric|min:0',
             'items.*.descuento' => 'required|numeric|min:0',
@@ -58,9 +69,10 @@ class PedidosController extends Controller
         if ($validatorPedido->fails()) {
             return response()->json(['success' => false, 'message' => $validatorPedido->errors()->first()], 400);
         }
-        
+
         DB::beginTransaction();
         try {
+            $user = auth()->user();
             $datas = [
                 'user_id' => $user->id,
                 'cliente_id' => $req->cliente_id === 0 ? 1 : $req->cliente_id,
@@ -70,10 +82,9 @@ class PedidosController extends Controller
                 'porcentaje_descuento' => $req->porcentaje_descuento,
                 'descuento' => $req->descuento,
                 'total' => $req->total,
-                'estado'=> $req->entregado ? 3 : 1
+                'estado' => $req->entregado ? 3 : 1
             ];
-            
-    
+
             $pedido = Pedido::create($datas);
             foreach ($req->items as $item) {
                 $pedido->items()->create([
@@ -86,25 +97,12 @@ class PedidosController extends Controller
                     'total' => $item['total'],
                 ]);
             }
-            
-            if($req->entregado){
-                $pedido->items->each(function($item){
-                    if($item->producto->tipo == 1){
-                        $stock = $item->producto->stock()->where('deposito_id', $item->deposito_id)->first();
-                        if (!$stock || $stock->cantidad < $item->cantidad) {
-                            DB::rollBack();
-                            throw new \Exception("No se encontró stock suficiente para el producto {$item->producto_id} en el depósito {$item->deposito_id}");
-                        } 
-                        $stock->decrement('cantidad', $item->cantidad);
-                    }
-                 });
-            }
+
             DB::commit();
-            $results = $pedido->load('items','cliente','formaPago','user');
-            return response()->json(['success' => true, 'message' => 'Pedido creado con éxito', 'results' => $results], 201);
+            return response()->json(['success' => true, 'results' => $pedido], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            return response()->json(['success' => false, 'message' => 'Error al crear el pedido', 'error' => $e->getMessage()], 500);
         }
     }
 

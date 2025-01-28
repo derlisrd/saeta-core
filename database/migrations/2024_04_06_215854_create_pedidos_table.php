@@ -18,7 +18,8 @@ return new class extends Migration
             $table->bigInteger('sucursal_id')->unsigned()->nullable();
             $table->bigInteger('formas_pago_id')->unsigned()->nullable();
             $table->boolean('aplicar_impuesto')->default(1);
-            $table->tinyInteger('tipo')->default(1); // 1 venta normal 2 presupuesto
+            $table->string('obs')->nullable();
+            $table->tinyInteger('tipo')->default(1); // 1 venta normal 2 presupuesto 3 ecommerce
             $table->float('porcentaje_descuento')->default(0);
             $table->float('descuento')->default(0);
             $table->tinyInteger('estado')->default(1); // 1 pendiente 2 pagado 3 entregado 4 cancelado
