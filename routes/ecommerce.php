@@ -26,6 +26,10 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::post('/',[PedidosController::class,'crearPedido']);
     });
 
+    Route::prefix('cliente')->group(function(){
+        Route::post('/',[UserController::class,'store']);
+    });
+
     Route::prefix('user')->group(function(){
         Route::put('/',[UserController::class,'update']);
         Route::get('me', [UserController::class, 'me']);

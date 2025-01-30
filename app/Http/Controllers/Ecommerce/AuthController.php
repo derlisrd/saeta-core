@@ -70,9 +70,6 @@ class AuthController extends Controller
         $validator = Validator::make($req->all(), [
             'nombres' => 'required|string',
             'apellidos' => 'required|string',
-            'doc' => 'required|string|unique:clientes,doc',
-            'direccion' => 'nullable|string',
-            'telefono' => 'nullable|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
         ]);
@@ -91,23 +88,14 @@ class AuthController extends Controller
 
         // Crear un nuevo cliente
         $razonSocial = $req->nombres . ' ' . $req->apellidos;
-        $cliente = Cliente::create([
-            'doc' => $req->doc,
-            'nombres' => $req->nombres,
-            'apellidos' => $req->apellidos,
-            'razon_social' => $razonSocial,
-            'direccion' => $req->direccion,
-            'telefono' => $req->telefono,
-            'email' => $req->email,
-            'nacimiento' => $req->nacimiento,
-        ]);
+        
 
         // Crear un nuevo usuario asociado al cliente
         $user = User::create([
             'name' => $razonSocial,
             'email' => $req->email,
             'password' => Hash::make($req->password),
-            'cliente_id' => $cliente->id,
+            'cliente_id' => null
         ]);
 
         // Generar un token JWT para el nuevo usuario
