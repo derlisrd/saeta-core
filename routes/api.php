@@ -31,6 +31,9 @@ Route::middleware(Authenticate::using('api'))->group(function(){
    
     Route::prefix('/categorias')->group(function(){
         Route::get('/',[CategoriasController::class,'index']);
+        Route::post('/',[CategoriasController::class,'store']);
+        Route::put('/{id}',[CategoriasController::class,'update']);
+        Route::delete('/{id}',[CategoriasController::class,'destroy']);
     });
 
     Route::prefix('productos')->group(function(){
