@@ -19,9 +19,7 @@ class EmpresaController extends Controller
         ]);
     }
 
-    public function update(Request $request)
-    {
-
+    public function update(Request $request){
         $validator = Validator::make($request->all(), [
             'nombre' => 'required',
             'ruc' => 'required',
@@ -42,4 +40,5 @@ class EmpresaController extends Controller
             'message'=> 'Empresa actualizada correctamente'
         ]);
     }
+    
 }
