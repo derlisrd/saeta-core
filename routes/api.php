@@ -55,6 +55,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     Route::prefix('medidas')->group(function(){
         Route::get('/',[MedidasController::class,'index']);
         Route::post('/',[MedidasController::class,'store']);
+        Route::put('/{id}',[MedidasController::class,'update']);
     });
 
     Route::prefix('stock')->group(function(){
@@ -83,8 +84,10 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::get('/search',[ClientesController::class,'search']);
         Route::post('/',[ClientesController::class,'store']);
     });
+    Route::prefix('impuestos')->group(function(){
+        Route::get('/',[ImpuestosController::class,'index']);
+    });
 
-    Route::get('/impuestos',[ImpuestosController::class,'index']);
     
     Route::prefix('pedidos')->group(function(){
         Route::get('/',[PedidosController::class,'index']);

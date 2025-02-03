@@ -21,19 +21,48 @@ class MedidasController extends Controller
             'descripcion'=>'required',
             'abreviatura'=>'required'
         ]);
-        if($validator->fails()){
+        if($validator->fails())
             return response()->json([
                 'success'=>false,
                 'message'=>$validator->errors()->first()
             ],400);
-        }
+        
         $medida = Medida::create([
             'descripcion'=>$req->descripcion,
-        'abreviatura'=>$req->abreviatura
+            'abreviatura'=>$req->abreviatura
         ]);
         return response()->json([
             'success'=>true,
             'message'=>'Medida creada',
+            'results'=>$medida
+        ]);
+    }
+
+    public function update(Request $req, $id){
+        $validator = Validator::make($req->all(),[
+            'descripcion'=>'required',
+            'abreviatura'=>'required'
+        ]);
+        if($validator->fails())
+            return response()->json([
+                'success'=>false,
+                'message'=>$validator->errors()->first()
+            ],400);
+        
+        $medida = Medida::find($id);
+        if(!$medida)
+            return response()->json([
+                'success'=>false,
+                'message'=>'Medida no encontrada'
+            ],404);
+        
+        $medida->update([
+            'descripcion'=>$req->descripcion,
+            'abreviatura'=>$req->abreviatura
+        ]);
+        return response()->json([
+            'success'=>true,
+            'message'=>'Medida actualizada',
             'results'=>$medida
         ]);
     }
