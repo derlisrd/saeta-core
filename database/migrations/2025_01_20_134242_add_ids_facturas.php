@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('facturas', function (Blueprint $table) {
             $table->foreignId('pedido_id')->nullable()->constraint('pedidos')->after('id');
+            $table->foreignId('moneda_id')->nullable()->constraint('monedas')->after('sucursal_id');
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('facturas', function (Blueprint $table) {
             $table->dropColumn('pedido_id');
+            $table->dropColumn('moneda_id');
         });
     }
 };

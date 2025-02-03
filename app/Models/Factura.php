@@ -13,6 +13,7 @@ class Factura extends Model
        'empresa_id',
        'timbrado_id',
        'sucursal_id',
+       'moneda_id',
        'caja_id',
        'codido_control',
        'descripcion',

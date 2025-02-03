@@ -52,6 +52,7 @@ class PedidosController extends Controller
         $validatorPedido = Validator::make($req->all(), [
             //'cliente_id' => 'required|exists:clientes,id',
             'formas_pago_id' => 'required|exists:formas_pagos,id',
+            'moneda_id' => 'required|exists:monedas,id',
             'aplicar_impuesto' => 'required|boolean',
             'tipo' => 'required',
             'entregado' => 'required|boolean',
@@ -77,6 +78,7 @@ class PedidosController extends Controller
             $user = auth()->user();
             $datas = [
                 'user_id' => $user->id,
+                'moneda_id' => $req->moneda_id,
                 'cliente_id' => $req->cliente_id === 0 ? 1 : $req->cliente_id,
                 'formas_pago_id' => $req->formas_pago_id,
                 'aplicar_impuesto' => $req->aplicar_impuesto,

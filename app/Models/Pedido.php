@@ -14,6 +14,7 @@ class Pedido extends Model
         'cliente_id',
         'user_id',
         'formas_pago_id',
+        'moneda_id',
         'aplicar_impuesto',
         'tipo',
         'porcentaje_descuento',
@@ -37,5 +38,9 @@ class Pedido extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    public function moneda()
+    {
+        return $this->belongsTo(Moneda::class, 'moneda_id');
     }
 }

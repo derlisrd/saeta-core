@@ -9,6 +9,7 @@ use App\Models\Empresa;
 use App\Models\FormasPago;
 use App\Models\Impuesto;
 use App\Models\Medida;
+use App\Models\Moneda;
 use App\Models\Permiso;
 use App\Models\PermisosOtorgado;
 use App\Models\Producto;
@@ -94,6 +95,11 @@ class ExampleSeeder extends Seeder
             'user_id'=>1,
             'permiso_id'=>1,
             'otorgado'=>true
+        ]);
+        Moneda::create([
+            'nombre'=>'Guaraníes',
+            'simbolo'=>'Gs',
+            'default'=>true
         ]);
     }
 }
