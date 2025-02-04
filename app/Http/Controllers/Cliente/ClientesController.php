@@ -143,13 +143,13 @@ class ClientesController extends Controller
 
     public function store(Request $req){
         $validator = Validator::make($req->all(),[
-            'doc' => 'required|unique:clientes',
+            'doc' => 'required|unique:clientes,doc',
             'nombres' => 'required',
             'apellidos' => 'nullable',
             'razon_social' => 'nullable',
             'direccion' => 'nullable',
             'telefono' => 'nullable',
-            'email' => 'nullable|email',
+            'email' => 'nullable|email|unique:clientes,email',
             'nacimiento' => 'nullable|date',
             'tipo' => 'required|in:0,1',
             'extranjero' => 'in:0,1'
@@ -164,7 +164,7 @@ class ClientesController extends Controller
 
         $razon_social = $req->razon_social;
         if($razon_social == '' || $razon_social == null){
-            $razon_social = $req->nombre . ' ' . $req->apellidos;
+            $razon_social = $req->nombres . ' ' . $req->apellidos;
         }
 
 

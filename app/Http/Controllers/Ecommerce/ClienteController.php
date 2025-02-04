@@ -40,10 +40,10 @@ class ClienteController extends Controller
             'telefono' => $req->telefono,
             'email' => $req->email,
             'nacimiento' => $req->nacimiento,
+            'web' => 1
         ]);
 
         $user->cliente_id = $cliente->id;
         $user->save();
-
     }
 }
