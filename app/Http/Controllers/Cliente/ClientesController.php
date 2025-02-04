@@ -151,7 +151,7 @@ class ClientesController extends Controller
             'telefono' => 'nullable',
             'email' => 'nullable|email|unique:clientes,email',
             'nacimiento' => 'nullable|date',
-            'tipo' => 'required|in:0,1',
+            'tipo' => 'nullable|in:0,1',
             'extranjero' => 'in:0,1'
         ]);
 
