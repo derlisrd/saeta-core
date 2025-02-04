@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cliente;
 use App\Services\RucParaguayService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ClientesController extends Controller
@@ -16,7 +17,8 @@ class ClientesController extends Controller
         
         if(!$cliente){
             $rucService = new RucParaguayService();
-            $info = $rucService->infoRuc($doc);
+            $info = $rucService->infoRuc2($doc);
+            
             if($info){
                 $cliente = [
                     'doc' => $info['ruc'],
@@ -25,10 +27,10 @@ class ClientesController extends Controller
                     'tipo' => 1,
                     'juridica' => $info['juridico']
                 ];
-            }
+            } 
             return response()->json([
                 'success' => false,
-                'results' => $cliente,
+                'results' => $info,
             ]);
         }
 
