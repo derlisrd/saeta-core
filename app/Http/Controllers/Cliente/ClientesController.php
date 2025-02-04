@@ -18,14 +18,18 @@ class ClientesController extends Controller
             $rucService = new RucParaguayService();
             $info = $rucService->infoRuc($doc);
             if($info){
-                $cliente = Cliente::create([
+                $cliente = [
                     'doc' => $info['ruc'],
                     'nombres' => $info['nombre'],
                     'razon_social' => $info['nombre'],
                     'tipo' => 1,
                     'juridica' => $info['juridico']
-                ]);
+                ];
             }
+            return response()->json([
+                'success' => false,
+                'results' => $cliente,
+            ]);
         }
 
         return response()->json([
