@@ -6,6 +6,7 @@ use App\Http\Controllers\Config\EmpresaController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\FormasPagosController;
 use App\Http\Controllers\Factura\ImpuestosController;
+use App\Http\Controllers\Factura\MonedaController;
 use App\Http\Controllers\Pedido\PedidosController;
 use App\Http\Controllers\Permiso\PermisosController;
 use App\Http\Controllers\Producto\CategoriasController;
@@ -88,6 +89,11 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::get('/',[ImpuestosController::class,'index']);
     });
 
+    Route::prefix('monedas')->group(function(){
+        Route::get('/',[MonedaController::class,'index']);
+        Route::post('/',[MonedaController::class,'store']);
+        Route::put('/{id}',[MonedaController::class,'update']);
+    });
     
     Route::prefix('pedidos')->group(function(){
         Route::get('/',[PedidosController::class,'index']);
