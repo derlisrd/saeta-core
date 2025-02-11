@@ -61,7 +61,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
 
     Route::prefix('stock')->group(function(){
         Route::post('/',[StockController::class,'add']);
-        Route::pust('/corregir',[StockController::class,'corregir']);
+        Route::put('/corregir',[StockController::class,'corregir']);
     });
 
     Route::prefix('depositos')->group(function(){
