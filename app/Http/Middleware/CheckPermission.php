@@ -21,10 +21,7 @@ class CheckPermission
 
         // Verificar si el usuario está autenticado
         if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No autenticado.',
-            ], 401);
+            return $next($request);
         }
 
         // Permitir acceso total a super administradores

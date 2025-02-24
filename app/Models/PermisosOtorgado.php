@@ -21,8 +21,8 @@ class PermisosOtorgado extends Model
         'updated_at'
     ];
 
-    public function permiso()
-    {
+    public function permiso(){
         return $this->belongsTo(Permiso::class);
     }
+
 }

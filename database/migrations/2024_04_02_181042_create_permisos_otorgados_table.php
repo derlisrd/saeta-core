@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('permisos_otorgados', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('permiso_id');
-            $table->boolean('otorgado')->default(1);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('permiso_id')->constrained('permisos')->onDelete('cascade');
+            $table->boolean('otorgado')->default(true);
             $table->timestamps();
         });
     }

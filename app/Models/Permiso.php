@@ -13,4 +13,10 @@ class Permiso extends Model
         'descripcion'
     ];
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'permisos_otorgados')
+            ->withPivot('otorgado')
+            ->withTimestamps();
+    }
 }

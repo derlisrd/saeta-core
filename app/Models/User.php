@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject; 
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -24,7 +24,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    
+
     protected $fillable = [
         'name',
         'empresa_id',
@@ -64,17 +64,21 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-    public function cliente(){
-        return $this->belongsTo(Cliente::class,'cliente_id');
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
-    public function sucursal(){
-        return $this->belongsTo(Sucursal::class,'sucursal_id');
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
     public function permisos(){
-        return $this->hasMany(PermisosOtorgado::class,'user_id');
+        return $this->belongsToMany(Permiso::class, 'permisos_otorgados')
+            ->withPivot('otorgado')
+            ->withTimestamps();
     }
-   
+
     public function esSuperAdmin()
     {
         return $this->tipo === self::TIPO_SUPER_ADMIN;
