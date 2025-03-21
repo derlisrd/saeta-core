@@ -98,7 +98,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     
     Route::prefix('pedidos')->group(function(){
         Route::get('/',[PedidosController::class,'index']);
-        Route::get('/{id}',[PedidosController::class,'find']);
+        Route::get('/id/{id}',[PedidosController::class,'find']);
         Route::get('/rango-fecha',[PedidosController::class,'porRangoDeFechas']);
         Route::get('/del-dia',[PedidosController::class,'delDia']);
         Route::post('/',[PedidosController::class,'crearPedidoEnMostrador']);
