@@ -32,7 +32,7 @@ class Pedido extends Model
     }
     public function formasPagoPedido()
     {
-        return $this->belongsTo(FormasPagoPedido::class, 'pedido_id');
+        return $this->hasMany(FormasPagoPedido::class, 'pedido_id');
     }
     public function user()
     {
