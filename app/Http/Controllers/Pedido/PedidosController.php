@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Validator;
 
 class PedidosController extends Controller
 {
-    public function index(Request $req) {
+    public function index(Request $req)
+    {
         // Validar las fechas de entrada
         $validator = Validator::make($req->all(), [
             'start_date' => 'nullable|date',
@@ -24,13 +25,13 @@ class PedidosController extends Controller
         }
 
         // Utilizar Carbon para manejar las fechas
-  
+
         $startReq = $req->start_date ? Carbon::parse($req->start_date)->startOfDay() : Carbon::now()->startOfMonth();
         $endReq = $req->end_date ? Carbon::parse($req->end_date)->endOfDay() : Carbon::now()->endOfMonth();
 
         $start = $startReq->format('Y-m-d H:i:s');
         $end = $endReq->format('Y-m-d H:i:s');
-    
+
 
         // Obtener los pedidos en el rango de fechas
         $pedidos = Pedido::whereBetween('created_at', [$start, $end])->get();
@@ -39,35 +40,51 @@ class PedidosController extends Controller
         return response()->json(['success' => true, 'results' => $pedidos, 'fechas' => ['start' => $start, 'end' => $end]], 200);
     }
 
-    public function porRangoDeFechas(Request $req) {
+    public function porRangoDeFechas(Request $req)
+    {
         // Validar las fechas de entrada
         $validator = Validator::make($req->all(), [
             'desde' => 'required|format:Y-m-d',
             'hasta' => 'required|format:Y-m-d',
         ]);
-        if ($validator->fails()) 
+        if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
-        
-        $pedidos = Pedido::whereBetween('created_at',[
+
+        $pedidos = Pedido::whereBetween('created_at', [
             $req->desde,
             $req->hasta
         ])->get();
-        return response()->json(['success' => true, 'message'=>'', 'results' => $pedidos]);
+        return response()->json(['success' => true, 'message' => '', 'results' => $pedidos]);
     }
 
-    public function delDia() {
-        // Obtener la fecha actual
-        $fechaActual = Carbon::now()->format('Y-m-d H:i:s');
-        $desde = Carbon::parse($fechaActual)->startOfDay();
-        $hasta = Carbon::parse($fechaActual)->endOfDay();
-        $pedidos = Pedido::whereBetween('created_at',[
-            $desde,
-            $hasta
-        ])->get();
-        return response()->json(['success' => true, 'message'=>'', 'results' => $pedidos]);
+    public function delDia()
+    {
+        try {
+            // Usar today() es más simple que now()->startOfDay()
+            $desde = Carbon::today();
+            $hasta = Carbon::today()->endOfDay();
+
+            $pedidos = Pedido::whereBetween('created_at', [$desde, $hasta])
+                ->with(['cliente', 'items']) // Carga relaciones si las necesitas
+                ->orderBy('created_at', 'desc')  
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pedidos obtenidos correctamente',
+                'results' => $pedidos
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los pedidos: ' . $e->getMessage(),
+                'results' => []
+            ], 500);
+        }
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $pedido = Pedido::with('items')->find($id);
         if (!$pedido)
             return response()->json(['success' => false, 'message' => 'Pedido no encontrado'], 404);
@@ -87,7 +104,7 @@ class PedidosController extends Controller
             'porcentaje_descuento' => 'required|numeric|min:0',
             'descuento' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
-            'items'=>'required|array',
+            'items' => 'required|array',
             'items.*.producto_id' => 'required|exists:productos,id',
             'items.*.impuesto_id' => 'required|exists:impuestos,id',
             'items.*.deposito_id' => 'required|exists:depositos,id',
@@ -129,22 +146,21 @@ class PedidosController extends Controller
                     'total' => $item['total'],
                 ]);
             }
-            if($req->entregado){
-                $pedido->items->each(function($item){
-    
+            if ($req->entregado) {
+                $pedido->items->each(function ($item) {
+
                     $stock = $item->producto->stock()->where('deposito_id', $item->deposito_id)->first();
-    
+
                     if ($stock) {
                         $stock->decrement('cantidad', $item->cantidad);
                     } else {
                         throw new \Exception("No se encontró stock para el producto {$item->producto_id} en el depósito {$item->deposito_id}");
                     }
-                 });
+                });
             }
             DB::commit();
-            $results = $pedido->load('items','cliente','formaPago','user');
+            $results = $pedido->load('items', 'cliente', 'formaPago', 'user');
             return response()->json(['success' => true, 'message' => 'Pedido creado con éxito', 'results' => $results], 201);
-            
         } catch (\Exception $e) {
             DB::rollBack();
             Log::info($e->getMessage());
@@ -153,7 +169,8 @@ class PedidosController extends Controller
     }
 
 
-    public function cambiarEstado($id, Request $req) {
+    public function cambiarEstado($id, Request $req)
+    {
         $validator = Validator::make($req->all(), [
             'estado' => 'required|in:1,2,3,4,5'
         ]);
@@ -162,11 +179,11 @@ class PedidosController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
 
-        if($estado == 1){
+        if ($estado == 1) {
             return response()->json(['success' => false, 'message' => 'No se puede cambiar el estado a pendiente'], 400);
         }
 
-        
+
 
         $pedido = Pedido::find($id);
         if (!$pedido)
@@ -175,19 +192,18 @@ class PedidosController extends Controller
         $pedido->save();
         $pedido->load('items');
         $message = 'Pedido procesado con éxito.';
-        if($estado == 2){
+        if ($estado == 2) {
             $message = 'Pedido ha sido pagado.';
         }
-        if($estado == 3 && $pedido->tipo == 1 && $pedido->estado > 2){
-         $pedido->items->each(function($item){
-            $item->producto->stock->where('deposito_id',$item->deposito_id)->first()->update([
-                'cantidad'=>$item->producto->stock->where('deposito_id',$item->deposito_id)->first()->cantidad - $item->cantidad
-            ]);
-         });
-         $message = 'Pedido ha sido entregado.';   
+        if ($estado == 3 && $pedido->tipo == 1 && $pedido->estado > 2) {
+            $pedido->items->each(function ($item) {
+                $item->producto->stock->where('deposito_id', $item->deposito_id)->first()->update([
+                    'cantidad' => $item->producto->stock->where('deposito_id', $item->deposito_id)->first()->cantidad - $item->cantidad
+                ]);
+            });
+            $message = 'Pedido ha sido entregado.';
         }
 
         return response()->json(['success' => true, 'message' => $message, 'results' => $pedido]);
     }
-
 }
