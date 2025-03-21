@@ -65,7 +65,7 @@ class PedidosController extends Controller
             $hasta = Carbon::today()->endOfDay();
 
             $pedidos = Pedido::whereBetween('created_at', [$desde, $hasta])
-                ->with(['cliente', 'items']) // Carga relaciones si las necesitas
+                ->with(['cliente', 'items','user','formaPago']) // Carga relaciones si las necesitas
                 ->orderBy('created_at', 'desc')  
                 ->get();
 
