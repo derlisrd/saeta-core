@@ -39,6 +39,29 @@ class PedidosController extends Controller
         return response()->json(['success' => true, 'results' => $pedidos, 'fechas' => ['start' => $start, 'end' => $end]], 200);
     }
 
+    public function porRangoDeFechas(Request $req) {
+        // Validar las fechas de entrada
+        $validator = Validator::make($req->all(), [
+            'desde' => 'required|format:Y-m-d',
+            'hasta' => 'required|format:Y-m-d',
+        ]);
+        if ($validator->fails()) 
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        
+        $pedidos = Pedido::whereBetween('created_at',[
+            $req->desde,
+            $req->hasta
+        ])->get();
+        return response()->json(['success' => true, 'message'=>'', 'results' => $pedidos]);
+    }
+
+    public function delDia() {
+        // Obtener la fecha actual
+        $fechaActual = Carbon::now()->format('Y-m-d');
+        $pedidos = Pedido::whereDate('created_at', $fechaActual)->get();
+        return response()->json(['success' => true, 'message'=>'', 'results' => $pedidos]);
+    }
+
     public function find($id) {
         $pedido = Pedido::with('items')->find($id);
         if (!$pedido)

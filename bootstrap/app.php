@@ -25,10 +25,9 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::prefix('ecommerce')
             ->middleware('x-api-key')
             ->name('ecommerce')
-            ->group(base_path('routes/ecommerce.php'));
+            ->group(__DIR__ . '/../routes/ecommerce.php');
         }
-    )
-    ->withMiddleware(function (Middleware $middleware) {
+    )    ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(append: [
             XapiKeyTokenIsValid::class,
             //CheckPermission::class
