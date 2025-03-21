@@ -16,7 +16,6 @@ return new class extends Migration
             $table->bigInteger('cliente_id')->unsigned()->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->bigInteger('sucursal_id')->unsigned()->nullable();
-            $table->bigInteger('formas_pago_id')->unsigned()->nullable();
             $table->boolean('aplicar_impuesto')->default(1);
             $table->string('obs')->nullable();
             $table->tinyInteger('tipo')->default(1); // 1 venta normal 2 presupuesto 3 ecommerce
@@ -26,7 +25,6 @@ return new class extends Migration
             $table->float('total',20,2);
             $table->timestamps();
             $table->foreign('sucursal_id')->references('id')->on('sucursales');
-            $table->foreign('formas_pago_id')->references('id')->on('formas_pagos');
             $table->foreign('cliente_id')->references('id')->on('clientes');
         });
     }

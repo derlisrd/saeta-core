@@ -15,57 +15,22 @@ class PedidosController extends Controller
     public function index(Request $req)
     {
         // Validar las fechas de entrada
-        $validator = Validator::make($req->all(), [
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable||date',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
-        }
-
-        // Utilizar Carbon para manejar las fechas
-
-        $startReq = $req->start_date ? Carbon::parse($req->start_date)->startOfDay() : Carbon::now()->startOfMonth();
-        $endReq = $req->end_date ? Carbon::parse($req->end_date)->endOfDay() : Carbon::now()->endOfMonth();
-
-        $start = $startReq->format('Y-m-d H:i:s');
-        $end = $endReq->format('Y-m-d H:i:s');
-
-
-        // Obtener los pedidos en el rango de fechas
-        $pedidos = Pedido::whereBetween('created_at', [$start, $end])->get();
-
-
-        return response()->json(['success' => true, 'results' => $pedidos, 'fechas' => ['start' => $start, 'end' => $end]], 200);
-    }
-
-    public function porRangoDeFechas(Request $req)
-    {
         // Validar las fechas de entrada
         $validator = Validator::make($req->all(), [
-            'desde' => 'required|format:Y-m-d',
-            'hasta' => 'required|format:Y-m-d',
+            'desde' => 'format:Y-m-d',
+            'hasta' => 'format:Y-m-d',
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
 
-        $pedidos = Pedido::whereBetween('created_at', [
-            $req->desde,
-            $req->hasta
-        ])->get();
-        return response()->json(['success' => true, 'message' => '', 'results' => $pedidos]);
-    }
+        // Utilizar Carbon para manejar las fechas
 
-    public function delDia()
-    {
-        try {
-            // Usar today() es más simple que now()->startOfDay()
-            $desde = Carbon::today();
-            $hasta = Carbon::today()->endOfDay();
+        $desde = $req->desde ? Carbon::parse($req->desde) : Carbon::now();
+        $hasta = $req->hasta ? Carbon::parse($req->hasta) : Carbon::now();
 
-            $pedidos = Pedido::whereBetween('created_at', [$desde, $hasta])
-                ->with(['cliente', 'items','user','formaPago']) // Carga relaciones si las necesitas
+
+        $pedidos = Pedido::whereBetween('created_at', [$desde->startOfDay(), $hasta->endOfDay()])
+                ->with(['cliente', 'items','user','formasPagos']) // Carga relaciones si las necesitas
                 ->orderBy('created_at', 'desc')  
                 ->get();
 
@@ -74,14 +39,14 @@ class PedidosController extends Controller
                 'message' => 'Pedidos obtenidos correctamente',
                 'results' => $pedidos
             ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al obtener los pedidos: ' . $e->getMessage(),
-                'results' => []
-            ], 500);
-        }
+
+
+        return response()->json(['success' => true, 'results' => $pedidos, 'fechas' => ['start' => $start, 'end' => $end]], 200);
     }
+
+    
+
+
 
     public function find($id)
     {
@@ -96,7 +61,10 @@ class PedidosController extends Controller
         // Validar los datos de entrada
         $validatorPedido = Validator::make($req->all(), [
             //'cliente_id' => 'required|exists:clientes,id',
-            'formas_pago_id' => 'required|exists:formas_pagos,id',
+            'formas_pagos' => 'required|array',
+            'formas_pagos.*.id' => 'required|exists:formas_pagos,id',
+            'formas_pagos.*.monto' => 'required|numeric|min:0',
+            'formas_pagos.*.abreviatura' => 'required|string',
             'moneda_id' => 'required|exists:monedas,id',
             'aplicar_impuesto' => 'required|boolean',
             'tipo' => 'required',
@@ -125,7 +93,6 @@ class PedidosController extends Controller
                 'user_id' => $user->id,
                 'moneda_id' => $req->moneda_id,
                 'cliente_id' => $req->cliente_id === 0 ? 1 : $req->cliente_id,
-                'formas_pago_id' => $req->formas_pago_id,
                 'aplicar_impuesto' => $req->aplicar_impuesto,
                 'tipo' => $req->tipo,
                 'porcentaje_descuento' => $req->porcentaje_descuento,
@@ -146,6 +113,13 @@ class PedidosController extends Controller
                     'total' => $item['total'],
                 ]);
             }
+            foreach ($req->formas_pagos as $formaPago) {
+                $pedido->formasPagoPedido()->create([
+                    'forma_pago_id' => $formaPago['id'],
+                    'monto' => $formaPago['monto'],
+                    'abreviatura' => $formaPago['abreviatura'],
+                ]);
+            }
             if ($req->entregado) {
                 $pedido->items->each(function ($item) {
 
@@ -159,7 +133,7 @@ class PedidosController extends Controller
                 });
             }
             DB::commit();
-            $results = $pedido->load('items', 'cliente', 'formaPago', 'user');
+            $results = $pedido->load('items', 'cliente', 'formasPagoPedido', 'user');
             return response()->json(['success' => true, 'message' => 'Pedido creado con éxito', 'results' => $results], 201);
         } catch (\Exception $e) {
             DB::rollBack();

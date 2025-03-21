@@ -13,7 +13,6 @@ class Pedido extends Model
     protected $fillable = [
         'cliente_id',
         'user_id',
-        'formas_pago_id',
         'moneda_id',
         'aplicar_impuesto',
         'tipo',
@@ -31,9 +30,9 @@ class Pedido extends Model
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
-    public function formaPago()
+    public function formasPagoPedido()
     {
-        return $this->belongsTo(FormasPago::class, 'formas_pago_id');
+        return $this->belongsTo(FormasPagoPedido::class, 'pedido_id');
     }
     public function user()
     {
