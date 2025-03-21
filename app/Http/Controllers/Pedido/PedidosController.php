@@ -57,8 +57,13 @@ class PedidosController extends Controller
 
     public function delDia() {
         // Obtener la fecha actual
-        $fechaActual = Carbon::now()->format('Y-m-d');
-        $pedidos = Pedido::whereDate('created_at', $fechaActual)->get();
+        $fechaActual = Carbon::now()->format('Y-m-d H:i:s');
+        $desde = Carbon::parse($fechaActual)->startOfDay();
+        $hasta = Carbon::parse($fechaActual)->endOfDay();
+        $pedidos = Pedido::whereBetween('created_at',[
+            $desde,
+            $hasta
+        ])->get();
         return response()->json(['success' => true, 'message'=>'', 'results' => $pedidos]);
     }
 
