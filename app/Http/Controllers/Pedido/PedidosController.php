@@ -29,24 +29,22 @@ class PedidosController extends Controller
         $hasta = $req->hasta ? Carbon::parse($req->hasta) : Carbon::now();
 
 
-        /* $pedidos = Pedido::whereBetween('created_at', [$desde->startOfDay(), $hasta->endOfDay()])
-                ->with(['cliente',
-                'productos',
-                'user','formasPagoPedido']) 
-                ->orderBy('created_at', 'desc')  
-                ->get(); */
-        $pedidos = Pedido::whereBetween('pedidos.created_at', [$desde->startOfDay(), $hasta->endOfDay()])
-            ->with(['cliente', 'user', 'formasPagoPedido'])
-            ->join('pedidos_items as items', 'pedidos.id', '=', 'items.pedido_id')
-            ->join('productos', 'items.producto_id', '=', 'productos.id')
-            ->select(
-                'pedidos.*',
-                'items.id as item_id',
-                'items.cantidad as cantidad_comprada',
-                'productos.nombre as nombre_producto'
-            )
-            ->orderBy('pedidos.created_at', 'desc')
-            ->get();
+        $pedidos = Pedido::whereBetween('created_at', [$desde->startOfDay(), $hasta->endOfDay()])
+        ->with([
+            'cliente', 
+            'user',
+            'formasPagoPedido',
+            'items' => function($query) {
+                $query->select(
+                    'pedidos_items.*',  // Todos los campos del item
+                    'productos.nombre as nombre_producto',
+                    'productos.codigo as codigo_producto',
+                )
+                ->join('productos', 'pedidos_items.producto_id', '=', 'productos.id');
+            }
+        ])
+        ->orderBy('created_at', 'desc')  
+        ->get();
 
         return response()->json([
             'success' => true,
