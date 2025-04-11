@@ -26,6 +26,17 @@ class Pedido extends Model
     {
         return $this->hasMany(PedidoItems::class, 'pedido_id');
     }
+    public function productos()
+    {
+        return $this->hasManyThrough(
+            Producto::class,  // Modelo destino
+            PedidoItems::class,      // Modelo intermedio
+            'pedido_id',      // Clave foránea en la tabla intermedia (items) que apunta a pedidos
+            'id',             // Clave primaria en la tabla destino (productos)
+            'id',             // Clave primaria en la tabla origen (pedidos)
+            'producto_id'     // Clave foránea en la tabla intermedia (items) que apunta a productos
+        );
+    }
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
