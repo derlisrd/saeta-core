@@ -30,7 +30,7 @@ class PedidosController extends Controller
 
 
         $pedidos = Pedido::whereBetween('created_at', [$desde->startOfDay(), $hasta->endOfDay()])
-                ->with(['cliente', 'items','user','formasPagoPedido']) // Carga relaciones si las necesitas
+                ->with(['cliente', 'items.producto','user','formasPagoPedido']) // Carga relaciones si las necesitas
                 ->orderBy('created_at', 'desc')  
                 ->get();
 
