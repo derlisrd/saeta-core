@@ -29,6 +29,19 @@ class PedidoItems extends Model
     {
         return $this->belongsTo(Producto::class, 'producto_id');
     }
+
+    public function getDetallesProductoAttribute()
+{
+    if ($this->producto) {
+        return [
+            'id' => $this->producto->id,
+            'nombre' => $this->producto->nombre,
+            'codigo' => $this->producto->codigo,
+        ];
+    }
+    return null;
+}
+
     public function impuesto()
     {
         return $this->belongsTo(Impuesto::class, 'impuesto_id');
