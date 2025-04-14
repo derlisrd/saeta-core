@@ -30,21 +30,34 @@ class PedidosController extends Controller
 
 
         $pedidos = Pedido::whereBetween('pedidos.created_at', [$desde->startOfDay(), $hasta->endOfDay()])
-        ->with([
-            'formasPagoPedido',
-            'items' => function($query) {
-                $query->select(
-                    'pedidos_items.*',  // Todos los campos del item
-                    'productos.nombre as nombre_producto',
-                    'productos.codigo as codigo_producto',
-                )
-                ->join('productos', 'pedidos_items.producto_id', '=', 'productos.id');
-            }
-        ])
-        ->join('clientes','pedidos.cliente_id', '=', 'clientes.id')
-        ->select('pedidos.*','clientes.razon_social')
-        ->orderBy('pedidos.created_at', 'desc')  
-        ->get();
+            ->with([
+                'formasPagoPedido',
+                'items' => function ($query) {
+                    $query->select(
+                        'pedidos_items.cantidad', 
+                        'pedidos_items.precio',
+                        'pedidos_items.id',
+                        'pedidos_items.impuesto_id',
+                        'pedidos_items.total',
+                        'productos.nombre as nombre_producto',
+                        'productos.codigo as codigo_producto',
+                    )
+                        ->join('productos', 'pedidos_items.producto_id', '=', 'productos.id');
+                }
+            ])
+            ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
+            ->select(
+                'pedidos.total',
+                'pedidos.id',
+                'pedidos.estado',
+                'pedidos.tipo',
+                'pedidos.created_at',
+                'pedidos.descuento',
+                'clientes.razon_social',
+                'clientes.doc'
+            )
+            ->orderBy('pedidos.created_at', 'desc')
+            ->get();
 
         return response()->json([
             'success' => true,
