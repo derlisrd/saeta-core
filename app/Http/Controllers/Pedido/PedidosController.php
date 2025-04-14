@@ -41,7 +41,14 @@ class PedidosController extends Controller
                 ->join('productos', 'pedidos_items.producto_id', '=', 'productos.id');
             }
         ])
-        ->load('cliente', 'user')
+        ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
+        ->join('users', 'pedidos.user_id', '=', 'users.id')
+        ->select(
+            'pedidos.*',
+            'users.name as vendedor',
+            'clientes.nombre as nombre_cliente',
+            'clientes.telefono as telefono_cliente',
+            )
         ->orderBy('created_at', 'desc')  
         ->get();
 
