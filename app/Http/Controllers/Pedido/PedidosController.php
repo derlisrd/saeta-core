@@ -42,10 +42,8 @@ class PedidosController extends Controller
             }
         ])
         ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
-        ->join('users', 'pedidos.user_id', '=', 'users.id')
         ->select(
             'pedidos.*',
-            'users.name as vendedor',
             'clientes.doc',
             'clientes.extranjero',
             'clientes.razon_social',
