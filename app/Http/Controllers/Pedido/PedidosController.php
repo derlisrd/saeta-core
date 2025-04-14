@@ -29,7 +29,7 @@ class PedidosController extends Controller
         $hasta = $req->hasta ? Carbon::parse($req->hasta) : Carbon::now();
 
 
-        $pedidos = Pedido::whereBetween('created_at', [$desde->startOfDay(), $hasta->endOfDay()])
+        $pedidos = Pedido::whereBetween('pedidos.created_at', [$desde->startOfDay(), $hasta->endOfDay()])
         ->with([
             'formasPagoPedido',
             'items' => function($query) {
