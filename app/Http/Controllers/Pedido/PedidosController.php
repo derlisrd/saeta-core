@@ -31,8 +31,6 @@ class PedidosController extends Controller
 
         $pedidos = Pedido::whereBetween('created_at', [$desde->startOfDay(), $hasta->endOfDay()])
         ->with([
-            'cliente', 
-            'user',
             'formasPagoPedido',
             'items' => function($query) {
                 $query->select(
@@ -43,6 +41,7 @@ class PedidosController extends Controller
                 ->join('productos', 'pedidos_items.producto_id', '=', 'productos.id');
             }
         ])
+        ->load('cliente', 'user')
         ->orderBy('created_at', 'desc')  
         ->get();
 
