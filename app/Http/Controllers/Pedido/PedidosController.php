@@ -41,8 +41,9 @@ class PedidosController extends Controller
                 ->join('productos', 'pedidos_items.producto_id', '=', 'productos.id');
             }
         ])
-        
-        ->orderBy('created_at', 'desc')  
+        ->join('clientes','pedidos.cliente_id', '=', 'clientes.id')
+        ->select('pedidos.*','clientes.razon_social')
+        ->orderBy('pedidos.created_at', 'desc')  
         ->get();
 
         return response()->json([
