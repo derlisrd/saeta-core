@@ -46,8 +46,10 @@ class PedidosController extends Controller
         ->select(
             'pedidos.*',
             'users.name as vendedor',
-            'clientes.nombre as nombre_cliente',
-            'clientes.telefono as telefono_cliente',
+            'clientes.doc',
+            'clientes.extranjero',
+            'clientes.razon_social',
+            'clientes.email',
             )
         ->orderBy('created_at', 'desc')  
         ->get();
