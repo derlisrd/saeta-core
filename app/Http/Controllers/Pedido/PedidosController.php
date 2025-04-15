@@ -17,8 +17,8 @@ class PedidosController extends Controller
         // Validar las fechas de entrada
         // Validar las fechas de entrada
         $validator = Validator::make($req->all(), [
-            'desde' => 'format:Y-m-d',
-            'hasta' => 'format:Y-m-d',
+            'desde' => 'nullable|format:Y-m-d',
+            'hasta' => 'nullable|format:Y-m-d',
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
