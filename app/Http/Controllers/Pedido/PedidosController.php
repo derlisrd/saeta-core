@@ -33,16 +33,18 @@ class PedidosController extends Controller
             ->with([
                 'formasPagoPedido',
                 'items' => function ($query) {
-                    $query->select(
-                        'pedidos_items.cantidad', 
-                        'pedidos_items.precio',
-                        'pedidos_items.id',
-                        'pedidos_items.impuesto_id',
-                        'pedidos_items.total',
-                        'productos.nombre as nombre_producto',
-                        'productos.codigo as codigo_producto',
-                    )
-                    ->join('productos', 'pedidos_items.producto_id', '=', 'productos.id');
+                    $query->with(['producto' => function ($q) {
+                        $q->select('id', 'nombre', 'codigo');
+                    }])
+                        ->select(
+                            'pedidos_items.id',
+                            'pedidos_items.pedido_id', 
+                            'pedidos_items.producto_id',
+                            'pedidos_items.cantidad',
+                            'pedidos_items.precio',
+                            'pedidos_items.impuesto_id',
+                            'pedidos_items.total'
+                        );
                 }
             ])
             ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
@@ -54,8 +56,7 @@ class PedidosController extends Controller
                 'pedidos.created_at',
                 'pedidos.descuento',
                 'clientes.razon_social',
-                'clientes.doc',
-                'pedidos.items'
+                'clientes.doc'
             )
             ->orderBy('pedidos.created_at', 'desc')
             ->get();
@@ -65,9 +66,6 @@ class PedidosController extends Controller
             'message' => 'Pedidos obtenidos correctamente',
             'results' => $pedidos
         ]);
-
-
-        return response()->json(['success' => true, 'results' => $pedidos, 'fechas' => ['start' => $start, 'end' => $end]], 200);
     }
 
 
