@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class PedidoItems extends Model
 {
     use HasFactory;
-    protected $table ='pedidos_items';
-    protected $fillable= [
+    protected $table = 'pedidos_items';
+    protected $fillable = [
         'pedido_id',
         'producto_id',
         'deposito_id',
@@ -31,16 +31,16 @@ class PedidoItems extends Model
     }
 
     public function getDetallesProductoAttribute()
-{
-    if ($this->producto) {
-        return [
-            'id' => $this->producto->id,
-            'nombre' => $this->producto->nombre,
-            'codigo' => $this->producto->codigo,
-        ];
+    {
+        if ($this->producto) {
+            return [
+                'id' => $this->producto->id,
+                'nombre' => $this->producto->nombre,
+                'codigo' => $this->producto->codigo,
+            ];
+        }
+        return null;
     }
-    return null;
-}
 
     public function impuesto()
     {

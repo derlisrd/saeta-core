@@ -32,7 +32,8 @@ class PedidosController extends Controller
         $pedidos = Pedido::whereBetween('pedidos.created_at', [$desde->startOfDay(), $hasta->endOfDay()])
             ->with([
                 'formasPagoPedido',
-                'items.producto'
+                'items.producto',
+                'items.impuesto',
             ])
             ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
             ->select(
@@ -61,7 +62,9 @@ class PedidosController extends Controller
                     'codigo' => $item->producto->codigo,
                     'cantidad' => $item->cantidad,
                     'precio' => $item->precio,
-                    'impuesto' => $item->impuesto_id
+                    'impuesto_id' => $item->impuesto_id,
+                    'impuesto_descripcion' => $item->impuesto->descripcion,
+                    'impuesto_valor' => $item->impuesto->valor,
                 ];
             });
 
