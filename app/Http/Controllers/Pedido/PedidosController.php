@@ -42,7 +42,7 @@ class PedidosController extends Controller
                         'productos.nombre as nombre_producto',
                         'productos.codigo as codigo_producto',
                     )
-                        ->join('productos', 'pedidos_items.producto_id', '=', 'productos.id');
+                    ->join('productos', 'pedidos_items.producto_id', '=', 'productos.id');
                 }
             ])
             ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
@@ -54,7 +54,8 @@ class PedidosController extends Controller
                 'pedidos.created_at',
                 'pedidos.descuento',
                 'clientes.razon_social',
-                'clientes.doc'
+                'clientes.doc',
+                'pedidos.items'
             )
             ->orderBy('pedidos.created_at', 'desc')
             ->get();
