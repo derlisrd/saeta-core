@@ -32,7 +32,7 @@ class PedidosController extends Controller
         $pedidos = Pedido::whereBetween('pedidos.created_at', [$desde->startOfDay(), $hasta->endOfDay()])
             ->with([
                 'formasPagoPedido',
-                'items.producto:id,codigo,nombre'
+                'items.producto'
             ])
             ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
             ->select(
@@ -48,10 +48,29 @@ class PedidosController extends Controller
             ->orderBy('pedidos.created_at', 'desc')
             ->get();
 
+        // Luego, transforma los datos para el JSON de respuesta
+        $pedidosFormateados = $pedidos->map(function ($pedido) {
+            // Mantén los datos originales del pedido
+            $resultado = $pedido->toArray();
+
+            // Reformatea los items
+            $resultado['items'] = $pedido->items->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'nombre' => $item->producto->nombre,
+                    'codigo' => $item->producto->codigo,
+                    'cantidad' => $item->cantidad,
+                    'precio' => $item->precio,
+                    'impuesto' => $item->impuesto_id
+                ];
+            });
+
+            return $resultado;
+        });
         return response()->json([
             'success' => true,
             'message' => 'Pedidos obtenidos correctamente',
-            'results' => $pedidos
+            'results' => $pedidosFormateados
         ]);
     }
 
