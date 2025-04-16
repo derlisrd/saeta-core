@@ -96,10 +96,8 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::post('/',[MonedaController::class,'store']);
         Route::put('/{id}',[MonedaController::class,'update']);
     });
-    Route::prefix('parametros')->group(function(){
-        Route::get('/',[ParametrosController::class,'index']);
-        Route::get('/find',[ParametrosController::class,'show']);
-        Route::put('/',[ParametrosController::class,'update']);
+    Route::prefix('impresoras')->group(function(){
+        
     });
 
     

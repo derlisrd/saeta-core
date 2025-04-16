@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('parametros', function (Blueprint $table) {
+        Schema::create('impresoras', function (Blueprint $table) {
             $table->id();
-            $table->string('clave')->unique();
-            $table->string('nombre')->nullable();
-            $table->text('valor');
-            $table->boolean('default')->default(false);
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursales');
+            $table->string('nombre');
+            $table->integer('mm');
+            $table->integer('dpi')->nullable();
+            $table->boolean('activo')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('parametros');
+        Schema::dropIfExists('impresoras');
     }
 };
