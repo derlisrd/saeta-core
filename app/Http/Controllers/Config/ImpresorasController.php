@@ -19,7 +19,7 @@ class ImpresorasController extends Controller
 
     public function store(Request $req){
         $validator = Validator::make($req->all(),[
-            'sucursal_id',
+            'sucursal_id'=>'required',
             'nombre',
             'modelo',
             'mm',
@@ -41,6 +41,7 @@ class ImpresorasController extends Controller
             'success'=>true,
             'results'=>$impresora
         ]);
-        
     }
+
+
 }
