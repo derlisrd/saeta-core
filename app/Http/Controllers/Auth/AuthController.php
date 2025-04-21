@@ -47,7 +47,7 @@ class AuthController extends Controller
                     //$token = $user->createToken('auth_token')->plainTextToken;
                     $user->sucursal;
                     $empresa = Empresa::find($user->sucursal->empresa_id);
-                    $impresoras = $user->sucursal->impresoras;
+                    $impresoras = $user->sucursal->impresoras->sortByDesc('activo');
                     return response()->json([
                         'success' => true,
                         'results' => [
