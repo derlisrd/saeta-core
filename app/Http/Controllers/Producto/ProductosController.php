@@ -151,20 +151,16 @@ class ProductosController extends Controller
         }
     }
 
-    public function find($id)
-    {
-        $results = Producto::find($id);
-        if (!$results) {
-            return response()->json([
-                'success' => false,
-                'results' => null,
-                'message' => 'Producto no existe'
-            ], 404);
-        }
+    public function search(Request $request){
+        $query = Producto::query();
+        $query->where('nombre', 'like', '%' . $request->q . '%');
+        $query->orWhere('codigo', 'like', '%' . $request->q . '%');
+        
+
+        $results = $query->get();
         return response()->json([
             'success' => true,
-            'results' => $results,
-            'message' => ''
+            'results' => $results
         ]);
     }
 
