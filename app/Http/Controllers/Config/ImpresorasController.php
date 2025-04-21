@@ -25,7 +25,6 @@ class ImpresorasController extends Controller
         $validator = Validator::make($req->all(), [
             'sucursal_id' => 'required',
             'nombre' => 'required',
-            'modelo' => 'nullable',
             'mm' => 'required|numeric',
             'activo' => 'required|boolean'
         ]);
@@ -36,9 +35,8 @@ class ImpresorasController extends Controller
         $impresora = Impresora::create([
             'sucursal_id' => $req->sucursal_id,
             'nombre' => $req->nombre,
-            'modelo' => $req->modelo,
             'mm' => $req->mm,
-            'activo' => $req->activo
+            'activo' => $req->activo ?? false
         ]);
 
         return response()->json([
