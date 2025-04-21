@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ImpresorasController extends Controller
 {
-    public function index()
+    public function index(Request $req)
     {
-        $impresoras = Impresora::all();
+        $user = $req->user();
+        $sucursal_id = $user->sucursal_id;
+        $impresoras = Impresora::where('sucursal_id', $sucursal_id)->get();
         return response()->json([
             'success' => true,
             'results' => $impresoras

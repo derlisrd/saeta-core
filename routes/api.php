@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Cliente\ClientesController;
 use App\Http\Controllers\Config\EmpresaController;
+use App\Http\Controllers\Config\ImpresorasController;
 use App\Http\Controllers\Config\ParametrosController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\FormasPagosController;
@@ -97,7 +98,9 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::put('/{id}',[MonedaController::class,'update']);
     });
     Route::prefix('impresoras')->group(function(){
-        
+        Route::get('/',[ImpresorasController::class,'index']);
+        Route::post('/',[ImpresorasController::class,'store']);
+        Route::put('/{id}',[ImpresorasController::class,'update']);
     });
 
     
