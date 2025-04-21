@@ -17,4 +17,8 @@ class Sucursal extends Model
         'telefono',
         'numero'
     ];
+
+    public function impresoras(){
+        return $this->hasMany(Impresora::class);
+    }
 }

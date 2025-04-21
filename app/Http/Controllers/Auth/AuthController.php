@@ -47,7 +47,7 @@ class AuthController extends Controller
                     //$token = $user->createToken('auth_token')->plainTextToken;
                     $user->sucursal;
                     $empresa = Empresa::find($user->sucursal->empresa_id);
-
+                    $impresoras = $user->sucursal->impresoras;
                     return response()->json([
                         'success' => true,
                         'results' => [
@@ -55,7 +55,8 @@ class AuthController extends Controller
                             'tokenRaw' => $token,
                             'token' => 'Bearer ' . $token,
                             'refresh_token' => JWTAuth::claims(['type' => 'refresh'])->fromUser($user),
-                            'empresa' => $empresa
+                            'empresa' => $empresa,
+                            'impresoras' => $impresoras
                         ]
                     ]);
                 }
