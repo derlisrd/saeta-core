@@ -31,14 +31,15 @@ class StockController extends Controller
         if (!$stock) {
             return response()->json([
                 'success' => false,
-                'message' => 'Stock no encontrado'
-            ], 404);
+                'message' => 'Producto sin stock',
+                'results'=>null
+            ]);
         }
 
         return response()->json([
             'success' => true,
             'results' => $stock
-        ], 200);
+        ]);
     }
 
     public function add(Request $req)
