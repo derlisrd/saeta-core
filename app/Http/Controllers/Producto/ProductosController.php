@@ -151,6 +151,19 @@ class ProductosController extends Controller
         }
     }
 
+    public function searchPorDeposito(Request $request){
+        $query = Producto::query();
+        $query->where('deposito_id', $request->deposito_id);
+        $query->where('nombre', 'like', '%' . $request->q . '%');
+        $query->orWhere('codigo', 'like', '%' . $request->q . '%');
+        
+
+        $results = $query->get();
+        return response()->json([
+            'success' => true,
+            'results' => $results
+        ]);
+    }
     public function search(Request $request){
         $query = Producto::query();
         $query->where('nombre', 'like', '%' . $request->q . '%');
