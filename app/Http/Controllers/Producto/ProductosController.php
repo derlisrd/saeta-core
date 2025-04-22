@@ -159,7 +159,7 @@ class ProductosController extends Controller
             $query->where('deposito_id', $request->deposito_id);
         });
         
-
+        $query->select('productos.id','productos.codigo','productos.nombre');
         $results = $query->get();
         return response()->json([
             'success' => true,
