@@ -38,7 +38,8 @@ class StockController extends Controller
 
         return response()->json([
             'success' => true,
-            'results' => $stock
+            'results' => $stock,
+            'message' => 'Stock consultado correctamente'
         ]);
     }
 
