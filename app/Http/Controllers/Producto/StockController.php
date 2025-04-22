@@ -30,8 +30,8 @@ class StockController extends Controller
 
         if (!$stock) {
             return response()->json([
-                'success' => false,
-                'message' => 'Producto sin stock',
+                'success' => true,
+                'message' => 'Producto existente pero sin stock',
                 'results'=>null
             ]);
         }
