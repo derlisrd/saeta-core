@@ -64,6 +64,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     });
 
     Route::prefix('stock')->group(function(){
+        Route::get('/consultar',[StockController::class,'consultarStock']);
         Route::post('/',[StockController::class,'add']);
         Route::put('/corregir',[StockController::class,'corregir']);
     });

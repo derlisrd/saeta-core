@@ -10,6 +10,37 @@ use Illuminate\Support\Facades\Validator;
 
 class StockController extends Controller
 {
+
+    public function consultarStock(Request $req){
+        $validator = Validator::make($req->all(), [
+            'producto_id' => 'required|exists:productos,id',
+            'deposito_id' => 'required|exists:depositos,id',
+        ]);
+
+        if ($validator->fails()) 
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        
+
+        $stock = Stock::where('producto_id', $req->producto_id)
+            ->where('deposito_id', $req->deposito_id)
+            ->first();
+
+        if (!$stock) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Stock no encontrado'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'results' => $stock
+        ], 200);
+    }
+
     public function add(Request $req)
     {
         $validator = Validator::make($req->all(), [
