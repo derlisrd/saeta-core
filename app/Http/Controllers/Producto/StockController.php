@@ -98,12 +98,12 @@ class StockController extends Controller
             ->where('deposito_id', $req->deposito_id)
             ->select('cantidad')
             ->first();
-
+        $cantidadActual  = $stockConsulta->cantidad ?? 0;
         Activity::create([
             'user_id' => $req->user()->id,
             'action' => 'stock',
             'description' => 'Corregir stock',
-            'details' => 'Corregir stock de producto ' . $req->producto_id . ' en depósito ' . $req->deposito_id . ' por ' . $req->cantidad,
+            'details' => 'Cantidad: '.$cantidadActual . ' De producto: ' . $req->producto_id . ' en depósito ' . $req->deposito_id . ' por cantidad: ' . $req->cantidad,
             'browser' => $req->header('User-Agent'),
         ]);
 
