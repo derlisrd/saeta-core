@@ -97,7 +97,6 @@ class StockController extends Controller
             [
                 'producto_id' => $req->producto_id,
                 'deposito_id' => $req->deposito_id,
-                'medida_id' => $req->medida_id
             ],
             [
                 'cantidad' => $req->cantidad // Sumar la cantidad si ya existe
