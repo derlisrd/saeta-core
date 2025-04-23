@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Producto;
 
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,18 +12,19 @@ use Illuminate\Support\Facades\Validator;
 class StockController extends Controller
 {
 
-    public function consultarStock(Request $req){
+    public function consultarStock(Request $req)
+    {
         $validator = Validator::make($req->all(), [
             'producto_id' => 'required|exists:productos,id',
             'deposito_id' => 'required|exists:depositos,id',
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first()
             ], 400);
-        
+
 
         $stock = Stock::where('producto_id', $req->producto_id)
             ->where('deposito_id', $req->deposito_id)
@@ -32,7 +34,7 @@ class StockController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Producto existente pero sin stock',
-                'results'=>null
+                'results' => null
             ]);
         }
 
@@ -51,14 +53,14 @@ class StockController extends Controller
             'medida_id' => 'required|exists:medidas,id',
             'cantidad' => 'required|numeric'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first()
             ], 400);
         }
-    
+
         // Crear o actualizar el stock
         $stock = Stock::updateOrCreate(
             [
@@ -70,7 +72,7 @@ class StockController extends Controller
                 'cantidad' => DB::raw("cantidad + {$req->cantidad}") // Sumar la cantidad si ya existe
             ]
         );
-    
+
         return response()->json([
             'success' => true,
             'message' => 'Stock actualizado correctamente',
@@ -78,22 +80,35 @@ class StockController extends Controller
         ]);
     }
 
-    public function corregir(Request $req){
+    public function corregir(Request $req)
+    {
         $validator = Validator::make($req->all(), [
             'producto_id' => 'required|exists:productos,id',
             'deposito_id' => 'required|exists:depositos,id',
             'cantidad' => 'required|numeric'
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first()
             ], 400);
-        
+
+        $stockConsulta = Stock::where('producto_id', $req->producto_id)
+            ->where('deposito_id', $req->deposito_id)
+            ->select('cantidad')
+            ->first();
+
+        Activity::create([
+            'user_id' => $req->user()->id,
+            'action' => 'stock',
+            'description' => 'Corregir stock',
+            'details' => 'Corregir stock de producto ' . $req->producto_id . ' en depósito ' . $req->deposito_id . ' por ' . $req->cantidad,
+            'browser' => $req->header('User-Agent'),
+        ]);
 
         // Crear o actualizar el stock
-        $stock = Stock::updateOrCreate(
+        $stockConsulta->updateOrCreate(
             [
                 'producto_id' => $req->producto_id,
                 'deposito_id' => $req->deposito_id,
@@ -105,9 +120,8 @@ class StockController extends Controller
 
         return response()->json([
             'success' => true,
-            'results' => $stock,
-            'message' => 'Stock actualizado correctamente']);
-
+            'results' => $stockConsulta,
+            'message' => 'Stock actualizado correctamente'
+        ]);
     }
-    
 }
