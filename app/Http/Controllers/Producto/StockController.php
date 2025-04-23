@@ -120,7 +120,11 @@ class StockController extends Controller
 
         return response()->json([
             'success' => true,
-            'results' => $stockConsulta,
+            'results' => [
+                'producto_id' => $req->producto_id,
+                'deposito_id' => $req->deposito_id,
+                'cantidad' => $req->cantidad
+            ],
             'message' => 'Stock actualizado correctamente'
         ]);
     }
