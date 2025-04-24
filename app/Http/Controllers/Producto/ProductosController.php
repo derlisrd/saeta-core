@@ -127,11 +127,11 @@ class ProductosController extends Controller
         try {
 
             $count = Producto::count();
-            $limit = $request->query('limit', 120);
+            $limit = $request->query('limit', 240);
             $page = $request->query('page', 1);
             $offset = ($page - 1) * $limit;
 
-            $results = Producto::orderBy('nombre', 'asc')
+            $results = Producto::orderByDesc('id')
                 //->where('like','%'.$request->q ?? ''.'%')
                 ->offset($offset)
                 ->limit($limit)

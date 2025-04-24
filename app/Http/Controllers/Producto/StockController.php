@@ -107,17 +107,22 @@ class StockController extends Controller
             'browser' => $req->header('User-Agent'),
         ]);
 
-        // Crear o actualizar el stock
-        $stockConsulta->updateOrCreate(
+        
+        $stock = Stock::firstOrCreate(
             [
                 'producto_id' => $req->producto_id,
                 'deposito_id' => $req->deposito_id,
             ],
             [
-                'cantidad' => $req->cantidad // Sumar la cantidad si ya existe
+                'cantidad' => $req->cantidad
             ]
         );
-
+    
+        // Si el registro ya existía, lo actualizamos
+        if (!$stock->wasRecentlyCreated) {
+            $stock->update(['cantidad' => $req->cantidad]);
+        }
+    
         return response()->json([
             'success' => true,
             'results' => [
