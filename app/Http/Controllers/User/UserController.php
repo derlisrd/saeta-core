@@ -20,6 +20,15 @@ class UserController extends Controller
         ]);
     }
 
+    public function index(Request $req){
+        $users = User::all();
+        return response()->json([
+            'success'=>true,
+            'results'=>$users,
+            'message'=>''
+        ]);
+    }   
+
     public function recuperar(Request $req){
         try {
             $datos = [

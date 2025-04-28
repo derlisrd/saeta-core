@@ -28,6 +28,7 @@ Route::post('login',[AuthController::class,'login']);
 Route::middleware(Authenticate::using('api'))->group(function(){
 
     Route::prefix('/users')->group(function(){
+        Route::get('/',[UserController::class,'index']);
         Route::post('/create',[UserController::class,'create']);
         Route::post('/otorgar-permisos',[PermisosController::class,'otorgarPermisos']);
     });
