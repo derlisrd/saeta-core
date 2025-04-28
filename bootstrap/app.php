@@ -66,7 +66,13 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             return response()->json([
                 'success'=>false,
-                'message'=> 'No encontrado. ' // . $e->getMessage(),
+                'message'=> 'No encontrado.', // . $e->getMessage(),
+                'route' =>[
+                    'url_current' => url()->current(),
+                    'req_url' => request()->url(),
+                    'req_path' => request()->path(),
+                    'req_method' => request()->method(),
+                ]
             ],404);
         });
         $exceptions->renderable(function (RouteNotFoundException $e){
