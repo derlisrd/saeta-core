@@ -23,6 +23,7 @@ return new class extends Migration
             $table->float('descuento')->default(0);
             $table->tinyInteger('estado')->default(1); // 1 pendiente 2 pagado 3 entregado 4 cancelado
             $table->float('total',20,2);
+            $table->float('importe_final',20,2);
             $table->timestamps();
             $table->foreign('sucursal_id')->references('id')->on('sucursales');
             $table->foreign('cliente_id')->references('id')->on('clientes');

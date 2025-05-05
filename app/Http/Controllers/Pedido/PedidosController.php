@@ -117,9 +117,9 @@ class PedidosController extends Controller
 
         if ($validatorPedido->fails())
             return response()->json(['success' => false, 'message' => $validatorPedido->errors()->first()], 400);
-        
+        $importe_final = ($req->total - $req->descuento );
         $sumaPagos = array_sum(array_column($req->formas_pagos, 'monto'));
-        if ($sumaPagos < ($req->total - $req->descuento )) 
+        if ($sumaPagos < $importe_final ) 
             return response()->json(['success' => false, 'message' => 'El pago es menor al total del pedido'], 400);
             
 
@@ -135,6 +135,7 @@ class PedidosController extends Controller
                 'porcentaje_descuento' => $req->porcentaje_descuento,
                 'descuento' => $req->descuento,
                 'total' => $req->total,
+                'importe_final' => $importe_final,
                 'estado' => $req->entregado ? 3 : 1
             ];
 
