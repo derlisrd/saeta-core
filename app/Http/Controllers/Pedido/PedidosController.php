@@ -43,6 +43,7 @@ class PedidosController extends Controller
                 'pedidos.tipo',
                 'pedidos.created_at',
                 'pedidos.descuento',
+                'pedidos.importe_final',
                 'clientes.razon_social',
                 'clientes.doc'
             )
