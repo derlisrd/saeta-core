@@ -119,8 +119,8 @@ class PedidosController extends Controller
             return response()->json(['success' => false, 'message' => $validatorPedido->errors()->first()], 400);
         
         $sumaPagos = array_sum(array_column($req->formas_pagos, 'monto'));
-        if ($sumaPagos < $req->total) 
-            return response()->json(['success' => false, 'message' => 'La suma de los montos de pago debe ser mayor o igual al total del pedido'], 400);
+        if ($sumaPagos < ($req->total - $req->descuento )) 
+            return response()->json(['success' => false, 'message' => 'El pago es menor al total del pedido'], 400);
             
 
         DB::beginTransaction();
