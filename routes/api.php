@@ -109,6 +109,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
 
     
     Route::prefix('pedidos')->group(function(){
+        Route::get('/estadisticas',[PedidosController::class,'estadisticas']);
         Route::get('/',[PedidosController::class,'index']);
         Route::get('/search',[PedidosController::class,'index']);
         Route::get('/{id}',[PedidosController::class,'find']);
