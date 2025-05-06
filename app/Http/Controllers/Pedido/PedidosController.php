@@ -93,35 +93,39 @@ class PedidosController extends Controller
     public function crearPedidoEnMostrador(Request $req)
     {
         // Validar los datos de entrada
-        $validatorPedido = Validator::make($req->all(), [
-            //'cliente_id' => 'required|exists:clientes,id',
-            'formas_pagos' => 'required|array',
-            'formas_pagos.*.id' => 'required|exists:formas_pagos,id',
-            'formas_pagos.*.monto' => 'required|numeric|min:0',
-            'formas_pagos.*.abreviatura' => 'required|string',
-            'moneda_id' => 'required|exists:monedas,id',
-            'aplicar_impuesto' => 'required|boolean',
-            'tipo' => 'required',
-            'entregado' => 'required|boolean',
-            'porcentaje_descuento' => 'required|numeric|min:0',
-            'descuento' => 'required|numeric|min:0',
-            'total' => 'required|numeric|min:0',
-            'items' => 'required|array',
-            'items.*.producto_id' => 'required|exists:productos,id',
-            'items.*.impuesto_id' => 'required|exists:impuestos,id',
-            'items.*.deposito_id' => 'required|exists:depositos,id',
-            'items.*.cantidad' => 'required|numeric|min:1',
-            'items.*.precio' => 'required|numeric|min:0',
-            'items.*.descuento' => 'required|numeric|min:0',
-            'items.*.total' => 'required|numeric|min:0',
-        ]);
+    $validatorPedido = Validator::make($req->all(), [
+        //'cliente_id' => 'required|exists:clientes,id',
+        'formas_pagos' => 'sometimes|required|array',
+        'formas_pagos.*.id' => 'required_if:formas_pagos.*.monto,!=,null|exists:formas_pagos,id',
+        'formas_pagos.*.monto' => 'required_if:formas_pagos.*.id,!=,null|numeric|min:0',
+        'formas_pagos.*.abreviatura' => 'required_if:formas_pagos.*.id,!=,null|string',
+        'moneda_id' => 'required|exists:monedas,id',
+        'aplicar_impuesto' => 'required|boolean',
+        'tipo' => 'required',
+        'entregado' => 'required|boolean',
+        'porcentaje_descuento' => 'required|numeric|min:0',
+        'descuento' => 'required|numeric|min:0',
+        'total' => 'required|numeric|min:0',
+        'items' => 'required|array',
+        'items.*.producto_id' => 'required|exists:productos,id',
+        'items.*.impuesto_id' => 'required|exists:impuestos,id',
+        'items.*.deposito_id' => 'required|exists:depositos,id',
+        'items.*.cantidad' => 'required|numeric|min:1',
+        'items.*.precio' => 'required|numeric|min:0',
+        'items.*.descuento' => 'required|numeric|min:0',
+        'items.*.total' => 'required|numeric|min:0',
+    ]);
 
-        if ($validatorPedido->fails())
-            return response()->json(['success' => false, 'message' => $validatorPedido->errors()->first()], 400);
-        $importe_final = ($req->total - $req->descuento);
-        $sumaPagos = array_sum(array_column($req->formas_pagos, 'monto'));
-        if ($sumaPagos < $importe_final && $req->tipo === 0)
-            return response()->json(['success' => false, 'message' => 'El pago es menor al total del pedido'], 400);
+    $validatorPedido->sometimes('formas_pagos', 'required|array', function ($input) {
+        return $input->tipo == 0;
+    });
+
+    if ($validatorPedido->fails())
+        return response()->json(['success' => false, 'message' => $validatorPedido->errors()->first()], 400);
+    $importe_final = ($req->total - $req->descuento);
+    $sumaPagos = array_sum(array_column($req->formas_pagos, 'monto'));
+    if ($sumaPagos < $importe_final && $req->tipo === 0)
+        return response()->json(['success' => false, 'message' => 'El pago es menor al total del pedido'], 400);
 
 
         DB::beginTransaction();
@@ -152,12 +156,14 @@ class PedidosController extends Controller
                     'total' => $item['total'],
                 ]);
             }
-            foreach ($req->formas_pagos as $formaPago) {
-                $pedido->formasPagoPedido()->create([
-                    'forma_pago_id' => $formaPago['id'],
-                    'monto' => $formaPago['monto'],
-                    'abreviatura' => $formaPago['abreviatura'],
-                ]);
+            if (is_array($req->formas_pagos)) {
+                foreach ($req->formas_pagos as $formaPago) {
+                    $pedido->formasPagoPedido()->create([
+                        'forma_pago_id' => $formaPago['id'],
+                        'monto' => $formaPago['monto'],
+                        'abreviatura' => $formaPago['abreviatura'],
+                    ]);
+                }
             }
             if ($req->entregado) {
                 $pedido->items->each(function ($item) {
