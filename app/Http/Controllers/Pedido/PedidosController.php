@@ -220,47 +220,5 @@ class PedidosController extends Controller
         return response()->json(['success' => true, 'message' => $message, 'results' => $pedido]);
     }
 
-    public function estadisticas()
-    {
-        $hoy = now()->startOfDay();
-        $finHoy = now()->endOfDay();
-        $inicioSemana = now()->startOfWeek();
-        $finSemana = now()->endOfWeek();
-        $inicioMes = now()->startOfMonth();
-        $finMes = now()->endOfMonth();
-
-        $estadisticasHoy = Pedido::whereBetween('created_at', [$hoy, $finHoy])
-            ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
-            ->first();
-
-        $estadisticasSemana = Pedido::whereBetween('created_at', [$inicioSemana, $finSemana])
-            ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
-            ->first();
-
-        $estadisticasMes = Pedido::whereBetween('created_at', [$inicioMes, $finMes])
-            ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
-            ->first();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Estadísticas de pedidos',
-            'results' => [
-                'hoy' => [
-                    'cantidad_pedidos' => $estadisticasHoy ? $estadisticasHoy->cantidad_pedidos : 0,
-                    'importe_final_total' => $estadisticasHoy ? $estadisticasHoy->importe_final_total : 0,
-                    'descuento_total' => $estadisticasHoy ? $estadisticasHoy->descuento_total : 0,
-                ],
-                'semana' => [
-                    'cantidad_pedidos' => $estadisticasSemana ? $estadisticasSemana->cantidad_pedidos : 0,
-                    'importe_final_total' => $estadisticasSemana ? $estadisticasSemana->importe_final_total : 0,
-                    'descuento_total' => $estadisticasSemana ? $estadisticasSemana->descuento_total : 0,
-                ],
-                'mes' => [
-                    'cantidad_pedidos' => $estadisticasMes ? $estadisticasMes->cantidad_pedidos : 0,
-                    'importe_final_total' => $estadisticasMes ? $estadisticasMes->importe_final_total : 0,
-                    'descuento_total' => $estadisticasMes ? $estadisticasMes->descuento_total : 0,
-                ]
-            ]
-        ]);
-    }
+    
 }
