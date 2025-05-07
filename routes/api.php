@@ -5,6 +5,7 @@ use App\Http\Controllers\Cliente\ClientesController;
 use App\Http\Controllers\Config\EmpresaController;
 use App\Http\Controllers\Config\ImpresorasController;
 use App\Http\Controllers\Config\ParametrosController;
+use App\Http\Controllers\Config\SucursalController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\FormasPagosController;
 use App\Http\Controllers\Factura\ImpuestosController;
@@ -125,6 +126,11 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::get('/empresa',[EmpresaController::class,'index']);
         Route::put('/empresa',[EmpresaController::class,'update']);
     });
+    
+    Route::prefix('sucursales')->group(function(){
+        Route::get('/',[SucursalController::class,'index']);
+    });
+    
 
     Route::get('/refresh-token',[AuthController::class,'refreshToken']);
     Route::get('/me',[UserController::class,'me']);
