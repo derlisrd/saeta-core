@@ -11,7 +11,7 @@ class SucursalController extends Controller
     public function index(){
         return response()->json([
             'success' => true,
-            'data' => Sucursal::all()
+            'results' => Sucursal::all()
         ]);
     }
 }
