@@ -11,6 +11,7 @@ class FormasPago extends Model
     protected $fillable = [
         'tipo',
         'descripcion',
-        'porcentaje_descuento'
+        'porcentaje_descuento',
+        'activo'
     ];
 }
