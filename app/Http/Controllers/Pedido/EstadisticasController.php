@@ -29,46 +29,6 @@ class EstadisticasController extends Controller
             ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
             ->first();
 
-         // Estadísticas por forma de pago
-         $statsPorFormaPagoHoy = Pedido::whereBetween('created_at', [$hoy, $finHoy])
-         ->selectRaw('forma_pago, count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
-         ->groupBy('forma_pago')
-         ->get()
-         ->keyBy('forma_pago') // Agrupa por forma_pago para fácil acceso
-         ->map(function ($item) {
-             return [
-                 'cantidad_pedidos' => $item->cantidad_pedidos,
-                 'importe_final_total' => $item->importe_final_total,
-                 'descuento_total' => $item->descuento_total,
-             ];
-         });
-
-     $statsPorFormaPagoSemana = Pedido::whereBetween('created_at', [$inicioSemana, $finSemana])
-         ->selectRaw('forma_pago, count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
-         ->groupBy('forma_pago')
-         ->get()
-         ->keyBy('forma_pago')
-         ->map(function ($item) {
-             return [
-                 'cantidad_pedidos' => $item->cantidad_pedidos,
-                 'importe_final_total' => $item->importe_final_total,
-                 'descuento_total' => $item->descuento_total,
-             ];
-         });
-
-     $statsPorFormaPagoMes = Pedido::whereBetween('created_at', [$inicioMes, $finMes])
-         ->selectRaw('forma_pago, count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
-         ->groupBy('forma_pago')
-         ->get()
-         ->keyBy('forma_pago')
-         ->map(function ($item) {
-             return [
-                 'cantidad_pedidos' => $item->cantidad_pedidos,
-                 'importe_final_total' => $item->importe_final_total,
-                 'descuento_total' => $item->descuento_total,
-             ];
-         });
-
         return response()->json([
             'success' => true,
             'message' => 'Estadísticas de pedidos',
@@ -76,20 +36,17 @@ class EstadisticasController extends Controller
                 'hoy' => [
                     'cantidad_pedidos' => $estadisticasHoy ? $estadisticasHoy->cantidad_pedidos : 0,
                     'importe_final_total' => $estadisticasHoy ? $estadisticasHoy->importe_final_total : 0,
-                    'descuento_total' => $estadisticasHoy ? $estadisticasHoy->descuento_total : 0,
-                    'forma_pago' =>$statsPorFormaPagoHoy
+                    'descuento_total' => $estadisticasHoy ? $estadisticasHoy->descuento_total : 0
                 ],
                 'semana' => [
                     'cantidad_pedidos' => $estadisticasSemana ? $estadisticasSemana->cantidad_pedidos : 0,
                     'importe_final_total' => $estadisticasSemana ? $estadisticasSemana->importe_final_total : 0,
-                    'descuento_total' => $estadisticasSemana ? $estadisticasSemana->descuento_total : 0,
-                    'forma_pago' => $statsPorFormaPagoSemana
+                    'descuento_total' => $estadisticasSemana ? $estadisticasSemana->descuento_total : 0
                 ],
                 'mes' => [
                     'cantidad_pedidos' => $estadisticasMes ? $estadisticasMes->cantidad_pedidos : 0,
                     'importe_final_total' => $estadisticasMes ? $estadisticasMes->importe_final_total : 0,
-                    'descuento_total' => $estadisticasMes ? $estadisticasMes->descuento_total : 0,
-                    'forma_pago' => $statsPorFormaPagoMes
+                    'descuento_total' => $estadisticasMes ? $estadisticasMes->descuento_total : 0
                 ]
             ]
         ]);
