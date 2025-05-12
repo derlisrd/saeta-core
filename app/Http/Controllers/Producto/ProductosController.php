@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Validator;
 class ProductosController extends Controller
 {
 
+    public function find($id){
+        $result = Producto::findOrFail($id);
+        return response()->json([
+            'success'=>true,
+            'message'=>'',
+            'results'=>$result
+        ]);
+    }
+
     public function consultarPorDeposito(Request $req)
     {
         $validator = Validator::make($req->all(), [
