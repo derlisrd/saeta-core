@@ -10,12 +10,14 @@ class Pedido extends Model
     use HasFactory;
     const ESTADOS = ['generado', 'impreso', 'rendido', 'entregado', 'cancelado'];
     const TIPOS = ['mostrador', 'presupuesto', 'ecommerce'];
+    const CONDICION = ['contado','credito'];
     protected $fillable = [
         'cliente_id',
         'user_id',
         'moneda_id',
         'aplicar_impuesto',
         'tipo',
+        'condicion',
         'porcentaje_descuento',
         'descuento',
         'total',

@@ -98,7 +98,7 @@ class PedidosController extends Controller
             //'cliente_id' => 'required|exists:clientes,id',
             'moneda_id' => 'required|exists:monedas,id',
             'aplicar_impuesto' => 'required|boolean',
-            'tipo' => 'required|in:0,1',
+            'condicion' => 'required|in:0,1',
             'entregado' => 'required|boolean',
             'porcentaje_descuento' => 'required|numeric|min:0',
             'descuento' => 'required|numeric|min:0',
@@ -115,11 +115,11 @@ class PedidosController extends Controller
 
         // Validar cliente_id cuando tipo es 1 (a crédito)
         $validatorPedido->sometimes('cliente_id', 'required|exists:clientes,id', function ($input) {
-            return $input->tipo == 1;
+            return $input->condicion == 1;
         });
         // Validar formas_pagos solo cuando tipo es 0 (pago inmediato)
         $validatorPedido->sometimes('formas_pagos', 'required|array', function ($input) {
-            return $input->tipo == 0;
+            return $input->condicion == 0;
         });
 
         // Validar los campos de las formas de pago si están presentes
@@ -141,7 +141,7 @@ class PedidosController extends Controller
         $importe_final = ($req->total - $req->descuento);
 
         // Verificar suma de pagos solo cuando tipo es 0
-        if ($req->tipo === 0) {
+        if ($req->condicion === 0) {
             $sumaPagos = 0;
             if (is_array($req->formas_pagos)) {
                 $sumaPagos = array_sum(array_column($req->formas_pagos, 'monto'));
@@ -161,7 +161,8 @@ class PedidosController extends Controller
                 'moneda_id' => $req->moneda_id,
                 'cliente_id' => $req->cliente_id === 0 ? 1 : $req->cliente_id,
                 'aplicar_impuesto' => $req->aplicar_impuesto,
-                'tipo' => $req->tipo,
+                'tipo' => 1,
+                'condicion'=>$req->condicion,
                 'porcentaje_descuento' => $req->porcentaje_descuento,
                 'descuento' => $req->descuento,
                 'total' => $req->total,
