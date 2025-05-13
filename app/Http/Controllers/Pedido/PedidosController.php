@@ -210,6 +210,7 @@ class PedidosController extends Controller
                         'forma_pago_id' => $formaPago['id'],
                         'monto' => $formaPago['monto'],
                         'abreviatura' => $formaPago['abreviatura'],
+                        'detalles' => $formaPago['detalles']
                     ]);
                 }
             }

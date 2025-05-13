@@ -14,8 +14,6 @@ class FormasPagoPedido extends Model
         'abreviatura',
         'forma_pago_id',
         'monto',
-        'porcentaje_descuento',
-        'monto_descuento',
-        'monto_total'
+        'detalles'
     ];
 }

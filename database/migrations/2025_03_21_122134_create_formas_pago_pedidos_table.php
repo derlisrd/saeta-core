@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('forma_pago_id');
             $table->string('abreviatura');
             $table->decimal('monto', 10, 2);
+            $table->string('detalles')->nullable();
             $table->foreign('pedido_id')->references('id')->on('pedidos');
             $table->foreign('forma_pago_id')->references('id')->on('formas_pagos');
             $table->timestamps();
