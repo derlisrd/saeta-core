@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pedido;
 
 use App\Http\Controllers\Controller;
 use App\Models\Credito;
+use App\Models\Movimiento;
 use App\Models\Pedido;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -172,7 +173,7 @@ class PedidosController extends Controller
 
             $pedido = Pedido::create($datas);
 
-            if($req->tipo ===1){
+            if($req->condicion ===1){
                 Credito::create([
                     'pedido_id' => $pedido->id,
                     'cliente_id' => $req->cliente_id,
@@ -180,6 +181,16 @@ class PedidosController extends Controller
                     'fecha_vencimiento' => now()->addDays(30)
                 ]);
             }
+
+            Movimiento::create([
+                'user_id'=>$user->id,
+                'pedido_id' =>$pedido->id,
+                'caja_id'=>null,
+                'descripcion'=> 'Pedido de venta',
+                'valor' =>$importe_final,
+                'forma_transaccion'=>1,
+                'tipo'=>1
+            ]);
 
             foreach ($req->items as $item) {
                 $pedido->items()->create([

@@ -20,6 +20,7 @@ class Pedido extends Model
         'condicion',
         'porcentaje_descuento',
         'descuento',
+        'total_sin_impuesto',
         'total',
         'importe_final',
         'estado'
