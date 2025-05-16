@@ -65,6 +65,8 @@ class EstadisticasController extends Controller
 
     public function lucros()
     {
+        $ayer = now()->subDay()->startOfDay();
+        $finAyer  = now()->subDay()->endOfDay();
         $hoyInicio = now()->startOfDay();
         $hoyFin = now()->endOfDay();
         $inicioSemana = now()->startOfWeek();
@@ -88,6 +90,10 @@ class EstadisticasController extends Controller
         };
 
         // Obtener los pedidos con relaciones necesarias, seleccionando solo las columnas relevantes
+        $pedidosAyer = Pedido::whereBetween('created_at', [$ayer, $finAyer])
+            ->with(['items:pedido_id,producto_id,cantidad', 'items.producto:id,costo'])
+            ->select('id', 'importe_final')
+            ->get();
         $pedidosHoy = Pedido::whereBetween('created_at', [$hoyInicio, $hoyFin])
             ->with(['items:pedido_id,producto_id,cantidad', 'items.producto:id,costo'])
             ->select('id', 'importe_final')
@@ -107,6 +113,9 @@ class EstadisticasController extends Controller
             'success' => true,
             'message' => 'Lucro de pedidos',
             'results' => [
+                'ayer' => [
+                    'lucro_total' => $calcularLucroPedidosOptimizado($pedidosAyer),
+                ],
                 'hoy' => [
                     'lucro_total' => $calcularLucroPedidosOptimizado($pedidosHoy),
                 ],
