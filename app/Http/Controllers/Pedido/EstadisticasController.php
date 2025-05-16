@@ -10,12 +10,18 @@ class EstadisticasController extends Controller
 {
     public function pedidos()
     {
+        $ayer = now()->subDay()->startOfDay();
+        $finAyer  = now()->subDay()->endOfDay();
         $hoy = now()->startOfDay();
         $finHoy = now()->endOfDay();
         $inicioSemana = now()->startOfWeek();
         $finSemana = now()->endOfWeek();
         $inicioMes = now()->startOfMonth();
         $finMes = now()->endOfMonth();
+
+        $estadisticasAyer = Pedido::whereBetween('created_at', [$ayer, $finAyer])
+        ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
+        ->first();
 
         $estadisticasHoy = Pedido::whereBetween('created_at', [$hoy, $finHoy])
             ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
@@ -33,6 +39,11 @@ class EstadisticasController extends Controller
             'success' => true,
             'message' => 'Estadísticas de pedidos',
             'results' => [
+                'ayer' => [
+                    'cantidad_pedidos' => $estadisticasAyer ? $estadisticasAyer->cantidad_pedidos : 0,
+                    'importe_final_total' => $estadisticasAyer ? $estadisticasAyer->importe_final_total : 0,
+                    'descuento_total' => $estadisticasAyer ? $estadisticasAyer->descuento_total : 0
+                ],
                 'hoy' => [
                     'cantidad_pedidos' => $estadisticasHoy ? $estadisticasHoy->cantidad_pedidos : 0,
                     'importe_final_total' => $estadisticasHoy ? $estadisticasHoy->importe_final_total : 0,
