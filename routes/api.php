@@ -4,7 +4,6 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Cliente\ClientesController;
 use App\Http\Controllers\Config\EmpresaController;
 use App\Http\Controllers\Config\ImpresorasController;
-use App\Http\Controllers\Config\ParametrosController;
 use App\Http\Controllers\Config\SucursalController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\FormasPagosController;
