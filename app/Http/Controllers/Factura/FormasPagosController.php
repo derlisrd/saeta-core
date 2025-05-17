@@ -11,7 +11,7 @@ class FormasPagosController extends Controller
 {
     public function index()
     {
-        $results = FormasPago::where('activo',1)->get();
+        $results = FormasPago::all();
         return response()->json([
             'success' => true,
             'results' => $results
