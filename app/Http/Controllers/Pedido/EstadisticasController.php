@@ -19,6 +19,14 @@ class EstadisticasController extends Controller
         $inicioMes = now()->startOfMonth();
         $finMes = now()->endOfMonth();
 
+        // Para la semana pasada
+        $inicioSemanaPasada = now()->subWeek()->startOfWeek();
+        $finSemanaPasada = now()->subWeek()->endOfWeek();
+
+        // Para el mes pasado
+        $inicioMesPasado = now()->subMonth()->startOfMonth();
+        $finMesPasado = now()->subMonth()->endOfMonth();
+
         $estadisticasAyer = Pedido::whereBetween('created_at', [$ayer, $finAyer])
         ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
         ->first();
@@ -32,6 +40,16 @@ class EstadisticasController extends Controller
             ->first();
 
         $estadisticasMes = Pedido::whereBetween('created_at', [$inicioMes, $finMes])
+            ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
+            ->first();
+
+            // Estadísticas de la semana pasada
+            $estadisticasSemanaPasada = Pedido::whereBetween('created_at', [$inicioSemanaPasada, $finSemanaPasada])
+            ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
+            ->first();
+
+        // Estadísticas del mes pasado
+        $estadisticasMesPasado = Pedido::whereBetween('created_at', [$inicioMesPasado, $finMesPasado])
             ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
             ->first();
 
@@ -58,6 +76,16 @@ class EstadisticasController extends Controller
                     'cantidad_pedidos' => $estadisticasMes ? $estadisticasMes->cantidad_pedidos : 0,
                     'importe_final_total' => $estadisticasMes ? $estadisticasMes->importe_final_total : 0,
                     'descuento_total' => $estadisticasMes ? $estadisticasMes->descuento_total : 0
+                ],
+                'semana_pasada' => [ // Agregado semana pasada
+                    'cantidad_pedidos' => $estadisticasSemanaPasada ? $estadisticasSemanaPasada->cantidad_pedidos : 0,
+                    'importe_final_total' => $estadisticasSemanaPasada ? $estadisticasSemanaPasada->importe_final_total : 0,
+                    'descuento_total' => $estadisticasSemanaPasada ? $estadisticasSemanaPasada->descuento_total : 0
+                ],
+                'mes_pasado' => [ // Agregado mes pasado
+                    'cantidad_pedidos' => $estadisticasMesPasado ? $estadisticasMesPasado->cantidad_pedidos : 0,
+                    'importe_final_total' => $estadisticasMesPasado ? $estadisticasMesPasado->importe_final_total : 0,
+                    'descuento_total' => $estadisticasMesPasado ? $estadisticasMesPasado->descuento_total : 0
                 ]
             ]
         ]);
