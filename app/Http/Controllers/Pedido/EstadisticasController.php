@@ -214,6 +214,7 @@ class EstadisticasController extends Controller
             'results'=>[
                 'cantidad' => $cantidad,
                 'lucro' => $lucroFinal,
+                'costo' => $costos,
                 'total' => $total,
                 'ventas'=> $itemsVendidos,
             ]
