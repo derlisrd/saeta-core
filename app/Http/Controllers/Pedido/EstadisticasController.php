@@ -168,7 +168,7 @@ class EstadisticasController extends Controller
         $validator = Validator::make($data, [
             'desde' => ['required', 'date_format:Y-m-d'],
             'hasta' => ['required', 'date_format:Y-m-d', 'after_or_equal:desde'], // Agregada validación 'after_or_equal'
-            'id' => ['required', 'integer', 'exists:productos,id'], // El 'id' de la URL se agrega a la validación
+            'id' => ['required', 'numeric', 'exists:productos,id'], // El 'id' de la URL se agrega a la validación
         ]);
         if ($validator->fails()) 
             return response()->json([
