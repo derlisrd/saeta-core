@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Pedido;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pedido;
+use App\Models\PedidoItems;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class EstadisticasController extends Controller
 {
@@ -156,4 +158,51 @@ class EstadisticasController extends Controller
             ]
         ]);
     }
+
+
+    public function producto(Request $req){
+
+        $validator = Validator::make($req->all(), [
+            'desde' => 'required|date|format:Y-m-d',
+            'hasta' => 'required|date|format:Y-m-d',
+            'producto_id' => 'required|integer|exists:productos,id',
+        ]);
+        if ($validator->fails()) 
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        
+        
+        $id = $req->producto_id;
+        $desde = $req->desde;
+        $hasta = $req->hasta;
+
+        // calcular el total de ventas de un producto en un rango de fechas
+        $itemsVendidos = PedidoItems::where('producto_id', $id)->whereBetween('created_at', [$desde, $hasta])->get();
+        $cantidad = 0;
+        $lucro = 0;
+        
+        foreach ($itemsVendidos as $i) {
+            $cantidad += $i->cantidad;
+            $lucro += (($i->item->precio - $i->descuento) * $i->cantidad ) - ($i->producto->costo * $i->cantidad);
+        }
+        
+
+        return response()->json([
+            'success'=>true,
+            'results'=>[
+                'ventas'=> $itemsVendidos,
+                'cantidad' => $cantidad,
+                'lucro' => $lucro,
+            ]
+        ]);
+    }
+
+
 }
+
+      
+
+
+

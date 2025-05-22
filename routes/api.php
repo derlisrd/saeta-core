@@ -112,6 +112,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     Route::prefix('estadisticas')->group(function(){
         Route::get('/pedidos',[EstadisticasController::class,'pedidos']);
         Route::get('/lucros',[EstadisticasController::class,'lucros']);
+        Route::get('/productos/{id}', [EstadisticasController::class, 'producto']);
     });
     Route::prefix('pedidos')->group(function(){
         Route::get('/',[PedidosController::class,'index']);
