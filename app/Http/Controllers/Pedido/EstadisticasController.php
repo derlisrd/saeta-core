@@ -190,16 +190,15 @@ class EstadisticasController extends Controller
         'descuento', 'total', 'p.costo', 'p.id','p.nombre')
         ->get();
         $cantidad = 0;
-        $lucro = 0;
+        $costos = 0;
         $total = 0;
         
         foreach ($itemsVendidos as $i) {
             $cantidad += $i->cantidad;
             $total +=  $i->total; 
-            //$i->precio * $i->cantidad;
-            $lucro +=  ($total ) - ($i->costo * $i->cantidad); 
-            //(($i->precio - $i->descuento) * $i->cantidad ) - ($i->producto->costo * $i->cantidad);
+            $costos +=  ($i->costo * $i->cantidad); 
         }
+        $lucroFinal = $total - $costos;
 
         /* foreach ($itemsVendidos as $i) {
             $cantidad += $i->cantidad;
@@ -214,7 +213,7 @@ class EstadisticasController extends Controller
             'success'=>true,
             'results'=>[
                 'cantidad' => $cantidad,
-                'lucro' => $lucro,
+                'lucro' => $lucroFinal,
                 'total' => $total,
                 'ventas'=> $itemsVendidos,
             ]
