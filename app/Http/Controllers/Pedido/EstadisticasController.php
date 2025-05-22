@@ -182,8 +182,12 @@ class EstadisticasController extends Controller
         $hasta = $req->hasta . ' 23:59:59'; ;
 
         // calcular el total de ventas de un producto en un rango de fechas
-        $itemsVendidos = PedidoItems::where('producto_id', $id)->whereBetween('created_at', [$desde, $hasta])
-            ->with('producto:id,costo')->select('producto_id', 'cantidad', 'precio', 'descuento','total')
+        $itemsVendidos = PedidoItems::where('producto_id', $id)
+        ->whereBetween('pedidos_items.created_at', [$desde, $hasta])
+        ->join('productos as p', 'pedidos_items.producto_id', '=', 'p.id')
+        //->with('producto:id,costo')
+        ->select('producto_id', 'cantidad', 'precio', 
+        'descuento', 'total', 'p.costo', 'p.id','p.nombre')
         ->get();
         $cantidad = 0;
         $lucro = 0;
@@ -191,9 +195,19 @@ class EstadisticasController extends Controller
         
         foreach ($itemsVendidos as $i) {
             $cantidad += $i->cantidad;
-            $total +=  $i->total; //$i->precio * $i->cantidad;
-            $lucro +=  ($total ) - ($i->producto->costo * $i->cantidad); //(($i->precio - $i->descuento) * $i->cantidad ) - ($i->producto->costo * $i->cantidad);
+            $total +=  $i->total; 
+            //$i->precio * $i->cantidad;
+            $lucro +=  ($total ) - ($i->costo * $i->cantidad); 
+            //(($i->precio - $i->descuento) * $i->cantidad ) - ($i->producto->costo * $i->cantidad);
         }
+
+        /* foreach ($itemsVendidos as $i) {
+            $cantidad += $i->cantidad;
+            $total +=  $i->total; 
+            //$i->precio * $i->cantidad;
+            $lucro +=  ($total ) - ($i->producto->costo * $i->cantidad); 
+            //(($i->precio - $i->descuento) * $i->cantidad ) - ($i->producto->costo * $i->cantidad);
+        } */
         
 
         return response()->json([
