@@ -160,12 +160,15 @@ class EstadisticasController extends Controller
     }
 
 
-    public function producto(Request $req){
+    public function producto(Request $req,$id){
 
-        $validator = Validator::make($req->all(), [
-            'desde' => 'required|date|format:Y-m-d',
-            'hasta' => 'required|date|format:Y-m-d',
-            'producto_id' => 'required|integer|exists:productos,id',
+        $data = $req->all();
+        $data['id'] = $id;
+
+        $validator = Validator::make($data, [
+            'desde' => ['required', 'date_format:Y-m-d'],
+            'hasta' => ['required', 'date_format:Y-m-d', 'after_or_equal:desde'], // Agregada validación 'after_or_equal'
+            'id' => ['required', 'integer', 'exists:productos,id'], // El 'id' de la URL se agrega a la validación
         ]);
         if ($validator->fails()) 
             return response()->json([
@@ -174,27 +177,32 @@ class EstadisticasController extends Controller
             ], 400);
         
         
-        $id = $req->producto_id;
-        $desde = $req->desde;
-        $hasta = $req->hasta;
+        
+        $desde = $req->desde . ' 00:00:00';
+        $hasta = $req->hasta . ' 23:59:59'; ;
 
         // calcular el total de ventas de un producto en un rango de fechas
-        $itemsVendidos = PedidoItems::where('producto_id', $id)->whereBetween('created_at', [$desde, $hasta])->get();
+        $itemsVendidos = PedidoItems::where('producto_id', $id)->whereBetween('created_at', [$desde, $hasta])
+            ->with('producto:id,costo')->select('producto_id', 'cantidad', 'precio', 'descuento','total')
+        ->get();
         $cantidad = 0;
         $lucro = 0;
+        $total = 0;
         
         foreach ($itemsVendidos as $i) {
             $cantidad += $i->cantidad;
-            $lucro += (($i->item->precio - $i->descuento) * $i->cantidad ) - ($i->producto->costo * $i->cantidad);
+            $total +=  $i->total; //$i->precio * $i->cantidad;
+            $lucro +=  ($total ) - ($i->producto->costo * $i->cantidad); //(($i->precio - $i->descuento) * $i->cantidad ) - ($i->producto->costo * $i->cantidad);
         }
         
 
         return response()->json([
             'success'=>true,
             'results'=>[
-                'ventas'=> $itemsVendidos,
                 'cantidad' => $cantidad,
                 'lucro' => $lucro,
+                'total' => $total,
+                'ventas'=> $itemsVendidos,
             ]
         ]);
     }
