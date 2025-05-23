@@ -187,7 +187,7 @@ class EstadisticasController extends Controller
         ->join('productos as p', 'pedidos_items.producto_id', '=', 'p.id')
         //->with('producto:id,costo')
         ->select('producto_id', 'cantidad', 'precio', 
-        'descuento', 'total', 'p.costo', 'p.id','p.nombre','created_at')
+        'descuento', 'total', 'p.costo', 'p.id','p.nombre','pedidos_items.created_at')
         ->get();
         $cantidad = 0;
         $costos = 0;
