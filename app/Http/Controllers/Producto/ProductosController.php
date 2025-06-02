@@ -167,7 +167,17 @@ class ProductosController extends Controller
         $query->orWhere('productos.codigo', 'like', '%' . $request->q . '%');
         $query->where('s.deposito_id', $id);
         $query->limit(200);
-        $query->select('productos.id','productos.codigo','productos.created_at','productos.nombre','s.cantidad','productos.precio_normal');
+        $query->select('productos.id','productos.codigo','productos.created_at',
+            'productos.nombre',
+            's.cantidad',
+            'productos.precio_normal',
+            'productos.precio_minimo',
+            'productos.descripcion',
+            'productos.disponible',
+            'productos.tipo',
+            'productos.costo',
+            'productos.category_id',
+        );
         $results = $query->get();
 
 
