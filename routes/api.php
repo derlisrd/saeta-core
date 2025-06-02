@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Cliente\ClientesController;
+use App\Http\Controllers\Config\ConfigurarController;
 use App\Http\Controllers\Config\EmpresaController;
 use App\Http\Controllers\Config\ImpresorasController;
 use App\Http\Controllers\Config\SucursalController;
@@ -22,9 +23,10 @@ use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
 
-
 Route::post('login',[AuthController::class,'login']);
 
+
+Route::get('/config', [ConfigurarController::class, 'verificar']);
 
 Route::middleware(Authenticate::using('api'))->group(function(){
 
