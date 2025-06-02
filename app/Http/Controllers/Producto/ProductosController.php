@@ -172,6 +172,7 @@ class ProductosController extends Controller
         $results = $query->get();
         return response()->json([
             'success' => true,
+            'message' => '',
             'results' => $results
         ]);
     }
