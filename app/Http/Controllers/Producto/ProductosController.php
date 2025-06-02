@@ -168,7 +168,7 @@ class ProductosController extends Controller
             $query->where('deposito_id', $id);
         });
         
-        $query->select('productos.id','productos.codigo','productos.nombre');
+        //$query->select('productos.id','productos.codigo','productos.nombre','stock');
         $results = $query->get();
         return response()->json([
             'success' => true,
