@@ -119,7 +119,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
     Route::prefix('pedidos')->group(function(){
         Route::get('/',[PedidosController::class,'index']);
         Route::get('/search',[PedidosController::class,'index']);
-        Route::get('/{id}',[PedidosController::class,'find']);
+        //Route::get('/{id}',[PedidosController::class,'find']);
         Route::post('/',[PedidosController::class,'crearPedidoEnMostrador']);
         Route::put('/cambiar-estado/{id}',[PedidosController::class,'cambiarEstado']);
         Route::get('/cobrar', [PedidosController::class, 'pedidosACobrar']);
