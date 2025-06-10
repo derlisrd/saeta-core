@@ -15,10 +15,15 @@ Route::post('login', [AuthController::class, 'login']);
 Route::get('/redirect-google', [AuthGoogleController::class, 'redirectToGoogle']);
 Route::get('/callback-google', [AuthGoogleController::class, 'handleGoogleCallback']);
 
-
+Route::prefix('pedidos')->group(function () {
+    Route::get('/', [PedidosController::class, 'index']);
+    Route::get('/{id}', [PedidosController::class, 'show']);
+    Route::post('/', [PedidosController::class, 'store']);
+    Route::put('/{id}', [PedidosController::class, 'update']);
+    Route::delete('/{id}', [PedidosController::class, 'destroy']);
+});
 
 Route::middleware(Authenticate::using('api'))->group(function(){
-
 
     Route::prefix('pedidos')->group(function(){
         Route::get('/',[PedidosController::class,'misPedidos']);

@@ -122,6 +122,7 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::get('/{id}',[PedidosController::class,'find']);
         Route::post('/',[PedidosController::class,'crearPedidoEnMostrador']);
         Route::put('/cambiar-estado/{id}',[PedidosController::class,'cambiarEstado']);
+        Route::get('/cobrar', [PedidosController::class, 'pedidosACobrar']);
     });
 
     Route::prefix('config')->group(function(){

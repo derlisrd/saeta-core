@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Validator;
 
 class PedidosController extends Controller
 {
+
+    public function pedidosACobrar(){
+        $pedidos = Pedido::where('estado','<',3)
+        ->where('condicion',1)
+        ->get();
+        return response()->json(['success' => true, 'message' => 'Pedidos a cobrar', 'results' => $pedidos]);
+    }
+
     public function index(Request $req)
     {
         // Validar las fechas de entrada
