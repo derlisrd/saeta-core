@@ -16,7 +16,7 @@ class PedidosController extends Controller
 {
 
     public function pedidosACobrar(){
-        $pedidos = Pedido::where('estado','<',3)
+        $pedidos = Pedido::where('estado','>',3)
         ->where('condicion',1)
         ->get();
         return response()->json(['success' => true, 'message' => 'Pedidos a cobrar', 'results' => $pedidos]);
