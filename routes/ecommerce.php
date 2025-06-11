@@ -3,6 +3,7 @@
 use App\Http\Controllers\Ecommerce\AuthController;
 use App\Http\Controllers\Ecommerce\AuthGoogleController;
 use App\Http\Controllers\Ecommerce\PedidosController;
+use App\Http\Controllers\Ecommerce\ProductosController;
 use App\Http\Controllers\Ecommerce\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -15,12 +16,8 @@ Route::post('login', [AuthController::class, 'login']);
 Route::get('/redirect-google', [AuthGoogleController::class, 'redirectToGoogle']);
 Route::get('/callback-google', [AuthGoogleController::class, 'handleGoogleCallback']);
 
-Route::prefix('pedidos')->group(function () {
-    Route::get('/', [PedidosController::class, 'index']);
-    Route::get('/{id}', [PedidosController::class, 'show']);
-    Route::post('/', [PedidosController::class, 'store']);
-    Route::put('/{id}', [PedidosController::class, 'update']);
-    Route::delete('/{id}', [PedidosController::class, 'destroy']);
+Route::prefix('productos')->group(function () {
+    Route::get('/', [ProductosController::class, 'index']);
 });
 
 Route::middleware(Authenticate::using('api'))->group(function(){
