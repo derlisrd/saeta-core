@@ -19,8 +19,6 @@ class PedidosController extends Controller
 
     public function index(Request $req)
     {
-        // Validar las fechas de entrada
-        // Validar las fechas de entrada
         $validator = Validator::make($req->all(), [
             'desde' => 'nullable|date_format:Y-m-d',
             'hasta' => 'nullable|date_format:Y-m-d'
