@@ -80,4 +80,26 @@ class UserController extends Controller
             'message'=>'Usuario creado'
         ]);
     }
+
+    public function resetPassword(Request $req){
+        $validator = Validator::make($req->all(), [
+            'id' => 'required|exists:users,id',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+
+        User::where('id', $req->id)->update([
+            'password' => bcrypt($req->password)
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cambio de contraseña realizado correctamente'
+        ]);
+    }
 }

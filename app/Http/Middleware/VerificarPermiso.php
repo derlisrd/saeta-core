@@ -19,7 +19,7 @@ class VerificarPermiso
         if (!$user || !$user->tienePermiso($modulo, $accion)) {
             return response()->json([
                 'success' => false,
-                'message' => 'No tienes permisos para realizar esta acción.'
+                'message' => 'No tienes permiso suficiente.'
             ], 403);
         }
 
