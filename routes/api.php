@@ -37,8 +37,10 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         Route::post('/otorgar-permisos',[PermisosController::class,'otorgarPermisos']);
     });
    
-    Route::prefix('/categorias')->group(function(){
-        Route::get('/',[CategoriasController::class,'index']);
+    Route::prefix('/categorias')
+    
+    ->group(function(){
+        Route::get('/',[CategoriasController::class,'index'])->middleware('permiso:categorias,ver');
         Route::post('/',[CategoriasController::class,'store']);
         Route::put('/{id}',[CategoriasController::class,'update']);
         Route::delete('/{id}',[CategoriasController::class,'destroy']);

@@ -73,10 +73,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
-    public function permisos(){
-        return $this->belongsToMany(Permiso::class, 'permisos_otorgados')
-            ->withPivot('otorgado')
-            ->withTimestamps();
+    public function permisos()
+    {
+        return $this->belongsToMany(Permiso::class, 'permisos_otorgados');
+    }
+
+    public function tienePermiso(string $modulo, string $accion): bool
+    {
+        return $this->permisos()->where('modulo', $modulo)->where('accion', $accion)->exists();
     }
 
     public function esSuperAdmin()

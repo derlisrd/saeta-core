@@ -32,7 +32,6 @@ class ImageUploadService
         } catch (\Throwable $th) {
             Log::error($th);
             throw $th;
-            return null;
         }
     }
 }
