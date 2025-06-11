@@ -15,11 +15,7 @@ use Illuminate\Support\Facades\Validator;
 class PedidosController extends Controller
 {
 
-    public function pedidosACobrar(){
-        $pedidos = Pedido::where('condicion',1)
-        ->get();
-        return response()->json(['success' => true, 'message' => 'Pedidos a cobrar', 'results' => $pedidos]);
-    }
+    
 
     public function index(Request $req)
     {
@@ -163,7 +159,7 @@ class PedidosController extends Controller
 
         DB::beginTransaction();
         try {
-            $user = auth()->user();
+            $user = $req->user();
             $datas = [
                 'user_id' => $user->id,
                 'moneda_id' => $req->moneda_id,

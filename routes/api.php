@@ -6,6 +6,7 @@ use App\Http\Controllers\Config\ConfigurarController;
 use App\Http\Controllers\Config\EmpresaController;
 use App\Http\Controllers\Config\ImpresorasController;
 use App\Http\Controllers\Config\SucursalController;
+use App\Http\Controllers\Credito\CreditosController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\FormasPagosController;
 use App\Http\Controllers\Factura\ImpuestosController;
@@ -122,7 +123,10 @@ Route::middleware(Authenticate::using('api'))->group(function(){
         //Route::get('/{id}',[PedidosController::class,'find']);
         Route::post('/',[PedidosController::class,'crearPedidoEnMostrador']);
         Route::put('/cambiar-estado/{id}',[PedidosController::class,'cambiarEstado']);
-        Route::get('/cobrar', [PedidosController::class, 'pedidosACobrar']);
+    });
+
+    Route::prefix('creditos')->group(function(){
+        Route::get('/', [CreditosController::class, 'index']);
     });
 
     Route::prefix('config')->group(function(){
