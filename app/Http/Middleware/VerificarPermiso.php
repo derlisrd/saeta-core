@@ -16,7 +16,7 @@ class VerificarPermiso
     public function handle(Request $request, Closure $next, $modulo, $accion): Response
     {
         $user = $request->user();
-        if (!$user || !$user->tienePermiso($modulo, $accion)) {
+        if ((!$user || !$user->tienePermiso($modulo, $accion)) && !$user->tipo === 10) {
             return response()->json([
                 'success' => false,
                 'message' => 'No tienes permisos para ' . $accion . ' en el módulo ' . $modulo
