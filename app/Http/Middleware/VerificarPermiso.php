@@ -16,13 +16,12 @@ class VerificarPermiso
     public function handle(Request $request, Closure $next, $modulo, $accion): Response
     {
         $user = $request->user();
-        if ((!$user || !$user->tienePermiso($modulo, $accion)) && !$user->tipo === 10) {
+        if (!$user || ($user->tipo !== 10 && !$user->tienePermiso($modulo, $accion))) {
             return response()->json([
                 'success' => false,
                 'message' => 'No tienes permisos para ' . $accion . ' en el módulo ' . $modulo
             ], 403);
         }
-
         return $next($request);
     }
 }
