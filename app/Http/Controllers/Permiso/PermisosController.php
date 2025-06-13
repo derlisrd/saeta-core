@@ -49,7 +49,7 @@ class PermisosController extends Controller
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
 
-        $user = User::findOrFail($request->admin_id);
+        $user = User::findOrFail($request->user_id);
         $user->permisos()->syncWithoutDetaching($request->permisos);
 
         return response()->json([
@@ -70,7 +70,7 @@ class PermisosController extends Controller
 
 
 
-        $user = User::findOrFail($request->admin_id);
+        $user = User::findOrFail($request->user_id);
         $user->permisos()->detach($request->permisos);
 
         return response()->json([
