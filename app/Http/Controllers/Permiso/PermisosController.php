@@ -41,11 +41,13 @@ class PermisosController extends Controller
     // Asignar permisos a un user
     public function asignar(Request $request)
     {
-        $request->validate([
-            'users_id' => 'required|exists:users,id',
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
             'permisos' => 'required|array',
             'permisos.*' => 'exists:permisos,id',
         ]);
+        if ($validator->fails())
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
 
         $user = User::findOrFail($request->admin_id);
         $user->permisos()->syncWithoutDetaching($request->permisos);
@@ -58,11 +60,15 @@ class PermisosController extends Controller
     // Quitar permisos de un user
     public function revocar(Request $request)
     {
-        $request->validate([
-            'admin_id' => 'required|exists:admins,id',
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
             'permisos' => 'required|array',
             'permisos.*' => 'exists:permisos,id',
         ]);
+        if ($validator->fails())
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+
+
 
         $user = User::findOrFail($request->admin_id);
         $user->permisos()->detach($request->permisos);
