@@ -142,8 +142,12 @@ class ProductosController extends Controller
 
             $results = Producto::orderByDesc('id')
                 //->where('like','%'.$request->q ?? ''.'%')
+                ->with('images')
                 ->offset($offset)
                 ->limit($limit)
+                ->select('id', 'disponible', 'codigo', 'nombre', 'precio_normal', 'precio_descuento',
+                'precio_minimo', 'costo', 
+                'tipo', 'descripcion', 'created_at','0 as stock')
                 ->get();
 
             return response()->json([
