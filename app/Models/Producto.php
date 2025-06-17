@@ -40,6 +40,10 @@ class Producto extends Model
     {
         return $this->hasMany(Stock::class, 'producto_id');
     }
+    public function atributos()
+    {
+        return $this->hasMany(ProductoAtributoValor::class, 'producto_id');
+    }
 
     public function images()
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Producto;
 
 use App\Http\Controllers\Controller;
 use App\Models\Producto;
+use App\Models\ProductoAtributoValor;
 use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -246,7 +247,10 @@ class ProductosController extends Controller
             'stock.*.deposito_id' => 'exists:depositos,id',
             'stock.*.cantidad' => 'numeric|min:0',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'atributos' => 'nullable|array',
+            'atributos.*.atributo_id' => 'required',
+            'atributo_valor_id' => 'required',
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
@@ -284,6 +288,15 @@ class ProductosController extends Controller
                     'producto_id' => $producto->id,
                     'deposito_id' => $stock['deposito_id'],
                     'cantidad' => $stock['cantidad']
+                ]);
+            }
+        }
+        if (!empty($req->atributos)) {
+            foreach ($req->atributos as $atributo) {
+                ProductoAtributoValor::create([
+                    'producto_id' => $producto->id,
+                    'atributo_id' => $atributo['atributo_id'],
+                    'atributo_valor_id' => $atributo['atributo_valor_id'],
                 ]);
             }
         }
