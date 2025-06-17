@@ -249,8 +249,8 @@ class ProductosController extends Controller
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'atributos' => 'nullable|array',
-            'atributos.*.atributo_id' => 'required',
-            'atributo_valor_id' => 'required',
+            'atributos.*.atributo_id' => 'numeric',
+            'atributo_valor_id' => 'numeric',
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
