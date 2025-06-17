@@ -191,12 +191,40 @@ class ProductosController extends Controller
             'results' => $results
         ]);
     }
+
+
+    public function productosPorDeposito(Request $request,$id){
+        $query = Producto::query();
+        $query->join('stocks as s', 'productos.id', '=', 's.producto_id');
+        $query->where('productos.nombre', 'like', '%' . $request->q . '%');
+        $query->orWhere('productos.codigo', 'like', '%' . $request->q . '%');
+        $query->where('s.deposito_id', $id);
+        $query->limit(200);
+        $query->select('productos.id','productos.codigo','productos.created_at',
+            'productos.nombre',
+            's.cantidad',
+            'productos.precio_normal',
+            'productos.precio_minimo',
+            'productos.descripcion',
+            'productos.disponible',
+            'productos.tipo',
+            'productos.costo',
+            'productos.category_id',
+        );
+        $results = $query->get();
+
+
+        return response()->json([
+            'success' => true,
+            'message' => '',
+            'results' => $results
+        ]);
+    }
     public function search(Request $request){
         $query = Producto::query();
         $query->where('nombre', 'like', '%' . $request->q . '%');
         $query->orWhere('codigo', 'like', '%' . $request->q . '%');
         
-
         $results = $query->get();
         return response()->json([
             'success' => true,

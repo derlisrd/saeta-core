@@ -59,7 +59,8 @@ Route::middleware(Authenticate::using('api'))->group(function () {
         Route::get('/verificar/{codigo}', [ProductosController::class, 'verificarCodigoDisponible']);
         Route::get('/', [ProductosController::class, 'index']);
         Route::get('/search', [ProductosController::class, 'search']);
-        Route::get('/deposito/{id}', [ProductosController::class, 'searchPorDeposito']);
+        Route::get('/search-por-deposito', [ProductosController::class, 'searchPorDeposito']);
+        Route::get('/deposito/{id}', [ProductosController::class, 'productosPorDeposito']);
         Route::get('/find/{id}', [ProductosController::class, 'find']);
         Route::post('/', [ProductosController::class, 'store']);
         Route::put('/{id}', [ProductosController::class, 'update']);
