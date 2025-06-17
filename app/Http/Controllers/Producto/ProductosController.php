@@ -166,21 +166,17 @@ class ProductosController extends Controller
 
     public function searchPorDeposito(Request $request){
         $query = Producto::query();
-        $query->join('stocks as s', 'productos.id', '=', 's.producto_id');
+        //$query->join('stocks as s', 'productos.id', '=', 's.producto_id');
         $query->where('productos.nombre', 'like', '%' . $request->q . '%');
         $query->orWhere('productos.codigo', 'like', '%' . $request->q . '%');
-        $query->where('s.deposito_id', $request->deposito_id);
-        $query->limit(200);
-        $query->select('productos.id','productos.codigo','productos.created_at',
+        $query->limit(50);
+        $query->select('productos.id',
+            'productos.codigo',
             'productos.nombre',
-            's.cantidad',
-            'productos.precio_normal',
-            'productos.precio_minimo',
-            'productos.descripcion',
             'productos.disponible',
             'productos.tipo',
             'productos.costo',
-            'productos.category_id',
+            
         );
         $results = $query->get();
 
