@@ -147,7 +147,7 @@ class ProductosController extends Controller
                 ->limit($limit)
                 ->select('id', 'disponible', 'codigo', 'nombre', 'precio_normal', 'precio_descuento',
                 'precio_minimo', 'costo', 
-                'tipo', 'descripcion', 'created_at','0 as stock')
+                'tipo', 'descripcion', 'created_at')
                 ->get();
 
             return response()->json([
