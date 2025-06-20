@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Producto;
 
 use App\Http\Controllers\Controller;
+use App\Models\Atributo;
+use App\Models\AtributoValor;
 use App\Models\Producto;
 use App\Models\ProductoAtributoValor;
 use App\Services\ImageUploadService;
@@ -13,12 +15,13 @@ use Illuminate\Support\Facades\Validator;
 class ProductosController extends Controller
 {
 
-    public function find($id){
+    public function find($id)
+    {
         $result = Producto::findOrFail($id);
         return response()->json([
-            'success'=>true,
-            'message'=>'',
-            'results'=>$result
+            'success' => true,
+            'message' => '',
+            'results' => $result
         ]);
     }
 
@@ -34,7 +37,7 @@ class ProductosController extends Controller
             'cantidad.gt' => 'La cantidad debe ser mayor a cero'
         ]);
         if ($validator->fails())
-            return response()->json(['success' => false, 'message' => $validator->errors()->first(), 'results'=>null], 400);
+            return response()->json(['success' => false, 'message' => $validator->errors()->first(), 'results' => null], 400);
 
         // Buscar el producto por código
         $producto = Producto::with(['stock' => function ($query) use ($req) {
@@ -48,7 +51,7 @@ class ProductosController extends Controller
         if ($producto->tipo == 2) {
             return response()->json([
                 'success' => true,
-                'message'=>'',
+                'message' => '',
                 'results' => [
                     'id' => $producto->id,
                     'deposito_id' => null,
@@ -75,15 +78,15 @@ class ProductosController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'El producto existe, pero no tiene stock en el depósito seleccionado.',
-                    'results'=>null
-                ],400);
+                    'results' => null
+                ], 400);
             }
-            
+
             if ($stockDisponible->cantidad <= 0 || $stockDisponible->cantidad < $req->cantidad) {
                 return response()->json([
                     'success' => false,
                     'message' => 'El producto no tiene stock disponible.',
-                    'results'=>null
+                    'results' => null
                 ], 400);
             }
         }
@@ -91,7 +94,7 @@ class ProductosController extends Controller
         // Retornar producto con stock
         return response()->json([
             'success' => true,
-            'message'=>'',
+            'message' => '',
             'results' => [
                 'id' => $producto->id,
                 'producto_id' => $producto->id,
@@ -146,9 +149,19 @@ class ProductosController extends Controller
                 ->with('images')
                 ->offset($offset)
                 ->limit($limit)
-                ->select('id', 'disponible', 'codigo', 'nombre', 'precio_normal', 'precio_descuento',
-                'precio_minimo', 'costo', 
-                'tipo', 'descripcion', 'created_at')
+                ->select(
+                    'id',
+                    'disponible',
+                    'codigo',
+                    'nombre',
+                    'precio_normal',
+                    'precio_descuento',
+                    'precio_minimo',
+                    'costo',
+                    'tipo',
+                    'descripcion',
+                    'created_at'
+                )
                 ->get();
 
             return response()->json([
@@ -165,19 +178,21 @@ class ProductosController extends Controller
         }
     }
 
-    public function searchPorDeposito(Request $request){
+    public function searchPorDeposito(Request $request)
+    {
         $query = Producto::query();
         //$query->join('stocks as s', 'productos.id', '=', 's.producto_id');
         $query->where('productos.nombre', 'like', '%' . $request->q . '%');
         $query->orWhere('productos.codigo', 'like', '%' . $request->q . '%');
         $query->limit(50);
-        $query->select('productos.id',
+        $query->select(
+            'productos.id',
             'productos.codigo',
             'productos.nombre',
             'productos.disponible',
             'productos.tipo',
             'productos.costo',
-            
+
         );
         $results = $query->get();
 
@@ -190,14 +205,18 @@ class ProductosController extends Controller
     }
 
 
-    public function productosPorDeposito(Request $request,$id){
+    public function productosPorDeposito(Request $request, $id)
+    {
         $query = Producto::query();
         $query->join('stocks as s', 'productos.id', '=', 's.producto_id');
         $query->where('productos.nombre', 'like', '%' . $request->q . '%');
         $query->orWhere('productos.codigo', 'like', '%' . $request->q . '%');
         $query->where('s.deposito_id', $id);
         $query->limit(200);
-        $query->select('productos.id','productos.codigo','productos.created_at',
+        $query->select(
+            'productos.id',
+            'productos.codigo',
+            'productos.created_at',
             'productos.nombre',
             's.cantidad',
             'productos.precio_normal',
@@ -217,11 +236,12 @@ class ProductosController extends Controller
             'results' => $results
         ]);
     }
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $query = Producto::query();
         $query->where('nombre', 'like', '%' . $request->q . '%');
         $query->orWhere('codigo', 'like', '%' . $request->q . '%');
-        
+
         $results = $query->get();
         return response()->json([
             'success' => true,
@@ -249,8 +269,8 @@ class ProductosController extends Controller
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'atributos' => 'nullable|array',
-            'atributos.*.atributo_id' => 'numeric',
-            'atributo_valor_id' => 'numeric',
+            'atributos.*.nombre' => 'required',
+            'atributos.*.opciones' => 'array',
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
@@ -282,43 +302,52 @@ class ProductosController extends Controller
 
         try {
             $producto = Producto::create($datos);
-        if (!empty($req->stock)) {
-            foreach ($req->stock as $stock) {
-                $producto->stock()->create([
-                    'producto_id' => $producto->id,
-                    'deposito_id' => $stock['deposito_id'],
-                    'cantidad' => $stock['cantidad']
-                ]);
+            if (!empty($req->stock)) {
+                foreach ($req->stock as $stock) {
+                    $producto->stock()->create([
+                        'producto_id' => $producto->id,
+                        'deposito_id' => $stock['deposito_id'],
+                        'cantidad' => $stock['cantidad']
+                    ]);
+                }
             }
-        }
-        if (!empty($req->atributos)) {
-            foreach ($req->atributos as $atributo) {
-                ProductoAtributoValor::create([
-                    'producto_id' => $producto->id,
-                    'atributo_id' => $atributo['atributo_id'],
-                    'atributo_valor_id' => $atributo['atributo_valor_id'],
-                ]);
+            if (!empty($req->atributos)) {
+                foreach ($req->atributos as $itemAtributo) {
+                    $atributo = Atributo::create([
+                        'nombre' => $itemAtributo['nombre']
+                    ]);
+                    foreach ($itemAtributo['opciones'] as $itemValor) {
+                        $valor = AtributoValor::create([
+                            'atributo_id' => $atributo->id,
+                            'valor' => $itemValor
+                        ]);
+                        ProductoAtributoValor::create([
+                            'producto_id' => $producto->id,
+                            'atributo_id' => $atributo->id,
+                            'atributo_valor_id' => $valor->id
+                        ]);
+                    }
+                }
             }
-        }
-       
-        if ($req->hasFile('images')) {
-            $imageUploadService = new ImageUploadService();
-            foreach ($req->file('images') as $image) {
-                $url = $imageUploadService->subir($image, $producto->id); // Guarda en /public/{id}/time.jpg
-                $producto->images()->create([
-                    'producto_id' => $producto->id,
-                    'miniatura' => $url, // Puedes procesar miniaturas si lo necesitas
-                    'url' => $url
-                ]);
-            }
-        }
-    
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Producto creado',
-            'results' => $producto
-        ]);
+            if ($req->hasFile('images')) {
+                $imageUploadService = new ImageUploadService();
+                foreach ($req->file('images') as $image) {
+                    $url = $imageUploadService->subir($image, $producto->id); // Guarda en /public/{id}/time.jpg
+                    $producto->images()->create([
+                        'producto_id' => $producto->id,
+                        'miniatura' => $url, // Puedes procesar miniaturas si lo necesitas
+                        'url' => $url
+                    ]);
+                }
+            }
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Producto creado',
+                'results' => $producto
+            ]);
         } catch (\Throwable $th) {
             throw $th;
             Log::error($th);
