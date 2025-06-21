@@ -44,6 +44,7 @@ class PedidosController extends Controller
                 'pedidos.id',
                 'pedidos.estado',
                 'pedidos.tipo',
+                'pedidos.condicion',
                 'pedidos.created_at',
                 'pedidos.descuento',
                 'pedidos.importe_final',
