@@ -88,7 +88,7 @@ class PasswordResetController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'token' => 'required|string',
-            'password' => 'required|string|min:8|confirmed'
+            'password' => 'required|string|min:6|confirmed'
         ]);
 
         if ($validator->fails()) {
