@@ -51,7 +51,7 @@ class AuthController extends Controller
                     return response()->json([
                         'success' => true,
                         'results' => [
-                            'user' => $user->load(['sucursal', 'permisos']),
+                            'user' => $user->load(['sucursal']),
                             'tokenRaw' => $token,
                             'token' => 'Bearer ' . $token,
                             'refresh_token' => JWTAuth::claims(['type' => 'refresh'])->fromUser($user),

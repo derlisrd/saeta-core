@@ -141,6 +141,7 @@ Route::middleware(Authenticate::using('api'))->group(function () {
         Route::post('/send-email-recibo/{id}', [PedidosController::class, 'sendEmailRecibo']);
         Route::post('/', [PedidosController::class, 'crearPedidoEnMostrador']);
         Route::put('/cambiar-estado/{id}', [PedidosController::class, 'cambiarEstado']);
+        Route::get('/a-cobrar', [PedidosController::class, 'pedidosACobrar']);
     });
 
     Route::prefix('creditos')->group(function () {
