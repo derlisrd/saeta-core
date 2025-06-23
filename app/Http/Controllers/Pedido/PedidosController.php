@@ -316,7 +316,27 @@ class PedidosController extends Controller
 
 
     public function pedidosACobrar(){
-        $pedidos = Pedido::where('estado',1)->get();
+        $pedidos = Pedido::where('estado',1)
+            ->join('clientes as c', 'pedidos.cliente_id', '=', 'c.id')
+            ->join('monedas a m', 'pedidos.moneda_id', '=', 'm.id')
+            ->join('users as u', 'pedidos.user_id', '=', 'u.id')
+            ->select(
+                'pedidos.id',
+                'pedidos.cliente_id',
+                'pedidos.created_at',
+                'pedidos.update_at',
+                'pedidos.condicion',
+                'pedidos.obs',
+                'pedidos.estado',
+                'pedidos.tipo',
+                'pedidos.descuento',
+                'pedidos.total',
+                'pedidos.importe_final',
+                'u.username as usuario',
+                'm.simbolo'
+            )
+            ->orderBy('pedidos.created_at', 'desc')
+        ->get();
         return response()->json(['success' => true, 'results' => $pedidos]);
     }
 }
