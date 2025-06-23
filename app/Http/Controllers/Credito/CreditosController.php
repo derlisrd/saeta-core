@@ -22,7 +22,7 @@ class CreditosController extends Controller
             $desde = $req->desde ? Carbon::parse($req->desde) : Carbon::now();
             $hasta = $req->hasta ? Carbon::parse($req->hasta) : Carbon::now();
     
-        $creditos = Credito::whereBetween('pedidos.created_at', [$desde->startOfDay(), $hasta->endOfDay()])
+        $creditos = Credito::whereBetween('creditos.created_at', [$desde->startOfDay(), $hasta->endOfDay()])
         ->join('pedidos as p', 'p.id', '=', 'creditos.pedido_id')
         ->join('clientes as cl', 'cl.id', '=', 'creditos.cliente_id')
         ->select('creditos.id','creditos.pedido_id','cl.razon_social','cl.doc','creditos.monto','creditos.fecha_vencimiento','creditos.created_at')
