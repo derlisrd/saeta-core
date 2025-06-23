@@ -3,21 +3,22 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PasswordResetCode extends Mailable
+class ReciboPedido extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $code;
+    public $pedido;
     public $email;
 
-    public function __construct($code, $email)
+    public function __construct($pedido, $email)
     {
-        $this->code = $code;
+        $this->pedido = $pedido;
         $this->email = $email;
     }
 
@@ -27,7 +28,7 @@ class PasswordResetCode extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Código de Recuperación de Contraseña', // Asunto del correo
+            subject: 'Recibo de pedido', // Asunto del correo
         );
     }
 
@@ -37,14 +38,13 @@ class PasswordResetCode extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.passwordResetCode', // Ruta a tu vista Blade
+            view: 'email.recibo', // Ruta a tu vista Blade
             with: [
-                'code' => $this->code,
+                'code' => $this->pedido,
                 'email' => $this->email,
             ],
         );
     }
-
     /**
      * Get the attachments for the message.
      *

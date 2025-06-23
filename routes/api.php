@@ -138,6 +138,7 @@ Route::middleware(Authenticate::using('api'))->group(function () {
         Route::get('/', [PedidosController::class, 'index']);
         Route::get('/search', [PedidosController::class, 'index']);
         //Route::get('/{id}',[PedidosController::class,'find']);
+        Route::post('/send-email-recibo/{id}', [PedidosController::class, 'sendEmailRecibo']);
         Route::post('/', [PedidosController::class, 'crearPedidoEnMostrador']);
         Route::put('/cambiar-estado/{id}', [PedidosController::class, 'cambiarEstado']);
     });

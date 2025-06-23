@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pedido;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ReciboPedido;
 use App\Models\Credito;
 use App\Models\Movimiento;
 use App\Models\Pedido;
@@ -11,10 +12,42 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 class PedidosController extends Controller
 {
 
+    public function sendEmailRecibo($id){
+        
+
+        $pedido = Pedido::where('id',$id);
+        $pedido->with([
+            'formasPagoPedido',
+            'items.producto',
+            'items.impuesto',
+        ])
+        ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
+            ->select(
+                'pedidos.total',
+                'pedidos.id',
+                'pedidos.estado',
+                'pedidos.tipo',
+                'pedidos.condicion',
+                'pedidos.created_at',
+                'pedidos.descuento',
+                'pedidos.importe_final',
+                'clientes.razon_social',
+                'clientes.doc'
+            )->first();
+        $email = 'derlisruizdiaz@hotmail.com';
+            Mail::to($email)->send(
+            new ReciboPedido($pedido, $email)
+            );
+        
+        return response()->json(['success' => true, 'message' => 'Recibo generado con éxito. Enviado al correo electrónico.']);
+    
+
+    }
     
 
     public function index(Request $req)
