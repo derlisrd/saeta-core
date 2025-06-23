@@ -40,7 +40,7 @@ class ReciboPedido extends Mailable
         return new Content(
             view: 'email.recibo', // Ruta a tu vista Blade
             with: [
-                'code' => $this->pedido,
+                'pedido' => $this->pedido,
                 'email' => $this->email,
             ],
         );
