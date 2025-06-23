@@ -19,7 +19,7 @@ class CreditosController extends Controller
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
 
-            $desde = $req->desde ? Carbon::parse($req->desde) : Carbon::now();
+            $desde = $req->desde ? Carbon::parse($req->desde) : Carbon::now()->startOfMonth();
             $hasta = $req->hasta ? Carbon::parse($req->hasta) : Carbon::now();
     
         $creditos = Credito::whereBetween('creditos.created_at', [$desde->startOfDay(), $hasta->endOfDay()])
