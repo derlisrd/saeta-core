@@ -323,6 +323,8 @@ class PedidosController extends Controller
             ->select(
                 'pedidos.id',
                 'pedidos.cliente_id',
+                'c.doc',
+                'c.nombre as cliente',
                 'pedidos.created_at',
                 'pedidos.update_at',
                 'pedidos.condicion',
