@@ -316,10 +316,7 @@ class PedidosController extends Controller
 
 
     public function pedidosACobrar(){
-        $pedidos = Pedido::where([[
-            'estado', '=', 1,
-            'tipo', '=', 1
-        ]])->get();
+        $pedidos = Pedido::where('estado',1)->get();
         return response()->json(['success' => true, 'results' => $pedidos]);
     }
 }
