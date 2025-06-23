@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 class PedidosController extends Controller
 {
 
-    public function sendEmailRecibo($id){
+    public function sendEmailRecibo(Request $req, $id){
         
 
         $pedido = Pedido::where('pedidos.id',$id)
@@ -43,7 +43,7 @@ class PedidosController extends Controller
         
     
 
-        $email = 'derlisruizdiaz@hotmail.com';
+        $email = $req->email ?? 'derlisruizdiaz@hotmail.com';
             Mail::to($email)->send(
             new ReciboPedido($pedido, $email)
             );
@@ -312,5 +312,14 @@ class PedidosController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => $message, 'results' => $pedido]);
+    }
+
+
+    public function pedidosACobrar(){
+        $pedidos = Pedido::where([[
+            'estado', '=', 1,
+            'tipo', '=', 1
+        ]])->get();
+        return response()->json(['success' => true, 'results' => $pedidos]);
     }
 }
