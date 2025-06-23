@@ -40,19 +40,15 @@ class PedidosController extends Controller
                 'clientes.doc'
         )->first();
         //return response()->json($pedido);
-            return view('email.recibo')->with([
-            'pedido' => $pedido,
-            'email' => 'derlissruizdiaz@hotmail.com'
-            ]);
         
     
 
-        /* $email = 'derlisruizdiaz@hotmail.com';
+        $email = 'derlisruizdiaz@hotmail.com';
             Mail::to($email)->send(
             new ReciboPedido($pedido, $email)
             );
-        
-        return response()->json(['success' => true, 'message' => 'Recibo generado con éxito. Enviado al correo electrónico.']); */
+    
+        return response()->json(['success' => true, 'message' => 'Recibo generado con éxito. Enviado al correo electrónico.']); 
     
 
     }
