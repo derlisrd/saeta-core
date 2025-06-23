@@ -20,14 +20,14 @@ class PedidosController extends Controller
     public function sendEmailRecibo($id){
         
 
-        $pedido = Pedido::where('pedidos.id',$id);
-        $pedido->with([
+        $pedido = Pedido::where('pedidos.id',$id)
+        ->with([
             'formasPagoPedido',
             'items.producto',
             'items.impuesto',
         ])
         ->join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
-            ->select(
+        ->select(
                 'pedidos.total',
                 'pedidos.id',
                 'pedidos.estado',
@@ -38,13 +38,21 @@ class PedidosController extends Controller
                 'pedidos.importe_final',
                 'clientes.razon_social',
                 'clientes.doc'
-            )->first();
-        $email = 'derlisruizdiaz@hotmail.com';
+        )->first();
+        //return response()->json($pedido);
+            return view('email.recibo')->with([
+            'pedido' => $pedido,
+            'email' => 'derlissruizdiaz@hotmail.com'
+            ]);
+        
+    
+
+        /* $email = 'derlisruizdiaz@hotmail.com';
             Mail::to($email)->send(
             new ReciboPedido($pedido, $email)
             );
         
-        return response()->json(['success' => true, 'message' => 'Recibo generado con éxito. Enviado al correo electrónico.']);
+        return response()->json(['success' => true, 'message' => 'Recibo generado con éxito. Enviado al correo electrónico.']); */
     
 
     }

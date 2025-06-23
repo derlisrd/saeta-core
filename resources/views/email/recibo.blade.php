@@ -21,7 +21,6 @@
         }
         
         .header {
-            line-height: 0.1;
             margin-bottom: 10px;
         }
         
@@ -168,11 +167,11 @@
             @if($pedido->items && count($pedido->items) > 0)
                 @foreach($pedido->items as $item)
                     {{-- Código ocupa toda la fila --}}
-                    <small class="full-width">{{ $item->codigo }}</small>
+                    <small class="full-width">{{ $item->producto->codigo }}</small>
                     
                     {{-- Descripción, cantidad y precio --}}
                     <small class="item-row">
-                        {{ strlen($item->nombre) > 28 ? substr($item->nombre, 0, 28) : $item->nombre }}
+                        {{ strlen($item->producto->nombre) > 28 ? substr($item->producto->nombre, 0, 28) : $item->producto->nombre }}
                     </small>
                     <small class="item-row text-right">{{ $item->cantidad }}</small>
                     <small class="item-row text-right">{{ number_format($item->precio, 0, ',', '.') }}</small>
