@@ -20,7 +20,7 @@ class PedidosController extends Controller
     public function sendEmailRecibo($id){
         
 
-        $pedido = Pedido::where('id',$id);
+        $pedido = Pedido::where('pedidos.id',$id);
         $pedido->with([
             'formasPagoPedido',
             'items.producto',
