@@ -144,9 +144,7 @@ Route::middleware(Authenticate::using('api'))->group(function () {
     });
 
 
-    Route::prefix('creditos')->group(function () {
-        Route::get('/', [CreditosController::class, 'index']);
-    });
+
 
     Route::prefix('creditos')->group(function () {
         Route::get('/', [CreditosController::class, 'index']);
