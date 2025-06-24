@@ -39,10 +39,7 @@ class CreditosController extends Controller
         ->join('clientes as cl', 'cl.id', '=', 'creditos.cliente_id')
             ->with('cobros')
         ->select('creditos.id','creditos.pedido_id','cl.razon_social','cl.doc','creditos.monto','creditos.fecha_vencimiento',
-                'creditos.created_at',
-                'p.importe_final',
-                'creditos.pagado'
-            )
+                'creditos.created_at','p.importe_final','creditos.pagado')
         ->orderBy('creditos.created_at', 'asc')
         ->get();
         
