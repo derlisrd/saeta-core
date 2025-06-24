@@ -15,9 +15,9 @@ class CreditosController extends Controller
         $credito = Credito::where('creditos.id',$id)
             ->join('pedidos as p', 'p.id', '=', 'creditos.pedido_id')
             ->join('clientes as cl', 'cl.id', '=', 'creditos.cliente_id')
+            ->with('cobros')
             ->select('creditos.id','creditos.pedido_id','cl.razon_social','cl.doc','creditos.monto','creditos.fecha_vencimiento',
-            'creditos.created_at','p.importe_final',
-            )
+            'creditos.created_at','p.importe_final',)
             ->first();
         
         return response()->json(['success' => true, 'results' => $credito]);

@@ -21,4 +21,7 @@ class Credito extends Model
     public function pedido(){
         return $this->belongsTo(Pedido::class);
     }
+    public function cobros(){
+        return $this->hasMany(Cobro::class);
+    }
 }
