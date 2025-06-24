@@ -42,7 +42,7 @@ class CreditosController extends Controller
                 'p.importe_final',
                 'creditos.pagado'
             )
-        ->orderBy('creditos.created_at', 'desc')
+        ->orderBy('creditos.created_at', 'asc')
         ->get();
         
         return response()->json(['success' => true, 'results'=>$creditos]);
