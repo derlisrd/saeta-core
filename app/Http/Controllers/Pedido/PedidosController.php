@@ -39,18 +39,12 @@ class PedidosController extends Controller
                 'clientes.razon_social',
                 'clientes.doc'
         )->first();
-        //return response()->json($pedido);
-        
-    
 
         $email = $req->email ?? 'derlisruizdiaz@hotmail.com';
-            Mail::to($email)->send(
-            new ReciboPedido($pedido, $email)
-            );
+        Mail::to($email)->send(new ReciboPedido($pedido, $email));
     
         return response()->json(['success' => true, 'message' => 'Recibo generado con éxito. Enviado al correo electrónico.']); 
     
-
     }
     
 

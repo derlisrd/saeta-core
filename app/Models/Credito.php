@@ -17,4 +17,8 @@ class Credito extends Model
         'pagado',
         'fecha_vencimiento',
     ];
+
+    public function pedido(){
+        return $this->belongsTo(Pedido::class);
+    }
 }

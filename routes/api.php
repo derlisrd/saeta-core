@@ -149,6 +149,7 @@ Route::middleware(Authenticate::using('api'))->group(function () {
     Route::prefix('creditos')->group(function () {
         Route::get('/', [CreditosController::class, 'index']);
         Route::get('/a-cobrar', [CreditosController::class, 'aCobrar']);
+        Route::post('/cobrar', [CreditosController::class, 'cobrar']);
     });
 
     Route::prefix('config')->group(function () {
