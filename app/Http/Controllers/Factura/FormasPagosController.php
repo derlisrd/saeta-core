@@ -21,7 +21,8 @@ class FormasPagosController extends Controller
     public function store(Request $req)
     {
         $validator = Validator::make($req->all(), [
-            'tipo' => 'required|in:efectivo,digital',
+            'tipo' => 'required|in:caja,banco',
+            'condicion' => 'required|in:contado,credito',
             'descripcion' => 'required',
             'porcentaje_descuento'=>'nullable|numeric'
         ]);
@@ -30,6 +31,7 @@ class FormasPagosController extends Controller
 
         $formaPago = FormasPago::create([
             'tipo' => $req->tipo,
+            'condicion' => $req->condicion,
             'descripcion' => $req->descripcion,
             'porcentaje_descuento' => $req->porcentaje_descuento
         ]);
