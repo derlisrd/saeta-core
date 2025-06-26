@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('formas_pagos', function (Blueprint $table) {
             $table->id();
-            $table->enum('tipo',['efectivo','digital']);
+            $table->enum('tipo',['caja','banco']);
+            $table->enum('condicion',['contado','credito']);
             $table->string('descripcion');
             $table->bigInteger('porcentaje_descuento')->default(0);
             $table->boolean('activo')->default(true);

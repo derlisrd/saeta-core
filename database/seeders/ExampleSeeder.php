@@ -10,12 +10,10 @@ use App\Models\FormasPago;
 use App\Models\Impuesto;
 use App\Models\Medida;
 use App\Models\Moneda;
-use App\Models\Parametro;
 use App\Models\Permiso;
 use App\Models\PermisosOtorgado;
 use App\Models\Sucursal;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ExampleSeeder extends Seeder
@@ -75,6 +73,7 @@ class ExampleSeeder extends Seeder
         ]);
         FormasPago::create([
             'tipo'=>1,
+            'condicion' => 'contado',
             'descripcion'=>'Efectivo'
         ]);
         
@@ -88,8 +87,8 @@ class ExampleSeeder extends Seeder
             'tipo'=>10
         ]);
         Permiso::create([
-            'nombre' => 'Usuarios',
-            'descripcion'=>'Administrar usuarios'
+            'modulo' => 'Usuarios',
+            'accion'=>'Administrar usuarios'
         ]);
         PermisosOtorgado::create([
             'user_id'=>1,

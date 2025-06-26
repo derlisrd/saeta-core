@@ -9,8 +9,8 @@ class Permiso extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nombre',
-        'descripcion'
+        'modulo',
+        'accion'
     ];
 
     public function users()
