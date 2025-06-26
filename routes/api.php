@@ -21,7 +21,7 @@ use App\Http\Controllers\Producto\MedidasController;
 use App\Http\Controllers\Producto\ProductosController;
 use App\Http\Controllers\Producto\StockController;
 use App\Http\Controllers\User\UserController;
-use Illuminate\Auth\Middleware\Authenticate;
+//use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
 
@@ -35,7 +35,8 @@ Route::prefix('/password')->group(function () {
 
 Route::get('/config', [ConfigurarController::class, 'verificar']);
 
-Route::middleware(Authenticate::using('api'))->group(function () {
+//Authenticate::using('api')
+Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('/users')->group(function () {
         Route::get('/', [UserController::class, 'index'])->middleware('permiso:users,ver');
@@ -168,8 +169,6 @@ Route::middleware(Authenticate::using('api'))->group(function () {
     Route::get('/check', [AuthController::class, 'check']);
 });
 
-Route::get('/recuperar', [UserController::class, 'recuperar']);
 
-Route::fallback(function () {
-    return response()->json(['success' => false, 'message' => 'Not found route.'], 404);
-});
+
+Route::fallback(function () {return response()->json(['success' => false, 'message' => 'Not found route.'], 404);});
