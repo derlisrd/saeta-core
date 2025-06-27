@@ -250,6 +250,7 @@ class PedidosController extends Controller
             'p.nombre',
             'pedidos_items.precio', // Cambiado de 'ped.precio' a 'pedidos_items.precio'
             'p.costo',
+            'p.codigo',
             DB::raw('SUM(pedidos_items.cantidad) as total_vendido')
         )
         ->groupBy('p.id', 'p.nombre', 'pedidos_items.precio', 'p.costo')
