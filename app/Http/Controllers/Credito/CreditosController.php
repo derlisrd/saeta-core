@@ -17,7 +17,7 @@ class CreditosController extends Controller
             ->join('clientes as cl', 'cl.id', '=', 'creditos.cliente_id')
             ->with('cobros')
             ->select('creditos.id','creditos.pedido_id','cl.razon_social','cl.doc','creditos.monto','creditos.fecha_vencimiento',
-            'creditos.created_at','p.importe_final',)
+            'creditos.created_at','p.importe_final','creditos.monto_abonado')
             ->first();
         
         return response()->json(['success' => true, 'results' => $credito]);
@@ -39,7 +39,7 @@ class CreditosController extends Controller
         ->join('clientes as cl', 'cl.id', '=', 'creditos.cliente_id')
             ->with('cobros')
         ->select('creditos.id','creditos.pedido_id','cl.razon_social','cl.doc','creditos.monto','creditos.fecha_vencimiento',
-                'creditos.created_at','p.importe_final','creditos.pagado')
+                'creditos.created_at','p.importe_final','creditos.pagado','creditos.monto_abonado')
         ->orderBy('creditos.created_at', 'asc')
         ->get();
         
@@ -50,7 +50,11 @@ class CreditosController extends Controller
         $creditos = Credito::where('pagado', 0)
         ->join('pedidos as p', 'p.id', '=', 'creditos.pedido_id')
         ->join('clientes as cl', 'cl.id', '=', 'creditos.cliente_id')
-        ->select('creditos.id','creditos.pedido_id','cl.razon_social','cl.doc','creditos.monto','creditos.fecha_vencimiento','creditos.created_at')
+        ->select('creditos.id','creditos.pedido_id','cl.razon_social','cl.doc','creditos.monto','creditos.fecha_vencimiento',
+                'creditos.created_at',
+                'creditos.monto_abonado',
+                'creditos.pagado'
+            )
         ->get();
 
         return response()->json(['success' => true, 'results' => $creditos]);
