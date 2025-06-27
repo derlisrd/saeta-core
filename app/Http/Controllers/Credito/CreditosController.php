@@ -88,13 +88,14 @@ class CreditosController extends Controller
                 'monto' => $req->monto,
             ]);
             $totalPagadoActualizado = $totalPagado + $req->monto;
-
-            if ($totalPagadoActualizado >= $credito->monto) {
-                $credito->update([
-                    'pagado' => 1,
-                    'monto_abonado' => $totalPagadoActualizado,
-            ]);
-            }
+            
+            $updateArray = [
+            'pagado' => $totalPagadoActualizado >= $credito->monto ? 1 : 0,
+            'monto_abonado' => $totalPagadoActualizado,
+            ];
+            
+            $credito->update($updateArray);
+            
             return response()->json([
                 'success' => true, 
                 'message' => 'Cobro registrado exitosamente',
