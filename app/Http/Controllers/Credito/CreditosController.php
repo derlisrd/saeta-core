@@ -60,16 +60,15 @@ class CreditosController extends Controller
         return response()->json(['success' => true, 'results' => $creditos]);
     }
 
-    public function cobrar(Request $req){
+    public function cobrar(Request $req,$id){
         $validator = Validator::make($req->all(), [
-            'id' => 'required|exists:creditos,id',
             'forma_pago_id' => 'required|exists:formas_pagos,id',
             'monto' => 'required|numeric|min:0',
         ]);
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
 
-        $credito = Credito::find($req->id);
+        $credito = Credito::find($id);
         if ($credito->pagado === 1)
             return response()->json(['success' => false, 'message' => 'El credito ya fue pagado'], 400);
         
