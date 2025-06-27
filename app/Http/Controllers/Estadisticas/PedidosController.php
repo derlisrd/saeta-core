@@ -220,46 +220,54 @@ class PedidosController extends Controller
     }
 
     public function productosMasVendidos(Request $req)
-    {
+{
+    $validator = Validator::make($req->all(), [
+        'mes' => ['required', 'numeric', 'min:1', 'max:12'],
+        'anio' => ['required', 'numeric', 'min:2025'],
+        'limite' => ['nullable', 'numeric', 'min:1', 'max:50']
+    ]);
 
-        $validator = Validator::make($req->all(), [
-            'mes' => ['required', 'numeric', 'min:1', 'max:12'],
-            'anio' => ['required', 'numeric', 'min:2025'],
-            'limite' => ['nullable', 'numeric', 'min:1', 'max:50']
-        ]);
+    if ($validator->fails())
+        return response()->json([
+            'success' => false,
+            'message' => $validator->errors()->first(),
+        ], 400);
 
-        if ($validator->fails())
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-            ], 400);
+    $limite = $req->limite ?? 10;
+    $query = PedidoItems::query()
+        ->join('productos as p', 'pedidos_items.producto_id', '=', 'p.id')
+        ->join('pedidos as ped', 'pedidos_items.pedido_id', '=', 'ped.id');
 
-        $limite = $req->limite ?? 10;
-        $query = PedidoItems::query()
-            ->join('productos as p', 'pedidos_items.producto_id', '=', 'p.id')
-            ->join('pedidos as ped', 'pedidos_items.pedido_id', '=', 'ped.id');
+    $mes = $req->mes;
+    $anio = $req->anio;
+    $inicioMes = Carbon::create($anio, $mes, 1)->startOfMonth();
+    $finMes = Carbon::create($anio, $mes, 1)->endOfMonth();
 
-            $mes = $req->mes;
-            $anio = $req->anio;
-            $inicioMes = Carbon::create($anio, $mes, 1)->startOfMonth();
-            $finMes = Carbon::create($anio, $mes, 1)->endOfMonth();
-
-        $query->whereBetween('ped.created_at', [$inicioMes, $finMes]);
-        $productosMasVendidos = $query->select('p.id','p.nombre','p.precio','p.costo',DB::raw('SUM(pedidos_items.cantidad) as total_vendido'))
-        ->groupBy('p.id', 'p.nombre', 'p.precio', 'p.costo')
+    $query->whereBetween('ped.created_at', [$inicioMes, $finMes]);
+    
+    $productosMasVendidos = $query->select(
+            'p.id',
+            'p.nombre',
+            'pedidos_items.precio', // Cambiado de 'ped.precio' a 'pedidos_items.precio'
+            'p.costo',
+            DB::raw('SUM(pedidos_items.cantidad) as total_vendido')
+        )
+        ->groupBy('p.id', 'p.nombre', 'pedidos_items.precio', 'p.costo')
         ->orderBy('total_vendido', 'desc')
         ->limit($limite)
         ->get();
-        $total = $productosMasVendidos->sum('total_vendido');
-        return response()->json([
-            'success' => true,
-            'message' => 'Productos más vendidos',
-            'results' => [
-                'productos' => $productosMasVendidos,
-                'total'=>$total
-            ]
-        ]);
-    }
+        
+    $total = $productosMasVendidos->sum('total_vendido');
+    
+    return response()->json([
+        'success' => true,
+        'message' => 'Productos más vendidos',
+        'results' => [
+            'productos' => $productosMasVendidos,
+            'total' => $total
+        ]
+    ]);
+}
 
 
     public function producto(Request $req, $id)
