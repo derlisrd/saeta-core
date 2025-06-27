@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('pedido_id')->nullable()->constraint('pedidos');
             $table->foreignId('cliente_id')->nullable()->constraint('clientes');
             $table->float('monto');
+            $table->float('monto_abonado')->default(0);
             $table->integer('cuotas')->default(1);
             $table->float('interes')->default(0);
             $table->float('descuento')->default(0);

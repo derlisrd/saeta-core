@@ -90,7 +90,10 @@ class CreditosController extends Controller
             $totalPagadoActualizado = $totalPagado + $req->monto;
 
             if ($totalPagadoActualizado >= $credito->monto) {
-                $credito->update(['pagado' => 1]);
+                $credito->update([
+                    'pagado' => 1,
+                    'monto_abonado' => $totalPagadoActualizado,
+            ]);
             }
             return response()->json([
                 'success' => true, 

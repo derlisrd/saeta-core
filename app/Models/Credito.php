@@ -11,6 +11,7 @@ class Credito extends Model
         'pedido_id',
         'cliente_id',
         'monto',
+        'monto_abonado',
         'cuotas',
         'interes',
         'descuento',
