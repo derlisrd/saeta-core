@@ -14,7 +14,7 @@ class PedidosController extends Controller
 {
 
 
-    public function select(Request $req)
+    public function periodo(Request $req)
     {
         $validator = Validator::make($req->all(), [
             'mes' => ['required', 'numeric', 'min:1', 'max:12'],

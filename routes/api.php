@@ -135,6 +135,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/pedidos', [EstadisticasPedidosController::class, 'pedidos']);
         Route::get('/lucros', [EstadisticasPedidosController::class, 'lucros']);
         Route::get('/producto/{id}', [EstadisticasPedidosController::class, 'producto']);
+        Route::get('/periodo', [EstadisticasPedidosController::class, 'periodo']);
     });
     Route::prefix('pedidos')->group(function () {
         Route::get('/', [PedidosController::class, 'index']);
