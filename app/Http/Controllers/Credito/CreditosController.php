@@ -104,7 +104,7 @@ class CreditosController extends Controller
                 'message' => 'Cobro registrado exitosamente',
                 'results'=>[
                     'credito_pagado' => $credito->pagado === 1,
-                    'deuda_restante' => max(0, $credito->monto_total - $totalPagadoActualizado)
+                    'deuda_restante' => max(0, $credito->monto - $totalPagadoActualizado)
                 ]
             ]);
     }
