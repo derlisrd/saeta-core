@@ -12,7 +12,8 @@ use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\FormasPagosController;
 use App\Http\Controllers\Factura\ImpuestosController;
 use App\Http\Controllers\Factura\MonedaController;
-use App\Http\Controllers\Pedido\EstadisticasController;
+
+use App\Http\Controllers\Estadisticas\PedidosController as EstadisticasPedidosController;
 use App\Http\Controllers\Pedido\PedidosController;
 use App\Http\Controllers\Permiso\PermisosController;
 use App\Http\Controllers\Producto\CategoriasController;
@@ -131,9 +132,9 @@ Route::middleware(['auth:api'])->group(function () {
 
 
     Route::prefix('estadisticas')->group(function () {
-        Route::get('/pedidos', [EstadisticasController::class, 'pedidos']);
-        Route::get('/lucros', [EstadisticasController::class, 'lucros']);
-        Route::get('/producto/{id}', [EstadisticasController::class, 'producto']);
+        Route::get('/pedidos', [EstadisticasPedidosController::class, 'pedidos']);
+        Route::get('/lucros', [EstadisticasPedidosController::class, 'lucros']);
+        Route::get('/producto/{id}', [EstadisticasPedidosController::class, 'producto']);
     });
     Route::prefix('pedidos')->group(function () {
         Route::get('/', [PedidosController::class, 'index']);

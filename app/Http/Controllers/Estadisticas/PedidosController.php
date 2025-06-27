@@ -1,15 +1,54 @@
 <?php
 
-namespace App\Http\Controllers\Pedido;
+namespace App\Http\Controllers\Estadisticas;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
 use App\Models\Pedido;
 use App\Models\PedidoItems;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class EstadisticasController extends Controller
+class PedidosController extends Controller
 {
+
+
+    public function select(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'mes' => ['required', 'numeric', 'min:1', 'max:12'],
+            'anio' => ['required', 'numeric', 'min:2025'],
+        ]);
+
+        if ($validator->fails())
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+
+        $mes = $req->mes;
+        $anio = $req->anio;
+
+        // Crear las fechas de inicio y fin del mes seleccionado
+        $inicioMes = Carbon::create($anio, $mes, 1)->startOfMonth();
+        $finMes = Carbon::create($anio, $mes, 1)->endOfMonth();
+        // Obtener estadísticas del mes seleccionado
+        $estadisticas = Pedido::whereBetween('created_at', [$inicioMes, $finMes])
+            ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pedidos del mes seleccionado',
+            'results' => [
+                'cantidad_pedidos' => $estadisticas ? $estadisticas->cantidad_pedidos : 0,
+                'importe_final_total' => $estadisticas ? $estadisticas->importe_final_total : 0,
+                'descuento_total' => $estadisticas ? $estadisticas->descuento_total : 0
+            ]
+        ]);
+    }
+
     public function pedidos()
     {
         $ayer = now()->subDay()->startOfDay();
@@ -30,8 +69,8 @@ class EstadisticasController extends Controller
         $finMesPasado = now()->subMonth()->endOfMonth();
 
         $estadisticasAyer = Pedido::whereBetween('created_at', [$ayer, $finAyer])
-        ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
-        ->first();
+            ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
+            ->first();
 
         $estadisticasHoy = Pedido::whereBetween('created_at', [$hoy, $finHoy])
             ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
@@ -45,8 +84,8 @@ class EstadisticasController extends Controller
             ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
             ->first();
 
-            // Estadísticas de la semana pasada
-            $estadisticasSemanaPasada = Pedido::whereBetween('created_at', [$inicioSemanaPasada, $finSemanaPasada])
+        // Estadísticas de la semana pasada
+        $estadisticasSemanaPasada = Pedido::whereBetween('created_at', [$inicioSemanaPasada, $finSemanaPasada])
             ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
             ->first();
 
@@ -160,7 +199,8 @@ class EstadisticasController extends Controller
     }
 
 
-    public function producto(Request $req,$id){
+    public function producto(Request $req, $id)
+    {
 
         $data = $req->all();
         $data['id'] = $id;
@@ -170,33 +210,42 @@ class EstadisticasController extends Controller
             'hasta' => ['required', 'date_format:Y-m-d', 'after_or_equal:desde'], // Agregada validación 'after_or_equal'
             'id' => ['required', 'numeric', 'exists:productos,id'], // El 'id' de la URL se agrega a la validación
         ]);
-        if ($validator->fails()) 
+        if ($validator->fails())
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first(),
             ], 400);
-        
-        
-        
+
+
+
         $desde = $req->desde . ' 00:00:00';
-        $hasta = $req->hasta . ' 23:59:59'; ;
+        $hasta = $req->hasta . ' 23:59:59';;
 
         // calcular el total de ventas de un producto en un rango de fechas
         $itemsVendidos = PedidoItems::where('producto_id', $id)
-        ->whereBetween('pedidos_items.created_at', [$desde, $hasta])
-        ->join('productos as p', 'pedidos_items.producto_id', '=', 'p.id')
-        //->with('producto:id,costo')
-        ->select('producto_id', 'cantidad', 'precio', 
-        'descuento', 'total', 'p.costo', 'p.id','p.nombre','pedidos_items.created_at')
-        ->get();
+            ->whereBetween('pedidos_items.created_at', [$desde, $hasta])
+            ->join('productos as p', 'pedidos_items.producto_id', '=', 'p.id')
+            //->with('producto:id,costo')
+            ->select(
+                'producto_id',
+                'cantidad',
+                'precio',
+                'descuento',
+                'total',
+                'p.costo',
+                'p.id',
+                'p.nombre',
+                'pedidos_items.created_at'
+            )
+            ->get();
         $cantidad = 0;
         $costos = 0;
         $total = 0;
-        
+
         foreach ($itemsVendidos as $i) {
             $cantidad += $i->cantidad;
-            $total +=  $i->total; 
-            $costos +=  ($i->costo * $i->cantidad); 
+            $total +=  $i->total;
+            $costos +=  ($i->costo * $i->cantidad);
         }
         $lucroFinal = $total - $costos;
 
@@ -207,24 +256,17 @@ class EstadisticasController extends Controller
             $lucro +=  ($total ) - ($i->producto->costo * $i->cantidad); 
             //(($i->precio - $i->descuento) * $i->cantidad ) - ($i->producto->costo * $i->cantidad);
         } */
-        
+
 
         return response()->json([
-            'success'=>true,
-            'results'=>[
+            'success' => true,
+            'results' => [
                 'cantidad' => $cantidad,
                 'lucro' => $lucroFinal,
                 'costo' => $costos,
                 'total' => $total,
-                'ventas'=> $itemsVendidos,
+                'ventas' => $itemsVendidos,
             ]
         ]);
     }
-
-
 }
-
-      
-
-
-
