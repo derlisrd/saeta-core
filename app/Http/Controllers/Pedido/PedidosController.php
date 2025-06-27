@@ -211,7 +211,7 @@ class PedidosController extends Controller
                     'pedido_id' => $pedido->id,
                     'cliente_id' => $req->cliente_id,
                     'monto' => $importe_final,
-                    'fecha_vencimiento' => $req->vencimiento ? Carbon::parse($req->vencimiento) : now()->addDays(30)
+                    'fecha_vencimiento' => $req->fecha_vencimiento ?? now()->addDays(30)
                 ]);
             }
 
