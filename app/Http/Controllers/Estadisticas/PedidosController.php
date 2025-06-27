@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Pedido;
 use App\Models\PedidoItems;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PedidosController extends Controller
@@ -46,13 +47,13 @@ class PedidosController extends Controller
         // Crear las fechas de inicio y fin del mes seleccionado
         $inicioMes = Carbon::create($anio, $mes, 1)->startOfMonth();
         $finMes = Carbon::create($anio, $mes, 1)->endOfMonth();
-       
+
         // Obtener estadísticas del mes seleccionado
         $estadisticas = Pedido::whereBetween('created_at', [$inicioMes, $finMes])
             ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
             ->first();
 
-            $pedidosMes = Pedido::whereBetween('created_at', [$inicioMes, $finMes])
+        $pedidosMes = Pedido::whereBetween('created_at', [$inicioMes, $finMes])
             ->with(['items:pedido_id,producto_id,cantidad', 'items.producto:id,costo'])
             ->select('id', 'importe_final')
             ->get();
@@ -64,7 +65,7 @@ class PedidosController extends Controller
                 'cantidad_pedidos' => $estadisticas ? $estadisticas->cantidad_pedidos : 0,
                 'importe_final_total' => $estadisticas ? $estadisticas->importe_final_total : 0,
                 'descuento_total' => $estadisticas ? $estadisticas->descuento_total : 0,
-                'lucro_total'=>$calcularLucroPedidosOptimizado($pedidosMes)
+                'lucro_total' => $calcularLucroPedidosOptimizado($pedidosMes)
             ]
         ]);
     }
@@ -214,6 +215,48 @@ class PedidosController extends Controller
                 'mes' => [
                     'lucro_total' => $calcularLucroPedidosOptimizado($pedidosMes),
                 ]
+            ]
+        ]);
+    }
+
+    public function productosMasVendidos(Request $req)
+    {
+
+        $validator = Validator::make($req->all(), [
+            'mes' => ['required', 'numeric', 'min:1', 'max:12'],
+            'anio' => ['required', 'numeric', 'min:2025'],
+            'limite' => ['nullable', 'numeric', 'min:1', 'max:50']
+        ]);
+
+        if ($validator->fails())
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+
+        $limite = $req->limite ?? 10;
+        $query = PedidoItems::query()
+            ->join('productos as p', 'pedidos_items.producto_id', '=', 'p.id')
+            ->join('pedidos as ped', 'pedidos_items.pedido_id', '=', 'ped.id');
+
+            $mes = $req->mes;
+            $anio = $req->anio;
+            $inicioMes = Carbon::create($anio, $mes, 1)->startOfMonth();
+            $finMes = Carbon::create($anio, $mes, 1)->endOfMonth();
+
+        $query->whereBetween('ped.created_at', [$inicioMes, $finMes]);
+        $productosMasVendidos = $query->select('p.id','p.nombre','p.precio','p.costo',DB::raw('SUM(pedidos_items.cantidad) as total_vendido'))
+        ->groupBy('p.id', 'p.nombre', 'p.precio', 'p.costo')
+        ->orderBy('total_vendido', 'desc')
+        ->limit($limite)
+        ->get();
+        $total = $productosMasVendidos->sum('total_vendido');
+        return response()->json([
+            'success' => true,
+            'message' => 'Productos más vendidos',
+            'results' => [
+                'productos' => $productosMasVendidos,
+                'total'=>$total
             ]
         ]);
     }
