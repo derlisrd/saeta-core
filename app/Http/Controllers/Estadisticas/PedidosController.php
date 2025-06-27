@@ -29,14 +29,33 @@ class PedidosController extends Controller
 
         $mes = $req->mes;
         $anio = $req->anio;
+        $calcularLucroPedidosOptimizado = function ($pedidos) {
+            $lucroTotal = 0;
+            foreach ($pedidos as $pedido) {
+                $costoPedido = 0;
+                foreach ($pedido->items as $item) {
+                    if ($item->producto) {
+                        $costoPedido += $item->producto->costo * $item->cantidad;
+                    }
+                }
+                $lucroTotal += $pedido->importe_final - $costoPedido;
+            }
+            return $lucroTotal;
+        };
 
         // Crear las fechas de inicio y fin del mes seleccionado
         $inicioMes = Carbon::create($anio, $mes, 1)->startOfMonth();
         $finMes = Carbon::create($anio, $mes, 1)->endOfMonth();
+       
         // Obtener estadísticas del mes seleccionado
         $estadisticas = Pedido::whereBetween('created_at', [$inicioMes, $finMes])
             ->selectRaw('count(*) as cantidad_pedidos, sum(importe_final) as importe_final_total, sum(descuento) as descuento_total')
             ->first();
+
+            $pedidosMes = Pedido::whereBetween('created_at', [$inicioMes, $finMes])
+            ->with(['items:pedido_id,producto_id,cantidad', 'items.producto:id,costo'])
+            ->select('id', 'importe_final')
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -44,7 +63,8 @@ class PedidosController extends Controller
             'results' => [
                 'cantidad_pedidos' => $estadisticas ? $estadisticas->cantidad_pedidos : 0,
                 'importe_final_total' => $estadisticas ? $estadisticas->importe_final_total : 0,
-                'descuento_total' => $estadisticas ? $estadisticas->descuento_total : 0
+                'descuento_total' => $estadisticas ? $estadisticas->descuento_total : 0,
+                'lucro_total'=>$calcularLucroPedidosOptimizado($pedidosMes)
             ]
         ]);
     }
