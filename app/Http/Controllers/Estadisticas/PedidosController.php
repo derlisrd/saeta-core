@@ -251,7 +251,11 @@ class PedidosController extends Controller
             'pedidos_items.precio', // Cambiado de 'ped.precio' a 'pedidos_items.precio'
             'p.costo',
             'p.codigo',
-            DB::raw('SUM(pedidos_items.cantidad) as cantidad_total_vendido')
+            DB::raw('SUM(pedidos_items.cantidad) as cantidad_total_vendido'),
+            DB::raw('SUM(pedidos_items.total) as ingresos_total'),
+            DB::raw('SUM(pedidos_items.cantidad * p.costo) as costo_total'),
+            DB::raw('SUM(pedidos_items.total) - SUM(pedidos_items.cantidad * p.costo) as lucro_total'),
+            DB::raw('COUNT(DISTINCT pedidos_items.pedido_id) as pedidos_diferentes')
         )
         ->groupBy('p.id', 'p.nombre', 'pedidos_items.precio', 'p.costo')
         ->orderBy('cantidad_total_vendido', 'desc')
