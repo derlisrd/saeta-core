@@ -251,14 +251,14 @@ class PedidosController extends Controller
             'pedidos_items.precio', // Cambiado de 'ped.precio' a 'pedidos_items.precio'
             'p.costo',
             'p.codigo',
-            DB::raw('SUM(pedidos_items.cantidad) as total_vendido')
+            DB::raw('SUM(pedidos_items.cantidad) as cantidad_total_vendido')
         )
         ->groupBy('p.id', 'p.nombre', 'pedidos_items.precio', 'p.costo')
-        ->orderBy('total_vendido', 'desc')
+        ->orderBy('cantidad_total_vendido', 'desc')
         ->limit($limite)
         ->get();
         
-    $total = $productosMasVendidos->sum('total_vendido');
+    $total = $productosMasVendidos->sum('cantidad_total_vendido');
     
     return response()->json([
         'success' => true,
