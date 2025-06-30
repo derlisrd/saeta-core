@@ -372,9 +372,10 @@ class ProductosController extends Controller
                 $imageUploadService = new ImageUploadService();
                 foreach ($req->file('images') as $image) {
                     $url = $imageUploadService->subir($image, $producto->id); // Guarda en /public/{id}/time.jpg
+                    $thumb = $imageUploadService->crearMiniaturaCuadrada($image, $producto->id); // Guarda en /public/{id}/thumb.jpg
                     $producto->images()->create([
                         'producto_id' => $producto->id,
-                        'miniatura' => $url, // Puedes procesar miniaturas si lo necesitas
+                        'miniatura' => $thumb,
                         'url' => $url
                     ]);
                 }

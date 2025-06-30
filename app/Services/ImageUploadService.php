@@ -71,6 +71,37 @@ class ImageUploadService
         }
     }
 
+    public function crearMiniaturaCuadrada(UploadedFile $image, int $id, string $directoryBase = 'img', int $size = 200): string
+    {
+        try {
+            // Define la carpeta basada en el ID del producto
+            $directory = "{$directoryBase}/{$id}";
+            $randomNumber = rand(1, 1000);
+            
+            // Cambiar extensión a .webp
+            $filename = time() . $randomNumber . '_thumb.webp';
+            $fullPath = $directory . '/' . $filename;
+
+            // Crear directorio si no existe
+            $storagePath = storage_path('app/public/' . $directory);
+            if (!file_exists($storagePath)) {
+                mkdir($storagePath, 0755, true);
+            }
+
+            // Procesar imagen: recorte cuadrado centrado
+            $processedImage = $this->manager->read($image->getRealPath())
+                ->cover(width: $size, height: $size) // Recorte cuadrado centrado
+                ->toWebp(quality: 80);
+
+            Storage::disk('public')->put($fullPath, $processedImage);
+            return asset('storage/' . $fullPath);
+
+        } catch (\Throwable $th) {
+            Log::error('Error al crear miniatura cuadrada: ' . $th->getMessage());
+            throw $th;
+        }
+    }
+
 
     public function eliminar(string $url): bool
     {
