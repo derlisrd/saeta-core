@@ -25,6 +25,7 @@ class ProductosController extends Controller
         ]);
     }
 
+    // un solo producto
     public function consultarPorDeposito(Request $req)
     {
         $validator = Validator::make($req->all(), [
@@ -36,80 +37,102 @@ class ProductosController extends Controller
             'deposito_id.exists' => 'El depósito seleccionado no existe',
             'cantidad.gt' => 'La cantidad debe ser mayor a cero'
         ]);
-        if ($validator->fails())
-            return response()->json(['success' => false, 'message' => $validator->errors()->first(), 'results' => null], 400);
 
-        // Buscar el producto por código
-        $producto = Producto::with(['stock' => function ($query) use ($req) {
-            if ($req->deposito_id) {
-                $query->where('deposito_id', $req->deposito_id);
-            }
-        }])->where('codigo', $req->codigo)->first();
+        if ($validator->fails()) 
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'results' => null
+            ], 400);
+        
 
+        // Consulta optimizada con todos los campos necesarios
+        $query = Producto::select([
+            'productos.id',
+            'productos.codigo',
+            'productos.created_at',
+            'productos.nombre',
+            'productos.precio_normal',
+            'productos.precio_minimo',
+            'productos.descripcion',
+            'productos.disponible',
+            'productos.tipo',
+            'productos.costo',
+            'productos.category_id',
+            'productos.impuesto_id',
+            'productos.medida_id'
+        ])
+            ->leftJoin('stocks as s', 'productos.id', '=', 's.producto_id')
+            ->addSelect('s.cantidad', 's.deposito_id as stock_deposito_id')
+            ->where('productos.codigo', $req->codigo);
 
-        // Si el producto es un servicio (tipo = 2)
-        if ($producto->tipo == 2) {
+        // Filtrar por depósito si se especifica
+        if ($req->deposito_id) {
+            $query->where('s.deposito_id', $req->deposito_id);
+        }
+
+        $producto = $query->first();
+
+        if (!$producto) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Producto no encontrado',
+                'results' => null
+            ], 404);
+        }
+
+        // Preparar respuesta base con todos los campos
+        $resultado = [
+            'id' => $producto->id,
+            'producto_id' => $producto->id,
+            'codigo' => $producto->codigo,
+            'created_at' => $producto->created_at,
+            'nombre' => $producto->nombre,
+            'descripcion' => $producto->descripcion,
+            'precio_normal' => $producto->precio_normal,
+            'precio_minimo' => $producto->precio_minimo,
+            'disponible' => $producto->disponible,
+            'tipo' => $producto->tipo,
+            'costo' => $producto->costo,
+            'category_id' => $producto->category_id,
+            'impuesto_id' => $producto->impuesto_id,
+            'medida_id' => $producto->medida_id,
+            'cantidad' => $producto->tipo == 2 ? 0 : ($producto->cantidad ?? 0),
+            'deposito_id' => $producto->tipo == 2 ? null : $producto->stock_deposito_id,
+        ];
+
+        // Lógica específica por tipo de producto
+        if ($producto->tipo == 2) { // Servicio
+            $resultado['cantidad'] = 0;
+            $resultado['deposito_id'] = null;
+
             return response()->json([
                 'success' => true,
                 'message' => '',
-                'results' => [
-                    'id' => $producto->id,
-                    'deposito_id' => null,
-                    'impuesto_id' => $producto->impuesto_id,
-                    'producto_id' => $producto->id,
-                    'codigo' => $producto->codigo,
-                    'nombre' => $producto->nombre,
-                    'descripcion' => $producto->descripcion,
-                    'costo' => $producto->costo,
-                    'precio_normal' => $producto->precio_normal,
-                    'precio_minimo' => $producto->precio_minimo,
-                    'disponible' => $producto->disponible,
-                    'tipo' => $producto->tipo,
-                    'cantidad' => 0, // Los servicios no tienen cantidad
-                ],
+                'results' => $resultado
             ]);
         }
 
-        // Verificar stock para artículos (tipo = 1)
-        $stockDisponible = $producto->stock->first();
-
+        // Validaciones para artículos (tipo = 1)
         if ($producto->tipo == 1) {
-            if (!$stockDisponible) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'El producto existe, pero no tiene stock en el depósito seleccionado.',
-                    'results' => null
-                ], 400);
-            }
+            $validacionStock = $this->validarStock($producto, $req->cantidad);
 
-            if ($stockDisponible->cantidad <= 0 || $stockDisponible->cantidad < $req->cantidad) {
+            if (!$validacionStock['valido']) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'El producto no tiene stock disponible.',
+                    'message' => $validacionStock['mensaje'],
                     'results' => null
                 ], 400);
             }
         }
 
-        // Retornar producto con stock
+        $resultado['cantidad'] = $producto->cantidad ?? 0;
+        $resultado['deposito_id'] = $producto->stock_deposito_id;
+
         return response()->json([
             'success' => true,
             'message' => '',
-            'results' => [
-                'id' => $producto->id,
-                'producto_id' => $producto->id,
-                'deposito_id' => $stockDisponible ? $stockDisponible->deposito_id : null,
-                'impuesto_id' => $producto->impuesto_id,
-                'codigo' => $producto->codigo,
-                'nombre' => $producto->nombre,
-                'descripcion' => $producto->descripcion,
-                'costo' => $producto->costo,
-                'precio_normal' => $producto->precio_normal,
-                'precio_minimo' => $producto->precio_minimo,
-                'disponible' => $producto->disponible,
-                'tipo' => $producto->tipo,
-                'cantidad' => $stockDisponible ? $stockDisponible->cantidad : 0,
-            ],
+            'results' => $resultado
         ]);
     }
 
@@ -150,17 +173,20 @@ class ProductosController extends Controller
                 ->offset($offset)
                 ->limit($limit)
                 ->select(
-                    'id',
-                    'disponible',
-                    'codigo',
-                    'nombre',
-                    'precio_normal',
-                    'precio_descuento',
-                    'precio_minimo',
-                    'costo',
-                    'tipo',
-                    'descripcion',
-                    'created_at'
+                    'productos.id',
+                    'productos.codigo',
+                    'productos.created_at',
+                    'productos.nombre',
+                    's.cantidad',
+                    'productos.precio_normal',
+                    'productos.precio_minimo',
+                    'productos.descripcion',
+                    'productos.disponible',
+                    'productos.tipo',
+                    'productos.costo',
+                    'productos.category_id',
+                    'productos.impuesto_id',
+                    'productos.medida_id',
                 )
                 ->get();
 
@@ -188,10 +214,18 @@ class ProductosController extends Controller
         $query->select(
             'productos.id',
             'productos.codigo',
+            'productos.created_at',
             'productos.nombre',
+            's.cantidad',
+            'productos.precio_normal',
+            'productos.precio_minimo',
+            'productos.descripcion',
             'productos.disponible',
             'productos.tipo',
             'productos.costo',
+            'productos.category_id',
+            'productos.impuesto_id',
+            'productos.medida_id',
 
         );
         $results = $query->get();
@@ -226,6 +260,9 @@ class ProductosController extends Controller
             'productos.tipo',
             'productos.costo',
             'productos.category_id',
+            'productos.impuesto_id',
+            'productos.medida_id',
+
         );
         $results = $query->get();
 
@@ -413,5 +450,37 @@ class ProductosController extends Controller
                 'message' => 'Error de servidor. SEQ132'
             ], 500);
         }
+    }
+
+
+
+
+    /**
+     * Validar stock disponible para artículos
+     */
+    private function validarStock($producto, $cantidadSolicitada)
+    {
+        if (is_null($producto->cantidad)) {
+            return [
+                'valido' => false,
+                'mensaje' => 'El producto existe, pero no tiene stock en el depósito seleccionado.'
+            ];
+        }
+
+        if ($producto->cantidad <= 0) {
+            return [
+                'valido' => false,
+                'mensaje' => 'El producto no tiene stock disponible.'
+            ];
+        }
+
+        if ($producto->cantidad < $cantidadSolicitada) {
+            return [
+                'valido' => false,
+                'mensaje' => "Stock insuficiente. Disponible: {$producto->cantidad}, Solicitado: {$cantidadSolicitada}"
+            ];
+        }
+
+        return ['valido' => true];
     }
 }
