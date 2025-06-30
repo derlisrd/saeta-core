@@ -394,13 +394,32 @@ class ProductosController extends Controller
 
     public function update(Request $req, $id)
     {
+        $validator = Validator::make($req->all(), [
+            'impuesto_id' => 'required',
+            'category_id' => 'nullable|exists:categories,id',
+            'medida_id' => 'nullable|exists:medidas,id',
+            'nombre' => 'required',
+            'costo' => 'required|numeric',
+            'precio_normal' => 'required|numeric',
+            'precio_minimo' => 'required|numeric',
+            'preguntar_precio' => 'nullable|boolean',
+            'disponible' => 'required',
+            'tipo' => 'required',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'atributos' => 'nullable|array',
+            'atributos.*.nombre' => 'required',
+            'atributos.*.opciones' => 'array',
+        ]);
+        if ($validator->fails())
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+
         $user = $req->user();
         $datos = [
             'category_id' => $req->category_id,
             'medida_id' => $req->medida_id,
             'impuesto_id' => $req->impuesto_id,
             'modificado_por' => $user->id,
-            'codigo' => $req->codigo,
             'nombre' => $req->nombre,
             'descripcion' => $req->descripcion,
             'costo' => $req->costo,
@@ -414,8 +433,6 @@ class ProductosController extends Controller
             'disponible' => $req->disponible,
             'tipo' => $req->tipo,
             'preguntar_precio' => $req->preguntar_precio,
-            'notificar_minimo' => $req->notificar_minimo,
-            'cantidad_minima' => $req->cantidad_minima
         ];
 
         $producto = Producto::find($id);
