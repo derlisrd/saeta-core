@@ -177,7 +177,7 @@ class ProductosController extends Controller
                     'productos.codigo',
                     'productos.created_at',
                     'productos.nombre',
-                    '0 as cantidad',
+                    //'0 as cantidad',
                     'productos.precio_normal',
                     'productos.precio_minimo',
                     'productos.descripcion',
