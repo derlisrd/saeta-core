@@ -72,6 +72,21 @@ class ImageUploadService
     }
 
 
+    public function eliminar(string $url): bool
+    {
+        try {
+            $path = str_replace(asset('storage/'), '', $url);
+            return Storage::disk('public')->delete($path);
+    
+        } catch (\Throwable $th) {
+            Log::error('Error al eliminar imagen: ' . $th->getMessage(), [
+                'url' => $url,
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ]);
+            return false;
+        }
+    }
 
 
 
