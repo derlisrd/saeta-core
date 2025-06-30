@@ -246,7 +246,8 @@ class ProductosController extends Controller
         $query->where('productos.nombre', 'like', '%' . $request->q . '%');
         $query->orWhere('productos.codigo', 'like', '%' . $request->q . '%');
         $query->where('s.deposito_id', $id);
-        $query->limit(200);
+        $query->limit(240);
+        $query->orderByDesc('productos.id');
         $query->select(
             'productos.id',
             'productos.codigo',
