@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 
 class ConfigurarController extends Controller
@@ -25,6 +26,14 @@ class ConfigurarController extends Controller
 
     public function configurarPrimeraVez(Request $req)
     {
+        $ip = $req->ip();
+            $rateKey = "config:$ip";
+
+            if (RateLimiter::tooManyAttempts($rateKey, 5)) {
+                return response()->json(['success' => false, 'message' => 'Demasiadas peticiones. Espere 1 minuto.'], 429);
+            }
+            RateLimiter::hit($rateKey, 60);
+
         $validator = Validator::make($req->all(), [
             'nombre' => 'required|string|max:255',
             'ruc' => 'required|string|max:20|unique:empresas,ruc',
