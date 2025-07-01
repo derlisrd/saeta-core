@@ -36,7 +36,7 @@ class ConfigurarController extends Controller
 
         $validator = Validator::make($req->all(), [
             'nombre' => 'required|string|max:255',
-            'ruc' => 'required|string|max:20|unique:empresas,ruc',
+            'ruc' => 'required|string|max:20|unique:empresa,ruc',
             'telefono' => 'required|string|max:20',
             'direccion' => 'required|string|max:500',
             'propietario' => 'nullable|string|max:255',
@@ -82,9 +82,8 @@ class ConfigurarController extends Controller
                     'sucursal_id' => 1,
                     'username' => $req->email,
                     'email' => $req->email,
-                    'password' => Hash::make($req->password), // Más explícito que bcrypt()
+                    'password' => Hash::make($req->password),
                     'tipo' => 10,
-                    'email_verified_at' => now(), // Si quieres marcar como verificado
                 ]);
             });
 
