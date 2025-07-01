@@ -34,7 +34,7 @@ Route::prefix('/password')->group(function () {
     Route::post('reset', [PasswordResetController::class, 'resetPassword']);
 });
 
-Route::get('/config', [ConfigurarController::class, 'verificar']);
+Route::get('/config/verificar', [ConfigurarController::class, 'verificar']);
 Route::post('/config', [ConfigurarController::class, 'configurarPrimeraVez']);
 
 //Authenticate::using('api')
