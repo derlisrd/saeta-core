@@ -21,7 +21,7 @@ class UserController extends Controller
     }
 
     public function index(Request $req){
-        $users = User::all();
+        $users = User::where('hidden', 0)->get();
         return response()->json([
             'success'=>true,
             'results'=>$users,

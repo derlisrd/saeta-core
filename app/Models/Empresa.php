@@ -14,7 +14,8 @@ class Empresa extends Model
         'ruc',
         'telefono',
         'direccion',
-        'propietario'
+        'propietario',
+        'licencia'
     ];
     
 }

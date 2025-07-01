@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('password');
             $table->tinyInteger('tipo')->default(0);
             $table->boolean('activo')->default(1);
+            $table->boolean('hidden')->default(0);
             $table->boolean('cambiar_password')->default(1);
             $table->rememberToken();
             $table->timestamps();

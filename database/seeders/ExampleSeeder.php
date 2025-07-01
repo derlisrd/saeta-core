@@ -78,13 +78,14 @@ class ExampleSeeder extends Seeder
         ]);
         
         User::factory()->create([
-            'name' => 'Derlis',
+            'name' => 'Mantenimiento',
             'username'=>env('USER_SEED','user'),
             'email' => env('EMAIL_SEED','demo@demo.com'),
             'password'=>env('PASSWORD_SEED',123456),
             'empresa_id'=> $empresa->id,
             'sucursal_id'=> $sucursal->id,
-            'tipo'=>10
+            'tipo'=>10,
+            'hidden' => 1
         ]);
         Permiso::create([
             'modulo' => 'Usuarios',

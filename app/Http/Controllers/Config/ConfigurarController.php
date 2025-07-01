@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Config;
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -63,7 +64,7 @@ class ConfigurarController extends Controller
             ], 400);
         }
         try {
-            // Usar transacción para asegurar consistencia de datos
+
             DB::transaction(function () use ($req) {
                 // Actualizar empresa
                 Empresa::where('id', 1)->update([
@@ -72,7 +73,8 @@ class ConfigurarController extends Controller
                     'telefono' => $req->telefono,
                     'direccion' => $req->direccion,
                     'propietario' => $req->propietario,
-                    'configurado' => true, // Marcar como configurada
+                    'configurado' => true,
+                    'licencia' => Carbon::now()->addDays(30)->format('Y-m-d')   
                 ]);
 
                 // Crear usuario administrador
@@ -86,10 +88,11 @@ class ConfigurarController extends Controller
                     'tipo' => 10,
                 ]);
             });
-
+            $empresa = Empresa::first();
             return response()->json([
                 'success' => true,
-                'message' => 'Empresa configurada correctamente'
+                'message' => 'Empresa configurada correctamente',
+                'results' => $empresa
             ], 201); // Código HTTP para creación exitosa
 
         } catch (\Exception $e) {
