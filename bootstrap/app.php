@@ -28,7 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->group(__DIR__ . '/../routes/ecommerce.php'); */
 
             // ② Rutas exclusivas del dominio central  (saeta.uk)
-            Route::middleware('api')               // SIN middleware de Tenancy
+            Route::middleware('web')               
                 ->group(base_path('routes/central.php'));
         }
     )->withMiddleware(function (Middleware $mw) {
