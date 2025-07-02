@@ -19,7 +19,8 @@ return [
     'central_domains' => [
         '127.0.0.1',
         'localhost',
-        'saeta-core.test'
+        'saeta-core.test',
+        'saeta.uk'
     ],
 
     /**
