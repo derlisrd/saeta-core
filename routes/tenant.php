@@ -4,6 +4,7 @@
 
 use App\Models\Tenant;
 use Database\Seeders\ExampleSeeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -19,7 +20,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 | Feel free to customize them however you want. Good luck!
 |
 */
-Route::get('/', function () {
+/* Route::get('/', function () {
     // 1. Crear el tenant
     $tenant = Tenant::create([
         'id' => 'stock',
@@ -40,7 +41,7 @@ Route::get('/', function () {
     tenancy()->end();
 
     return response()->json(['message' => 'Tenant creado y seed ejecutado']);
-});
+}); */
 
 Route::middleware([
     'api', // middleware para API
@@ -52,4 +53,11 @@ Route::middleware([
         'domain' => request()->getHost(),
     ]));
 
+});
+
+Route::get('/debug-db', function () {
+    return [
+        'db' => DB::connection()->getDatabaseName(),
+        'tenant_id' => tenant('id'),
+    ];
 });
