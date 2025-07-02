@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',
         //commands: __DIR__.'/../routes/console.php',
         //health: '/up',
-        //apiPrefix:'/api',
+        apiPrefix:'/api',
         then: function ($router) {
             
             Route::prefix('ecommerce')
@@ -33,7 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
             ])->group(base_path('routes/tenant.php'));
         }
-    )    ->withMiddleware(function (Middleware $middleware) {
+    )->withMiddleware(function (Middleware $middleware) {
         $middleware->api(append: [
             XapiKeyTokenIsValid::class,
             //CheckPermission::class
