@@ -22,6 +22,7 @@ use App\Http\Controllers\Producto\MedidasController;
 use App\Http\Controllers\Producto\ProductosController;
 use App\Http\Controllers\Producto\StockController;
 use App\Http\Controllers\User\UserController;
+use Illuminate\Support\Facades\DB;
 //use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
@@ -175,4 +176,11 @@ Route::middleware(['auth:api'])->group(function () {
 
 
 
-Route::fallback(function () {return response()->json(['success' => false, 'message' => 'Not found route.'], 404);});
+//Route::fallback(function () {return response()->json(['success' => false, 'message' => 'Not found route.'], 404);});
+
+Route::get('/debug-db', function () {
+    return [
+        'db'        => DB::connection()->getDatabaseName(),
+        'tenant_id' => tenant('id'),
+    ];
+});

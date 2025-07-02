@@ -22,32 +22,29 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix:'/api',
         then: function ($router) {
             
-            Route::prefix('ecommerce')
+            /* Route::prefix('ecommerce')
             ->middleware(XapiKeyTokenIsValid::class)
             ->name('ecommerce')
-            ->group(__DIR__ . '/../routes/ecommerce.php');
+            ->group(__DIR__ . '/../routes/ecommerce.php'); */
 
-            Route::middleware([
-                'api',
-                \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
-                \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
-            ])->group(base_path('routes/tenant.php'));
+            // ② Rutas exclusivas del dominio central  (saeta.uk)
+            Route::middleware('api')               // SIN middleware de Tenancy
+                ->group(base_path('routes/central.php'));
         }
-    )->withMiddleware(function (Middleware $middleware) {
-        $middleware->api(append: [
+    )->withMiddleware(function (Middleware $mw) {
+        $mw->api(prepend: [
+            \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
+            \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
+        ]);
+        // (dejamos tu middleware XapiKeyTokenIsValid como estaba)
+        $mw->api(append: [
             XapiKeyTokenIsValid::class,
-            //CheckPermission::class
         ]);
-        $middleware->alias([
-            'x-api-key' => XapiKeyTokenIsValid::class
+        // alias que ya tenías …
+        $mw->alias([
+            'x-api-key' => XapiKeyTokenIsValid::class,
+            'permiso'   => VerificarPermiso::class,
         ]);
-        $middleware->alias([
-            'permiso' => VerificarPermiso::class
-        ]);
-        /* $middleware->append([XapiKeyTokenIsValid::class]);
-        $middleware->alias([
-            'x-api-key' => XapiKeyTokenIsValid::class
-        ]); */
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->renderable(function (AuthenticationException $e){
