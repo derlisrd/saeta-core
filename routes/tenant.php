@@ -2,6 +2,8 @@
 
 //declare(strict_types=1);
 
+use App\Models\Tenant;
+use Database\Seeders\ExampleSeeder;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -18,7 +20,26 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 Route::get('/', function () {
-    return view('welcome');
+    // 1. Crear el tenant
+    $tenant = Tenant::create([
+        'id' => 'stock',
+    ]);
+    
+    // 2. Asignar el dominio
+    $tenant->domains()->create([
+        'domain' => 'stock.saeta.uk'
+    ]);
+
+    // 3. Inicializar el contexto tenant
+    tenancy()->initialize($tenant);
+
+    // 4. Ejecutar el seeder
+    (new ExampleSeeder)->run();
+
+    // 5. Finalizar el contexto tenant
+    tenancy()->end();
+
+    return response()->json(['message' => 'Tenant creado y seed ejecutado']);
 });
 
 Route::middleware([

@@ -7,6 +7,7 @@ use Stancl\Tenancy\Database\Models\Tenant;
 
 return [
     'tenant_model' => \App\Models\Tenant::class,
+    //'tenant_model' => Tenant::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
 
     'domain_model' => Domain::class,
@@ -53,7 +54,7 @@ return [
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'saeta_core_',
+        'prefix' => 'saeta__',
         'suffix' => '',
 
         /**
@@ -101,7 +102,7 @@ return [
         /**
          * Each disk listed in the 'disks' array will be suffixed by the suffix_base, followed by the tenant_id.
          */
-        'suffix_base' => 'saeta_',
+        'suffix_base' => 'saeta__',
         'disks' => [
             'local',
             'public',
