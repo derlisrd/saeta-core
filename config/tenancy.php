@@ -53,7 +53,7 @@ return [
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'saeta_',
+        'prefix' => 'saeta_core_',
         'suffix' => '',
 
         /**
@@ -101,7 +101,7 @@ return [
         /**
          * Each disk listed in the 'disks' array will be suffixed by the suffix_base, followed by the tenant_id.
          */
-        'suffix_base' => 'tenant',
+        'suffix_base' => 'saeta_',
         'disks' => [
             'local',
             'public',
