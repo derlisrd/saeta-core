@@ -1,16 +1,10 @@
 <?php
 
-
+use App\Http\Controllers\ViewsCentral\HomeController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/aca-central', function () {
-    return view('welcome');
-});
-
-Route::get('/',function(){
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index']);
 
 //Route::view('/', 'welcome');
 

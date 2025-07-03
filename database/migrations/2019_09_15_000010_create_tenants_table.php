@@ -17,11 +17,11 @@ class CreateTenantsTable extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->string('id')->primary();
-
+            $table->unsignedBigInteger('user_id')->nullable();
             // your custom columns may go here
-
             $table->timestamps();
             $table->json('data')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
