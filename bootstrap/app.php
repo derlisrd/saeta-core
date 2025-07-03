@@ -27,13 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->name('ecommerce')
             ->group(__DIR__ . '/../routes/ecommerce.php'); */
 
-            Route::middleware([
-                'web',
-                \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
-                \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
-            ])
-                ->name('tenant')
-                ->group(__DIR__ . '/../routes/tenant.php');
+            
         }
     )->withMiddleware(function (Middleware $mw) {
         $mw->api(prepend: [
