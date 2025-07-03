@@ -5,7 +5,7 @@ use Database\Seeders\ExampleSeeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+Route::get('/aca-central', function () {
     return response()->json([
         'from' => 'central',
         'db'   => DB::connection()->getDatabaseName(),
@@ -13,7 +13,7 @@ Route::get('/', function () {
 });
 
 
-Route::get('/crear/{domain}', function ($domain) {
+/* Route::get('/crear/{domain}', function ($domain) {
     // 1. Crear el tenant
 
     $tenant = Tenant::create([
@@ -35,4 +35,4 @@ Route::get('/crear/{domain}', function ($domain) {
     tenancy()->end();
 
     return response()->json(['message' => 'Tenant creado y seed ejecutado']);
-});  
+});   */
