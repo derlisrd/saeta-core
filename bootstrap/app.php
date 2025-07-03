@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //api: __DIR__.'/../routes/api.php',
         //commands: __DIR__.'/../routes/console.php',
         //health: '/up',
-        //apiPrefix:'/api',
+        apiPrefix:'/api',
         then: function () {
             // Rutas tenant
             Route::middleware([
@@ -29,8 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ])->group(base_path('routes/tenant.php'));
 
             // API para tenants
-            Route::prefix('api')
-                ->middleware([
+            Route::middleware([
                     'api',
                     \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
                     \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
