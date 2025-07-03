@@ -5,10 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/aca-central', function () {
-    return response()->json([
-        'from' => 'central',
-        'db'   => DB::connection()->getDatabaseName(),
-    ]);
+    return view('welcome');
 });
 
 Route::get('/',function(){
