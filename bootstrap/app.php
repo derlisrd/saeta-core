@@ -26,7 +26,13 @@ return Application::configure(basePath: dirname(__DIR__))
             ->middleware(XapiKeyTokenIsValid::class)
             ->name('ecommerce')
             ->group(__DIR__ . '/../routes/ecommerce.php'); */
-
+            Route::domain('{tenant}.saeta.uk')                 // ⟵ domina la coincidencia
+                ->middleware([
+                    'web',
+                    Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
+                    Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
+                ])
+                ->group(__DIR__ . '/../routes/tenant.php');
             
         }
     )->withMiddleware(function (Middleware $mw) {

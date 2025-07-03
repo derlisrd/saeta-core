@@ -1,26 +1,28 @@
 <?php
 
-//declare(strict_types=1);
-
+use App\Models\Tenant;
+use Database\Seeders\ExampleSeeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-
-
 Route::get('/', function () {
-    return response()->json(['message' => 'Bienvenido a Saeta (central)']);
+    return response()->json([
+        'from' => 'central',
+        'db'   => DB::connection()->getDatabaseName(),
+    ]);
 });
 
 
-/* Route::get('/', function () {
+Route::get('/crear/{domain}', function ($domain) {
     // 1. Crear el tenant
+
     $tenant = Tenant::create([
-        'id' => 'stock',
+        'id' => $domain,
     ]);
     
     // 2. Asignar el dominio
     $tenant->domains()->create([
-        'domain' => 'stock.saeta.uk'
+        'domain' => $domain . '.saeta.uk'
     ]);
 
     // 3. Inicializar el contexto tenant
@@ -33,4 +35,4 @@ Route::get('/', function () {
     tenancy()->end();
 
     return response()->json(['message' => 'Tenant creado y seed ejecutado']);
-});  */
+});  
