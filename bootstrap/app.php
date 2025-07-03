@@ -15,26 +15,21 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/central.php',
-        //api: __DIR__.'/../routes/api.php',
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
         //commands: __DIR__.'/../routes/console.php',
         //health: '/up',
         apiPrefix:'/api',
-        then: function () {
-            // Rutas tenant
-            Route::middleware([
-                'web',
-                \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
-                \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
-            ])->group(base_path('routes/tenant.php'));
+        then: function ($router) {
+            
+            /* Route::prefix('ecommerce')
+            ->middleware(XapiKeyTokenIsValid::class)
+            ->name('ecommerce')
+            ->group(__DIR__ . '/../routes/ecommerce.php'); */
 
-            // API para tenants
-            Route::middleware([
-                    'api',
-                    \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
-                    \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
-                ])
-                ->group(base_path('routes/api.php'));
+            // ② Rutas exclusivas del dominio central  (saeta.uk)
+            Route::middleware('web')               
+                ->group(base_path('routes/central.php'));
         }
     )->withMiddleware(function (Middleware $mw) {
         $mw->api(prepend: [
