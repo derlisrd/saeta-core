@@ -21,18 +21,15 @@ return Application::configure(basePath: dirname(__DIR__))
         //commands: __DIR__.'/../routes/console.php',
         //health: '/up',
         apiPrefix: '/api',
-        then: function ($router) {
-
-            /* Route::prefix('ecommerce')
-            ->middleware(XapiKeyTokenIsValid::class)
-            ->name('ecommerce')
-            ->group(__DIR__ . '/../routes/ecommerce.php'); */
-            Route::middleware([
+        then: function () {
+            if (! in_array(request()->getHost(), config('tenancy.central_domains'))) {
+                Route::middleware([
                     Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
                     Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
                 ])
-                ->name('ecommerce')
                 ->group(__DIR__ . '/../routes/ecommerce.php');
+            }
+            
             
         }
     )->withMiddleware(function (Middleware $mw) {
