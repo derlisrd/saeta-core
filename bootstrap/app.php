@@ -15,25 +15,25 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/central.php',
-        api: __DIR__.'/../routes/api.php',
+        web: __DIR__ . '/../routes/central.php',
+        api: __DIR__ . '/../routes/api.php',
         //commands: __DIR__.'/../routes/console.php',
         //health: '/up',
-        apiPrefix:'/api',
+        apiPrefix: '/api',
         then: function ($router) {
-            
+
             /* Route::prefix('ecommerce')
             ->middleware(XapiKeyTokenIsValid::class)
             ->name('ecommerce')
             ->group(__DIR__ . '/../routes/ecommerce.php'); */
 
-            Route::domain('{tenant}.saeta.uk')     //  ⟵ clave
-                ->middleware([
-                    'web',
-                    \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
-                    \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
-                ])
-                ->group(base_path('routes/tenant.php'));
+            Route::middleware([
+                'web',
+                \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
+                \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
+            ])
+                ->name('tenant')
+                ->group(__DIR__ . '/../routes/tenant.php');
         }
     )->withMiddleware(function (Middleware $mw) {
         $mw->api(prepend: [
@@ -51,87 +51,86 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->renderable(function (AuthenticationException $e){
+        $exceptions->renderable(function (AuthenticationException $e) {
             return response()->json([
-                'success'=>false,
-                'message'=> 'Sesión inválida. Inicie sesión.' //$e->getMessage(),
-            ],401);
+                'success' => false,
+                'message' => 'Sesión inválida. Inicie sesión.' //$e->getMessage(),
+            ], 401);
         });
 
         $exceptions->render(function (AuthenticationException $e) {
             if (request()->is('api/*')) {
                 return response()->json([
-                    'success'=>false,
-                    'message' =>'Sesión inválida. Inicie sesión.'// $e->getMessage(),
+                    'success' => false,
+                    'message' => 'Sesión inválida. Inicie sesión.' // $e->getMessage(),
                 ], 401);
             }
         });
 
-        $exceptions->renderable(function (NotFoundHttpException $e){
+        $exceptions->renderable(function (NotFoundHttpException $e) {
             if (request()->is('api/*')) {
                 return response()->json([
-                    'success'=>false,
-                    'message' =>'Route not found. ' //. $e->getMessage()
+                    'success' => false,
+                    'message' => 'Route not found. ' //. $e->getMessage()
                 ], 404);
             }
             return response()->json([
-                'success'=>false,
-                'message'=> 'No encontrado.', // . $e->getMessage(),
-                'route' =>[
+                'success' => false,
+                'message' => 'No encontrado.', // . $e->getMessage(),
+                'route' => [
                     'url_current' => url()->current(),
                     'req_url' => request()->url(),
                     'req_path' => request()->path(),
                     'req_method' => request()->method(),
                 ]
-            ],404);
+            ], 404);
         });
-        $exceptions->renderable(function (RouteNotFoundException $e){
+        $exceptions->renderable(function (RouteNotFoundException $e) {
             if (request()->is('api/*')) {
                 return response()->json([
-                    'success'=>false,
-                    'message' =>'Route not found. ' // . $e->getMessage(),
+                    'success' => false,
+                    'message' => 'Route not found. ' // . $e->getMessage(),
                 ], 404);
             }
             return response()->json([
-                'success'=>false,
-                'message'=>'Not found. ' // . $e->getMessage(),
-            ],404);
+                'success' => false,
+                'message' => 'Not found. ' // . $e->getMessage(),
+            ], 404);
         });
-        $exceptions->renderable(function (MethodNotAllowedHttpException $e){
+        $exceptions->renderable(function (MethodNotAllowedHttpException $e) {
             return response()->json([
-                'success'=>false,
-                'message'=> $e->getMessage(),
-            ],405);
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 405);
         });
-        $exceptions->renderable(function (ConnectionException $e){
+        $exceptions->renderable(function (ConnectionException $e) {
             return response()->json([
-                'success'=>false,
-                'message'=> "Hubo un error con la conexion error de servidor."
-            ],500);
+                'success' => false,
+                'message' => "Hubo un error con la conexion error de servidor."
+            ], 500);
         });
-        $exceptions->renderable(function (QueryException $e){
+        $exceptions->renderable(function (QueryException $e) {
             return response()->json([
-                'success'=>false,
-                'message'=> 'Error de consulta en base de datos.'
-            ],500);
+                'success' => false,
+                'message' => 'Error de consulta en base de datos.'
+            ], 500);
         });
-        $exceptions->renderable(function (PDOException $e){
+        $exceptions->renderable(function (PDOException $e) {
             return response()->json([
-                'success'=>false,
-                'message'=> 'Error al insertar los datos en la base de datos.'
-            ],500);
+                'success' => false,
+                'message' => 'Error al insertar los datos en la base de datos.'
+            ], 500);
         });
-        $exceptions->renderable(function (BadMethodCallException $e){
+        $exceptions->renderable(function (BadMethodCallException $e) {
             return response()->json([
-                'success'=>false,
-                'message'=> 'Error de servidor metodo invalido',
-            ],500);
+                'success' => false,
+                'message' => 'Error de servidor metodo invalido',
+            ], 500);
         });
-        $exceptions->renderable(function (ErrorException $e){
+        $exceptions->renderable(function (ErrorException $e) {
             return response()->json([
-                'success'=>false,
-                'message'=> 'Error de servidor',
-            ],500);
+                'success' => false,
+                'message' => 'Error de servidor',
+            ], 500);
         });
-
     })->create();
