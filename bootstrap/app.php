@@ -11,6 +11,7 @@ use App\Http\Middleware\XapiKeyTokenIsValid;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -27,7 +28,6 @@ return Application::configure(basePath: dirname(__DIR__))
             ->name('ecommerce')
             ->group(__DIR__ . '/../routes/ecommerce.php'); */
             Route::middleware([
-                    'web',
                     Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
                     Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
                 ])
@@ -55,6 +55,12 @@ return Application::configure(basePath: dirname(__DIR__))
                 'success' => false,
                 'message' => 'Sesión inválida. Inicie sesión.' //$e->getMessage(),
             ], 401);
+        });
+        $exceptions->renderable(function (TenantCouldNotBeIdentifiedOnDomainException $e ){
+            return response()->json([
+                'success' => false,
+                'message' => 'Not found. ' //. $e->getMessage()
+            ], 404);
         });
 
         $exceptions->render(function (AuthenticationException $e) {
