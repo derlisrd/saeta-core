@@ -6,16 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
+
 Route::get('/', function () {
-    return response()->json([
-        'message' => 'central ok'
-    ]);
+    return response()->json(['message' => 'Bienvenido a Saeta (central)']);
 });
 
-
-Route::get('/status', function () {
-    return ['status' => 'central ok', 'db' => DB::connection()->getDatabaseName()];
-});
 
 /* Route::get('/', function () {
     // 1. Crear el tenant
