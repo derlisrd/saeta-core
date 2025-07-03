@@ -28,8 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->group(__DIR__ . '/../routes/ecommerce.php'); */
 
             // ② Rutas exclusivas del dominio central  (saeta.uk)
-            Route::middleware('web')               
-                ->group(base_path('routes/tenant.php'));
+            //Route::middleware('web')->group(base_path('routes/tenant.php'));
         }
     )->withMiddleware(function (Middleware $mw) {
         $mw->api(prepend: [
