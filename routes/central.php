@@ -12,6 +12,8 @@ Route::get('/aca-central', function () {
     ]);
 });
 
+Route::view('/', 'welcome');
+
 
 /* Route::get('/crear/{domain}', function ($domain) {
     // 1. Crear el tenant
