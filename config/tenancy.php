@@ -17,12 +17,8 @@ return [
      *
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
-    'central_domains' => [
-        '127.0.0.1',
-        'localhost',
-        'saeta-core.test',
-        'saeta.uk'
-    ],
+    'central_domains' => ['saeta.uk'],
+
 
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.
