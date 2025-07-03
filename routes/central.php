@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\Tenant;
-use Database\Seeders\ExampleSeeder;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -12,7 +11,11 @@ Route::get('/aca-central', function () {
     ]);
 });
 
-Route::view('/', 'welcome');
+Route::get('/',function(){
+    return view('welcome');
+});
+
+//Route::view('/', 'welcome');
 
 
 /* Route::get('/crear/{domain}', function ($domain) {
