@@ -31,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
                     Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
                 ])
+                ->name('ecommerce')
                 ->group(__DIR__ . '/../routes/ecommerce.php');
             
         }
