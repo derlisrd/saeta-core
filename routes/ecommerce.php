@@ -7,8 +7,14 @@ use App\Http\Controllers\Ecommerce\ProductosController;
 use App\Http\Controllers\Ecommerce\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Support\Facades\DB;
 
-
+Route::get('/', function () {
+    return response()->json([
+        'from' => 'ecommerce',
+        'db'   => DB::connection()->getDatabaseName(),
+    ]);
+});
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
