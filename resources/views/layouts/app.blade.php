@@ -10,17 +10,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-            </ul>
-        </nav>
-    </header>
+    
 
-    <main class='container'>
-        @yield('content')
-    </main>
+
+    @yield('content')
+    
 
     <footer>
         <p>&copy; {{ date('Y') }} Mi Sitio Laravel. Todos los derechos reservados.</p>

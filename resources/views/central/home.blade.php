@@ -1,5 +1,7 @@
 @extends('layouts.app') 
 
+@include('layouts.mainmenu')
+
 @section('content') 
 <section class='container mx-auto px-4'>
     <h1 class=" text-center text-3xl font-semibold leading-[54px]">Tu tienda online en segundos</h1>
