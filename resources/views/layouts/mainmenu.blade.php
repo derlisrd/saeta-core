@@ -1,10 +1,10 @@
-<header class='flex justify-between items-center p-4 dark:bg-dark'>
-    <a href="{{ route('home') }}" class='text-xl font-bold'>
-    Saeta tiendas
-    </a>
+<header class='flex justify-between items-center bg-gray-100 dark:bg-dark p-4'>
+    <a href="{{ route('home') }}" class='text-xl font-bold text-black dark:text-gray-100'>
+        Saeta tiendas
+        </a>
     <nav>
         <ul>
-            <li><a href="{{ route('signin') }}">Iniciar sesión</a></li>
+            <li><a href="{{ route('signin') }}" class='text-black text-sm p-2 rounded-xl bg-gray-200 hover:bg-gray-300 shadow-md'>Iniciar sesión</a></li>
         </ul>
     </nav>
 </header>

@@ -4,7 +4,7 @@
         </a>
     <nav>
         <ul>
-            <li><a href="{{ route('signup') }}" class='text-black text-sm p-2 rounded-xl bg-gray-200 hover:bg-gray-300 shadow-md'>Crear tienda</a></li>
+            <li><a href="{{ route('signup') }}" class='text-black text-sm p-2 rounded-xl bg-gray-200 hover:bg-gray-300 shadow-md'>Iniciar sesión</a></li>
         </ul>
     </nav>
 </header>

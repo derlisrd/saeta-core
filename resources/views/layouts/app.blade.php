@@ -9,15 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-    
-
-
+<body class='bg-gray-100 dark:bg-dark'>
+   <main>
     @yield('content')
-    
-
-    <footer>
-        <p>&copy; {{ date('Y') }} Mi Sitio Laravel. Todos los derechos reservados.</p>
-    </footer>
+    </main>
 </body>
 </html>

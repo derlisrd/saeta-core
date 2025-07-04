@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/signin', [HomeController::class, 'signIn'])->name('signin');
 Route::get('/signup', [HomeController::class, 'signUp'])->name('signup');
+Route::post('/signup', [HomeController::class, 'signUpSubmit'])->name('signup_submit');
 
 
 //Route::view('/', 'welcome');

@@ -16,6 +16,6 @@ class HomeController extends Controller
         return view('central.signin');
     }
     public function signUp(){
-        return view('central.signin');
+        return view('central.signup');
     }
 }
