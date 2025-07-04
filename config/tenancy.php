@@ -19,7 +19,8 @@ return [
      */
     'central_domains' => [
         env('CENTRAL_DOMAIN'),
-        'saeta-core.test'
+        'saeta-core.test',
+        'saeta.uk'
     ],
 
     /**
