@@ -16,12 +16,7 @@ class AuthController extends Controller
 {
     public function signUpSubmit(Request $req)
     {
-        // Define una clave única para el limitador de velocidad basada en la dirección IP del usuario.
-        // Esto asegura que cada IP tenga su propio contador de intentos.
         $key = 'signup-attempt:' . $req->ip();
-
-        // Define el número máximo de intentos permitidos y el tiempo de decaimiento (en minutos).
-        // En este caso, permitimos 1 intento cada 2 minutos.
         $maxAttempts = 1;
         $decayMinutes = 2;
 
@@ -36,7 +31,7 @@ class AuthController extends Controller
                              ->withInput(); // Mantiene los datos de entrada anteriores en el formulario
         }
 
-        // Incrementa el contador de intentos para esta clave.
+        Log::error('iniciado');
         // El segundo argumento es el tiempo de decaimiento en segundos.
         RateLimiter::hit($key, $decayMinutes * 60);
 
@@ -50,9 +45,7 @@ class AuthController extends Controller
         // Comprueba si la validación falla
         if ($validator->fails()) {
             Log::error('Error en el formulario de registro: ' . $validator->errors()->first());
-            return redirect()->back()
-                             ->withErrors($validator) // Pasa los errores de validación a la vista
-                             ->withInput();          // Mantiene los valores de entrada antiguos
+            return redirect()->back()->withErrors($validator)->withInput();          // Mantiene los valores de entrada antiguos
         }
 
         try {
@@ -63,23 +56,30 @@ class AuthController extends Controller
                 'password' => Hash::make($req->password),
             ]);
             RateLimiter::clear($key);
+            Log::info('RateLimiter limpiado'); // Cambiado a info
 
-            // Inicia sesión al usuario inmediatamente después de un registro exitoso (opcional)
-            if (!$token = JWTAuth::setGuard('admin')->attempt($user)) {
-                return back()->withErrors([
-                    'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-                ])->onlyInput('email');
+            // Autentica al usuario recién creado utilizando el guard 'admin'
+            // Si el guard 'admin' está configurado con el driver 'jwt', esto generará un token
+            // y lo asociará con la sesión (si usas JWT con sesiones) o lo hará disponible.
+            Auth::guard('admin')->login($user); // Esto autentica al usuario con el guard 'admin'
+
+            // Para obtener el token JWT explícitamente después del login
+            // (Esto es útil si necesitas el token para el frontend o para otras APIs)
+            $token = JWTAuth::fromUser($user); // Genera el token a partir del objeto User
+
+            if (!$token) {
+                Log::error('Error al generar token JWT después del registro para usuario: ' . $user->email);
+                return back()->with('error', 'No se pudo generar el token de autenticación. Por favor, inténtalo de nuevo.');
             }
-    
-            // Si querés guardar el token en sesión para usarlo en frontend blade:
-            session(['jwt_token' => $token]);
-    
-            // Si querés acceder al usuario:
-            $user = JWTAuth::setToken($token)->authenticate();
 
-            // Redirige a una página de panel de control o a una página de éxito.
-            // Podrías cambiar 'home' por una ruta específica para nuevos usuarios.
+            // Si quieres guardar el token en sesión para usarlo en frontend Blade:
+            session(['jwt_token' => $token]);
+
+            Log::info('Token JWT generado y sesión creada para usuario: ' . $user->email); // Cambiado a info
+
+            // Redirige a la página de creación de tienda
             return redirect()->route('store.create')->with('success', '¡Tu cuenta ha sido creada exitosamente! Ahora, registra el nombre de tu tienda.');
+
 
 
         } catch (\Exception $e) {
