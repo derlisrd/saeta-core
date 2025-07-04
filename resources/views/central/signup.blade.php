@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
-@include('layouts.mainmenu')
+
 
 @section('content')
+
+@include('layouts.mainmenu')
+
 <main class="w-full max-w-md mx-auto p-6">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 sm:p-10 border border-gray-200 dark:border-gray-700">
         <div class="text-center mb-8">

@@ -1,8 +1,10 @@
 @extends('layouts.app') 
 
-@include('layouts.mainmenu')
 
 @section('content') 
+
+@include('layouts.mainmenu')
+
 <main class="flex-grow flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
     <section class="max-w-4xl mx-auto text-center">
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold my-6 text-gray-800 dark:text-gray-100 leading-tight">
