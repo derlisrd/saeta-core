@@ -3,15 +3,23 @@
 @include('layouts.mainmenu')
 
 @section('content') 
-<section class='px-4'>
-    <h1 class=" text-center text-5xl font-bold my-10 text-gray-700 dark:text-gray-100">Tu propia tienda en linea</h1>
-    <p class='text-center text-lg dark:text-gray-100  text-gray-700'>
-        Crea tu tienda online, mejora cómo compran tus clientes y maneja todo de forma fácil y segura.
-    </p>
-    <div class="flex justify-center my-5">
-        <a href="{{ route('signup') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded-full my-10">
-            Empezar gratis ahora
-        </a>
-    </div>
-</section>
+<main class="flex-grow flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+    <section class="max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold my-6 text-gray-800 dark:text-gray-100 leading-tight">
+            Tu propia tienda en línea, <br class="hidden sm:inline"> fácil y rápido.
+        </h1>
+        <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+            Crea tu tienda online, mejora cómo compran tus clientes y maneja todo de forma fácil y segura.
+        </p>
+        <div class="flex justify-center my-5">
+            <!-- The original route('signup') is preserved here -->
+            <a href="{{ route('signup') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-xl transform hover:scale-105 transition duration-300 ease-in-out">
+                Empezar gratis ahora
+            </a>
+        </div>
+        <div class="mt-12">
+            <img src="https://placehold.co/800x450/e0f2fe/0c4a6e?text=Mockup+de+Tienda+Online" alt="Mockup de tienda online" class="rounded-lg shadow-lg mx-auto max-w-full h-auto">
+        </div>
+    </section>
+</main>
 @endsection

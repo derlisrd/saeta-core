@@ -1,13 +1,21 @@
 <?php
 
+use App\Http\Controllers\ViewsCentral\AuthController;
 use App\Http\Controllers\ViewsCentral\HomeController;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ViewsCentral\StoreController;
+//use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/signin', [HomeController::class, 'signIn'])->name('signin');
 Route::get('/signup', [HomeController::class, 'signUp'])->name('signup');
-Route::post('/signup', [HomeController::class, 'signUpSubmit'])->name('signup_submit');
+Route::post('/signup', [AuthController::class, 'signUpSubmit'])->name('signup_submit');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/create-store', [StoreController::class, 'create'])->name('store.create');
+    Route::post('/create-store', [StoreController::class, 'store'])->name('store.store'); // Para guardar el nombre de la tienda
+});
 
 
 //Route::view('/', 'welcome');
