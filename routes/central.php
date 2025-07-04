@@ -12,10 +12,13 @@ Route::get('/signup', [HomeController::class, 'signUp'])->name('signup');
 Route::post('/signup', [AuthController::class, 'signUpSubmit'])->name('signup_submit');
 
 
-Route::middleware(['auth'])->group(function () {
+
     Route::get('/create-store', [StoreController::class, 'create'])->name('store.create');
-    Route::post('/create-store', [StoreController::class, 'store'])->name('store.store'); // Para guardar el nombre de la tienda
-});
+    Route::post('/create-store', [StoreController::class, 'store'])->name('store.store');
+    // Agrega aquí cualquier otra ruta que solo deba ser accesible por un Admin\User
+
+
+
 
 
 //Route::view('/', 'welcome');
