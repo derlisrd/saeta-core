@@ -7,15 +7,14 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
-    {
+    public function index(){
         return view('central.home');
     }
 
-    public function signIn(){
-        return view('central.signin');
+    public function loginView(){
+        return view('central.login');
     }
-    public function signUp(){
-        return view('central.signup');
+    public function registerView(){
+        return view('central.register');
     }
 }

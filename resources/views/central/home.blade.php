@@ -3,7 +3,7 @@
 
 @section('content') 
 
-@include('layouts.mainmenu')
+@include('layouts.menu')
 
 <main class="flex-grow flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
     <section class="max-w-4xl mx-auto text-center">
@@ -15,7 +15,7 @@
         </p>
         <div class="flex justify-center my-5">
             <!-- The original route('signup') is preserved here -->
-            <a href="{{ route('signup') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-xl transform hover:scale-105 transition duration-300 ease-in-out">
+            <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-xl transform hover:scale-105 transition duration-300 ease-in-out">
                 Empezar gratis ahora
             </a>
         </div>
