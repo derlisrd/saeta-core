@@ -2,14 +2,11 @@
 
 namespace App\Services;
 
-
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-
-
 
 class ImageUploadService
 {
@@ -38,14 +35,7 @@ class ImageUploadService
 
             // Cambiar extensión a .webp
             $filename = time() . $randomNumber . '.webp';
-            $fullPath = $directory . '/' . $filename; // Esta es la ruta RELATIVA al disco 'public' del tenant
-
-            // NO ES NECESARIO mkdir() aquí. Storage::disk('public')->put() creará los directorios
-            // automáticamente dentro del scope del tenant.
-            // $storagePath = storage_path('app/public/' . $directory);
-            // if (!file_exists($storagePath)) {
-            //     mkdir($storagePath, 0755, true);
-            // }
+            $fullPath = $directory . '/' . $filename;
 
             // Procesar y convertir la imagen a WebP (Intervention Image v3)
             $imageProcessor = $this->manager->read($image->getRealPath());
@@ -59,20 +49,15 @@ class ImageUploadService
             // Guardar la imagen procesada usando el disco 'public' (que es tenant-aware)
             Storage::disk('public')->put($fullPath, $webpData);
 
-            // Retorna la URL pública de la imagen. asset() es tenant-aware si 'asset_helper_tenancy' está en true.
-            //return asset('storage/' . $fullPath);
-            Storage::disk('public')->put($fullPath, $webpData);
-
             // Construir URL manualmente
             return $this->buildTenantUrl($fullPath);
-
 
         } catch (\Throwable $th) {
             Log::error('Error al subir imagen: ' . $th->getMessage(), [
                 'file' => $th->getFile(),
                 'line' => $th->getLine(),
                 'product_id' => $id,
-                'trace' => $th->getTraceAsString(), // Añadir el trace para mejor depuración
+                'trace' => $th->getTraceAsString(),
             ]);
             throw $th;
         }
@@ -87,14 +72,7 @@ class ImageUploadService
 
             // Cambiar extensión a .webp
             $filename = time() . $randomNumber . '_thumb.webp';
-            $fullPath = $directory . '/' . $filename; // Ruta RELATIVA al disco 'public' del tenant
-
-            // NO ES NECESARIO mkdir() aquí. Storage::disk('public')->put() creará los directorios
-            // automáticamente dentro del scope del tenant.
-            // $storagePath = storage_path('app/public/' . $directory);
-            // if (!file_exists($storagePath)) {
-            //     mkdir($storagePath, 0755, true);
-            // }
+            $fullPath = $directory . '/' . $filename;
 
             // Procesar imagen: recorte cuadrado centrado
             $processedImage = $this->manager->read($image->getRealPath())
@@ -103,7 +81,9 @@ class ImageUploadService
 
             // Guardar la imagen procesada usando el disco 'public' (que es tenant-aware)
             Storage::disk('public')->put($fullPath, $processedImage);
-            return asset('storage/' . $fullPath);
+            
+            // Usar el mismo método para construir la URL
+            return $this->buildTenantUrl($fullPath);
 
         } catch (\Throwable $th) {
             Log::error('Error al crear miniatura cuadrada: ' . $th->getMessage(), [
@@ -119,23 +99,17 @@ class ImageUploadService
     public function eliminar(string $url): bool
     {
         try {
-           
-            // ya que el disco ya está scopeado.
-            $path = str_replace(asset('storage/'), '', $url);
-
+            // Extraer la ruta relativa desde la URL
             $parsedUrl = parse_url($url);
-            $relativePath = ltrim($parsedUrl['path'], '/'); // Elimina la barra inicial
+            $relativePath = ltrim($parsedUrl['path'], '/');
 
-            // Quita 'storage/' del inicio de la ruta
+            // Quitar 'storage/' del inicio de la ruta si existe
             if (str_starts_with($relativePath, 'storage/')) {
                 $relativePath = substr($relativePath, strlen('storage/'));
             }
 
-            $pathToDelete = str_replace('storage/', '', $path); // Elimina solo 'storage/' del inicio
-
-            $pathToDelete = str_replace(asset('storage/'), '', $url);
-
-            return Storage::disk('public')->delete($pathToDelete);
+            // Eliminar usando Storage con la ruta relativa
+            return Storage::disk('public')->delete($relativePath);
 
         } catch (\Throwable $th) {
             Log::error('Error al eliminar imagen: ' . $th->getMessage(), [
@@ -148,19 +122,48 @@ class ImageUploadService
         }
     }
 
-
+    /**
+     * Construye la URL completa para acceder a la imagen desde el tenant
+     */
     private function buildTenantUrl(string $path): string
     {
+        // Asegurar que el enlace simbólico existe
+        $this->ensureStorageLink();
+        
         // Obtener la URL base del request actual
         $baseUrl = request()->getSchemeAndHttpHost();
         
-        // Si estamos en contexto de tenant y las rutas de tenancy están habilitadas
-        if (tenant() && config('tenancy.routes', true)) {
-            // Usar la ruta específica de tenancy para assets
-            return $baseUrl . '/tenancy/assets/storage/' . ltrim($path, '/');
+        // Construir la URL usando la ruta estándar /storage/
+        return $baseUrl . '/storage/' . ltrim($path, '/');
+    }
+
+    /**
+     * Verifica y crea el enlace simbólico del storage si no existe
+     */
+    private function ensureStorageLink(): void
+    {
+        $tenant = tenant();
+        
+        if (!$tenant) {
+            return; // No hay tenant activo
         }
         
-        // Fallback a la ruta normal
-        return $baseUrl . '/storage/' . ltrim($path, '/');
+        $tenantStoragePath = storage_path("app/public");
+        $tenantPublicPath = public_path('storage');
+        
+        // Verificar que el directorio de storage existe
+        if (!file_exists($tenantStoragePath)) {
+            mkdir($tenantStoragePath, 0755, true);
+        }
+        
+        // Crear el enlace simbólico si no existe
+        if (!file_exists($tenantPublicPath)) {
+            try {
+                symlink($tenantStoragePath, $tenantPublicPath);
+                Log::info("Enlace simbólico creado para tenant: {$tenant->id}");
+            } catch (\Exception $e) {
+                Log::error("Error al crear enlace simbólico para tenant {$tenant->id}: " . $e->getMessage());
+            }
+        }
     }
 }
