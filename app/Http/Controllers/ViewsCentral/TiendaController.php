@@ -56,7 +56,8 @@ class TiendaController extends Controller
             // 2. Asignar el dominio
             $tenant->domains()->create([
                 'domain' => $fullDomain,
-                'plan_id' => 1
+                'plan_id' => 1,
+                'user_id' => $user->id
             ]);
 
             // 3. Inicializar el contexto tenant
