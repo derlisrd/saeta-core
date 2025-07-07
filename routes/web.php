@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ViewsCentral\AuthController;
+use App\Http\Controllers\ViewsCentral\DashboardController;
 use App\Http\Controllers\ViewsCentral\TiendaController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('/logout',[AuthController::class,'logout'])->name('logout');
 
-    Route::view('/dashboard','central.dashboard')->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');
     
 });
