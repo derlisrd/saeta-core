@@ -22,7 +22,7 @@ Route::view('/terminos','central.terminos')->name('terminos');
 
 Route::middleware(['auth:admin'])->group(function () {
 
-        Route::view('central.creartienda', ['centralDomain' => env('CENTRAL_DOMAIN')])->name('crear_tienda');
+        Route::view('/tienda','central.creartienda', ['centralDomain' => env('CENTRAL_DOMAIN')])->name('crear_tienda');
         Route::post('/tienda', [TiendaController::class, 'guardarTienda'])->name('guardar_tienda');
     
 
