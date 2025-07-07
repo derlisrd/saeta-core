@@ -1,15 +1,8 @@
 <?php
 
-
+use App\Http\Controllers\Ecommerce\HomeController;
 use Illuminate\Support\Facades\Route;
 
-use Illuminate\Support\Facades\DB;
-
-Route::get('/', function () {
-    return response()->json([
-        'from' => 'ecommerce',
-        'db'   => DB::connection()->getDatabaseName(),
-    ]);
-});
+Route::get('/',[HomeController::class, 'index']);
 
 
