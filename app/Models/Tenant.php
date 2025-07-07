@@ -19,10 +19,10 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', // Asegúrate de que 'id' esté fillable si lo vas a asignar manualmente
-        'name',
+        'id',
         'user_id',
         'data',
+        'tenancy_db_name'
     ];
 
     public function user()

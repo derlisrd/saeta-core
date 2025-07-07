@@ -20,8 +20,11 @@
             </a>
         </div>
         <div class="mt-12">
-            <img src="https://placehold.co/800x450/e0f2fe/0c4a6e?text=Mockup+de+Tienda+Online" alt="Mockup de tienda online" class="rounded-lg shadow-lg mx-auto max-w-full h-auto">
+            <img src="{{ asset('images/tienda-ejemplo.webp') }}" alt="Mockup de tienda online" class="rounded-lg shadow-lg mx-auto max-w-full h-auto">
         </div>
     </section>
 </main>
+
+@include('central.preguntas')
+
 @endsection

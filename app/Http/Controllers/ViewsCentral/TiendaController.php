@@ -9,14 +9,17 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Tenant;
 use Database\Seeders\ExampleSeeder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TiendaController extends Controller
 {
-    public function crearTiendaView(){
+    public function crearTiendaView()
+    {
         return view('central.creartienda', ['centralDomain' => env('CENTRAL_DOMAIN')]);
     }
 
-    public function guardarTienda(Request $request){
+    public function guardarTienda(Request $request)
+    {
         $centralDomain = env('CENTRAL_DOMAIN');
         // Verificar si CENTRAL_DOMAIN está configurado
         if (empty($centralDomain)) {
@@ -38,22 +41,22 @@ class TiendaController extends Controller
             return redirect()->route('login')->with('error', 'Debes iniciar sesión para crear una tienda.');
         }
 
-        // Obtener el ID del usuario autenticado
-        $userId = $user->id;
-
         try {
-            $domain = $request->input('domain');
+            $domain = $request->domain;
             $fullDomain = $domain . '.' . $centralDomain;
-            
-            // 1. Crear el tenant con información del usuario propietario
-            $tenant = Tenant::create([
+
+            $tenantData = [
                 'id' => $domain,
                 'user_id' => $user->id,
-            ]);
+            ];
+
+            // 1. Crear el tenant con información del usuario propietario
+            $tenant = Tenant::create($tenantData);
 
             // 2. Asignar el dominio
             $tenant->domains()->create([
                 'domain' => $fullDomain,
+                'plan_id' => 1
             ]);
 
             // 3. Inicializar el contexto tenant
@@ -66,7 +69,6 @@ class TiendaController extends Controller
             tenancy()->end();
 
             return redirect()->route('dashboard')->with('success', '¡Tu tienda "' . $fullDomain . '" ha sido creada exitosamente!');
-            
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Hubo un error al crear tu tienda. Por favor, inténtalo de nuevo.');
         }

@@ -5,6 +5,8 @@ namespace Database\Seeders;
 
 // use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Plan;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,5 +21,8 @@ class DatabaseSeeder extends Seeder
         /* $this->call([
             ExampleSeeder::class,
         ]); */
+        Plan::create([
+            'nombre'=>'Gratuito', 'precio'=>0, 'descripcion'=>'Plan gratuito'
+        ]);
     }
 }

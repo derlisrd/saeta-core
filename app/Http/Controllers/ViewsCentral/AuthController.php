@@ -14,7 +14,7 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public function registerSubmit(Request $req)
+    public function register(Request $req)
     {
         $key = 'register:' . $req->ip();
         $maxAttempts = 1;
@@ -50,14 +50,14 @@ class AuthController extends Controller
             ]);
             RateLimiter::clear($key);
 
-            Auth::guard('admin')->login($user); 
+            $userAdmin = Auth::guard('admin')->login($user); 
             // (Esto es útil si necesitas el token para el frontend o para otras APIs)
             $token = JWTAuth::fromUser($user); // Genera el token a partir del objeto User
 
             if (!$token) {
                 return back()->with('error', 'No se pudo generar el token de autenticación. Por favor, inténtalo de nuevo.');
             }
-
+            Log::info("Usuario registrado: " . $userAdmin);
             // Si quieres guardar el token en sesión para usarlo en frontend Blade:
             session(['jwt_token' => $token]);
 
@@ -72,7 +72,7 @@ class AuthController extends Controller
 
 
 
-    public function signInSubmit(Request $request)
+    public function login(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -90,11 +90,15 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout(); // <-- Usar el guard 'admin' para cerrar sesión
+        try {
+            Auth::guard('admin')->logout(); 
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-        return redirect('/');
+            return redirect('/');
+        } catch (\Throwable $th) {
+            return redirect('/');
+        }
     }
 }
