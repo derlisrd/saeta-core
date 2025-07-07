@@ -60,7 +60,12 @@ class ImageUploadService
             Storage::disk('public')->put($fullPath, $webpData);
 
             // Retorna la URL pública de la imagen. asset() es tenant-aware si 'asset_helper_tenancy' está en true.
-            return asset('storage/' . $fullPath);
+            //return asset('storage/' . $fullPath);
+            Storage::disk('public')->put($fullPath, $webpData);
+
+            // Construir URL manualmente
+            return $this->buildTenantUrl($fullPath);
+
 
         } catch (\Throwable $th) {
             Log::error('Error al subir imagen: ' . $th->getMessage(), [
@@ -144,4 +149,18 @@ class ImageUploadService
     }
 
 
+    private function buildTenantUrl(string $path): string
+    {
+        // Obtener la URL base del request actual
+        $baseUrl = request()->getSchemeAndHttpHost();
+        
+        // Si estamos en contexto de tenant y las rutas de tenancy están habilitadas
+        if (tenant() && config('tenancy.routes', true)) {
+            // Usar la ruta específica de tenancy para assets
+            return $baseUrl . '/tenancy/assets/storage/' . ltrim($path, '/');
+        }
+        
+        // Fallback a la ruta normal
+        return $baseUrl . '/storage/' . ltrim($path, '/');
+    }
 }
