@@ -39,7 +39,7 @@ class TiendaController extends Controller
         }
 
         try {
-            $domain = $request->domain;
+            $domain = strtolower($request->domain);
             $fullDomain = $domain . '.' . $centralDomain;
 
             $tenantData = [
