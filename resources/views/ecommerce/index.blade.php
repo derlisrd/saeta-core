@@ -7,40 +7,33 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Font: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f8fafc; /* Light background */
             color: #374151; /* Dark gray text */
-        }
-        /* Dark mode styles */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #1a202c; /* Dark background */
-                color: #e2e8f0; /* Light gray text */
-            }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
     <!-- Header / Navbar -->
-    <header class="bg-white dark:bg-gray-800 shadow-md py-4 px-6 md:px-10 rounded-b-lg">
+    <header class="bg-white  shadow-md py-4 px-6 md:px-10 rounded-b-lg">
         <nav class="flex justify-between items-center max-w-7xl mx-auto">
-            <a href="/" class="text-2xl font-bold text-gray-800 dark:text-white">
-                <span class="text-blue-600">Mi</span>Tienda
+            <a href="/" class="text-xl font-bold text-gray-800 ">
+               {{ $nombreTienda }}
             </a>
             <div class="hidden md:flex space-x-6">
-                <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition duration-300 ease-in-out">Inicio</a>
-                <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition duration-300 ease-in-out">Categorías</a>
-                <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition duration-300 ease-in-out">Ofertas</a>
+                <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Inicio</a>
+                <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Categorías</a>
+                <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Ofertas</a>
             </div>
             <div class="flex items-center space-x-4">
-                <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition duration-300 ease-in-out">
+                <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">
                     Carrito (0)
                 </a>
-                <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-full shadow-md transition duration-300 ease-in-out">
+                <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white  py-2 px-5 rounded-full shadow-md transition duration-300 ease-in-out">
                     Mi Cuenta
                 </a>
             </div>
@@ -64,20 +57,19 @@
 
     <!-- Products Section -->
     <main class="flex-grow py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 text-center mb-10">Nuestros Productos Destacados</h2>
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-10">Nuestros Productos Destacados</h2>
 
-        @if (isset($productos) && count($productos) > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 @foreach ($productos as $producto)
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out border border-gray-200 dark:border-gray-700">
-                        <img src="{{ $producto->image_url ?? 'https://placehold.co/400x300/e0f2fe/0c4a6e?text=Producto' }}"
-                             alt="{{ $producto->name ?? 'Producto' }}"
+                    <div class="bg-white  rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out border border-gray-200">
+                        <img src="{{ 'https://placehold.co/400x300/e0f2fe/0c4a6e?text=Producto' }}"
+                             alt="{{ $producto->nombre ?? 'Producto' }}"
                              class="w-full h-48 object-cover">
                         <div class="p-5">
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 truncate">{{ $producto->name ?? 'Nombre del Producto' }}</h3>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-2">{{ $producto->description ?? 'Una breve descripción del producto para atraer al cliente.' }}</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">${{ number_format($producto->price ?? 0, 2) }}</span>
+                            <h3 class="text-xl font-semibold text-gray-900  mb-2 truncate">{{ $producto->nombre ?? 'Nombre del Producto' }}</h3>
+                            <p class="text-gray-600  text-sm mb-3 line-clamp-2">{{ $producto->description ?? '' }}</p>
+                            <div class="flex items-center justify-between flex-col">
+                                <span class="text-2xl font-bold text-blue-600 ">${{ number_format($producto->precio_normal ?? 0, 2) }}</span>
                                 <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300 ease-in-out">
                                     Añadir al Carrito
                                 </button>
@@ -86,13 +78,10 @@
                     </div>
                 @endforeach
             </div>
-        @else
-            <p class="text-center text-lg text-gray-600 dark:text-gray-300 mt-10">No hay productos disponibles en este momento.</p>
-        @endif
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-100 dark:bg-gray-900 py-6 text-center text-gray-500 dark:text-gray-400 text-sm rounded-t-lg mt-auto">
+    <footer class="bg-gray-100  py-6 text-center text-gray-500  text-sm rounded-t-lg mt-auto">
         <p>&copy; 2025 Mi Tienda Online. Todos los derechos reservados.</p>
     </footer>
 
