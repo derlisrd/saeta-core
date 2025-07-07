@@ -13,10 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class TiendaController extends Controller
 {
-    public function crearTiendaView()
-    {
-        return view('central.creartienda', ['centralDomain' => env('CENTRAL_DOMAIN')]);
-    }
+
 
     public function guardarTienda(Request $request)
     {
@@ -62,7 +59,8 @@ class TiendaController extends Controller
 
             // 3. Inicializar el contexto tenant
             tenancy()->initialize($tenant);
-
+            // 4. Crear el enlace simbólico del storage para el tenant
+            $this->createTenantStorageLink($tenant->id);
             // 4. Ejecutar el seeder
             (new ExampleSeeder)->run($user);
 
@@ -73,5 +71,57 @@ class TiendaController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Hubo un error al crear tu tienda. Por favor, inténtalo de nuevo.');
         }
+    }
+
+
+    private function createTenantStorageLink(string $tenantId): void
+    {
+        try {
+            // Rutas del storage del tenant
+            $tenantStoragePath = storage_path("app/public");
+            $tenantPublicPath = public_path('storage');
+
+            // Verificar que el directorio de storage existe
+            if (!file_exists($tenantStoragePath)) {
+                mkdir($tenantStoragePath, 0755, true);
+            }
+
+            // Crear el enlace simbólico si no existe
+            if (!file_exists($tenantPublicPath)) {
+                if (symlink($tenantStoragePath, $tenantPublicPath)) {
+                    Log::info("Enlace simbólico creado para tenant: {$tenantId}");
+                } else {
+                    Log::warning("No se pudo crear el enlace simbólico para tenant: {$tenantId}");
+                }
+            } else {
+                // Verificar que el enlace existente apunta al lugar correcto
+                if (is_link($tenantPublicPath)) {
+                    $currentTarget = readlink($tenantPublicPath);
+                    if ($currentTarget !== $tenantStoragePath) {
+                        // El enlace existe pero apunta a otro lugar, recrearlo
+                        unlink($tenantPublicPath);
+                        symlink($tenantStoragePath, $tenantPublicPath);
+                        Log::info("Enlace simbólico actualizado para tenant: {$tenantId}");
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error("Error al crear enlace simbólico para tenant {$tenantId}: " . $e->getMessage());
+            // No lanzar excepción aquí para no interrumpir la creación del tenant
+        }
+    }
+
+    /**
+     * Verifica y repara el enlace simbólico del storage para el tenant actual
+     */
+    public function ensureStorageLink(): void
+    {
+        $tenant = tenant();
+
+        if (!$tenant) {
+            return; // No hay tenant activo
+        }
+
+        $this->createTenantStorageLink($tenant->id);
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\ViewsCentral\DashboardController;
 use App\Http\Controllers\ViewsCentral\TiendaController;
 use Illuminate\Support\Facades\Route;
 
+
 Route::view('/','central.home')->name('home');
 
 Route::middleware('guest:admin')->group(function () {
@@ -21,13 +22,15 @@ Route::view('/terminos','central.terminos')->name('terminos');
 
 Route::middleware(['auth:admin'])->group(function () {
 
-        Route::get('/tienda', [TiendaController::class, 'crearTiendaView'])->name('crear_tienda');
+        Route::view('central.creartienda', ['centralDomain' => env('CENTRAL_DOMAIN')])->name('crear_tienda');
         Route::post('/tienda', [TiendaController::class, 'guardarTienda'])->name('guardar_tienda');
     
 
     Route::get('/logout',[AuthController::class,'logout'])->name('logout');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->name('dashboard');
-    
+    ->name('dashboard'); 
 });
+
+
+
