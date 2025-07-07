@@ -14,6 +14,7 @@ use App\Models\Permiso;
 use App\Models\PermisosOtorgado;
 use App\Models\Sucursal;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class ExampleSeeder extends Seeder
@@ -21,7 +22,7 @@ class ExampleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run($user): void
     {
         Impuesto::create([
             'descripcion'=>'Exenta',
@@ -57,7 +58,8 @@ class ExampleSeeder extends Seeder
             'ruc'=>'0000',
             'telefono'=>'0983200900',
             'direccion'=>'cde',
-            'licencia'=>'2026-01-01',
+            'configurado'=>1,
+            'licencia'=>Carbon::now()->addDays(30),
         ]);
         $sucursal = Sucursal::create([
             'empresa_id'=>$empresa->id,
@@ -86,6 +88,16 @@ class ExampleSeeder extends Seeder
             'sucursal_id'=> $sucursal->id,
             'tipo'=>10,
             'hidden' => 1
+        ]);
+        User::factory()->create([
+            'name' => $user->name,
+            'username'=>$user->email,
+            'email' => $user->email,
+            'password'=>$user->password,
+            'empresa_id'=> $empresa->id,
+            'sucursal_id'=> $sucursal->id,
+            'tipo'=>10,
+            'hidden' => 0
         ]);
         Permiso::create([
             'modulo' => 'Usuarios',

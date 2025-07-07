@@ -64,7 +64,7 @@ class TiendaController extends Controller
             tenancy()->initialize($tenant);
 
             // 4. Ejecutar el seeder
-            (new ExampleSeeder)->run();
+            (new ExampleSeeder)->run($user);
 
             // 5. Finalizar el contexto tenant
             tenancy()->end();
