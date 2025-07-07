@@ -27,45 +27,47 @@ class ImageUploadService
             // Validar que la extensión sea permitida
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
             $originalExtension = strtolower($image->getClientOriginalExtension());
-            
+
             if (!in_array($originalExtension, $allowedExtensions)) {
                 throw new \Exception("Formato de imagen no permitido: {$originalExtension}");
             }
 
-            // Define la carpeta basada en el ID del producto
+            // Define la carpeta basada en el ID del producto (relativa al disco público del tenant)
             $directory = "{$directoryBase}/{$id}";
             $randomNumber = rand(1, 1000);
-            
+
             // Cambiar extensión a .webp
             $filename = time() . $randomNumber . '.webp';
-            $fullPath = $directory . '/' . $filename;
+            $fullPath = $directory . '/' . $filename; // Esta es la ruta RELATIVA al disco 'public' del tenant
 
-            // Crear el directorio si no existe
-            $storagePath = storage_path('app/public/' . $directory);
-            if (!file_exists($storagePath)) {
-                mkdir($storagePath, 0755, true);
-            }
+            // NO ES NECESARIO mkdir() aquí. Storage::disk('public')->put() creará los directorios
+            // automáticamente dentro del scope del tenant.
+            // $storagePath = storage_path('app/public/' . $directory);
+            // if (!file_exists($storagePath)) {
+            //     mkdir($storagePath, 0755, true);
+            // }
 
             // Procesar y convertir la imagen a WebP (Intervention Image v3)
-            $image = $this->manager->read($image->getRealPath());
-            
-            // Redimensionar manteniendo proporción (máximo 1200px en cualquier lado)
-            $image->scaleDown(width: 1200, height: 1200);
-            
-            // Convertir a WebP y obtener los datos
-            $webpData = $image->toWebp(quality: 85);
+            $imageProcessor = $this->manager->read($image->getRealPath());
 
-            // Guardar la imagen procesada
+            // Redimensionar manteniendo proporción (máximo 1200px en cualquier lado)
+            $imageProcessor->scaleDown(width: 1200, height: 1200);
+
+            // Convertir a WebP y obtener los datos
+            $webpData = $imageProcessor->toWebp(quality: 85);
+
+            // Guardar la imagen procesada usando el disco 'public' (que es tenant-aware)
             Storage::disk('public')->put($fullPath, $webpData);
 
-            // Retorna la URL pública de la imagen
+            // Retorna la URL pública de la imagen. asset() es tenant-aware si 'asset_helper_tenancy' está en true.
             return asset('storage/' . $fullPath);
 
         } catch (\Throwable $th) {
             Log::error('Error al subir imagen: ' . $th->getMessage(), [
                 'file' => $th->getFile(),
                 'line' => $th->getLine(),
-                'product_id' => $id
+                'product_id' => $id,
+                'trace' => $th->getTraceAsString(), // Añadir el trace para mejor depuración
             ]);
             throw $th;
         }
@@ -74,72 +76,72 @@ class ImageUploadService
     public function crearMiniaturaCuadrada(UploadedFile $image, int $id, string $directoryBase = 'img', int $size = 200): string
     {
         try {
-            // Define la carpeta basada en el ID del producto
+            // Define la carpeta basada en el ID del producto (relativa al disco público del tenant)
             $directory = "{$directoryBase}/{$id}";
             $randomNumber = rand(1, 1000);
-            
+
             // Cambiar extensión a .webp
             $filename = time() . $randomNumber . '_thumb.webp';
-            $fullPath = $directory . '/' . $filename;
+            $fullPath = $directory . '/' . $filename; // Ruta RELATIVA al disco 'public' del tenant
 
-            // Crear directorio si no existe
-            $storagePath = storage_path('app/public/' . $directory);
-            if (!file_exists($storagePath)) {
-                mkdir($storagePath, 0755, true);
-            }
+            // NO ES NECESARIO mkdir() aquí. Storage::disk('public')->put() creará los directorios
+            // automáticamente dentro del scope del tenant.
+            // $storagePath = storage_path('app/public/' . $directory);
+            // if (!file_exists($storagePath)) {
+            //     mkdir($storagePath, 0755, true);
+            // }
 
             // Procesar imagen: recorte cuadrado centrado
             $processedImage = $this->manager->read($image->getRealPath())
                 ->cover(width: $size, height: $size) // Recorte cuadrado centrado
                 ->toWebp(quality: 80);
 
+            // Guardar la imagen procesada usando el disco 'public' (que es tenant-aware)
             Storage::disk('public')->put($fullPath, $processedImage);
             return asset('storage/' . $fullPath);
 
         } catch (\Throwable $th) {
-            Log::error('Error al crear miniatura cuadrada: ' . $th->getMessage());
+            Log::error('Error al crear miniatura cuadrada: ' . $th->getMessage(), [
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+                'product_id' => $id,
+                'trace' => $th->getTraceAsString(),
+            ]);
             throw $th;
         }
     }
-
 
     public function eliminar(string $url): bool
     {
         try {
+           
+            // ya que el disco ya está scopeado.
             $path = str_replace(asset('storage/'), '', $url);
-            return Storage::disk('public')->delete($path);
-    
+
+            $parsedUrl = parse_url($url);
+            $relativePath = ltrim($parsedUrl['path'], '/'); // Elimina la barra inicial
+
+            // Quita 'storage/' del inicio de la ruta
+            if (str_starts_with($relativePath, 'storage/')) {
+                $relativePath = substr($relativePath, strlen('storage/'));
+            }
+
+            $pathToDelete = str_replace('storage/', '', $path); // Elimina solo 'storage/' del inicio
+
+            $pathToDelete = str_replace(asset('storage/'), '', $url);
+
+            return Storage::disk('public')->delete($pathToDelete);
+
         } catch (\Throwable $th) {
             Log::error('Error al eliminar imagen: ' . $th->getMessage(), [
                 'url' => $url,
                 'file' => $th->getFile(),
-                'line' => $th->getLine()
+                'line' => $th->getLine(),
+                'trace' => $th->getTraceAsString(),
             ]);
             return false;
         }
     }
-
-
-
-   /*  public function subir(UploadedFile $image, int $id, string $directoryBase = 'img'): string
-    {
-        try {
-            // Define la carpeta basada en el ID del producto
-        $directory = "{$directoryBase}/{$id}";
-        $randomNumer = rand(1, 1000);
-        // Nombre de la imagen con la marca de tiempo
-        $filename = time() . $randomNumer . '.' . $image->getClientOriginalExtension();
-
-        // Guarda la imagen en storage/app/public/{id}/timestamp.jpg
-        $path = $image->storeAs($directory, $filename, 'public');
-
-        // Retorna la URL pública de la imagen
-        return asset('storage/' . $path);
-        } catch (\Throwable $th) {
-            Log::error($th);
-            throw $th;
-        }
-    } */
 
 
 }
