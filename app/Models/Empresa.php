@@ -15,7 +15,8 @@ class Empresa extends Model
         'telefono',
         'direccion',
         'propietario',
-        'licencia'
+        'licencia',
+        'configurado'
     ];
     
 }
