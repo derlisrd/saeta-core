@@ -43,7 +43,7 @@
         </div>
 
         <p class="text-gray-600 leading-relaxed">
-            {{ $producto->description ?? 'Sin descripción disponible.' }}
+            {{ $producto->descripcion ?? 'Sin descripción disponible.' }}
         </p>
 
         <div class="space-y-3">
