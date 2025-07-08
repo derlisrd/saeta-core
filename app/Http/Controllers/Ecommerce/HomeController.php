@@ -18,8 +18,8 @@ class HomeController extends Controller
         return view('ecommerce.index',['productos'=>$products, 'nombreTienda'=>$nombreTienda->nombre]);
     }
 
-    public function details($id){
-        $producto = Producto::find($id)->with('images');
+    public function details(Request $req, $id){
+        $producto = Producto::where('id',$id)->with('images')->first();
 
         return view('ecommerce.details',['producto'=>$producto]);
     }
