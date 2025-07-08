@@ -37,7 +37,7 @@
             <div class="bg-white rounded-lg shadow-md overflow-hidden relative">
                 @if($producto->estado === 'SALE')
                     <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">SALE</span>
-                @elseif($producto->estado === 'NEW')
+                @elseif($producto->estado === 1)
                     <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">NEW</span>
                 @endif
                 <img src="{{  $producto->images->first()->url ?? 'https://placehold.co/400x300/e0f2fe/0c4a6e?text=Producto' }}" alt="{{ $producto->nombre }}" class="w-full h-48 object-cover">
