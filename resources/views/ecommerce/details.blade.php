@@ -62,9 +62,13 @@
     <div class="space-y-6">
         <h1 class="text-3xl font-bold text-gray-900">{{ $producto->nombre }}</h1>
 
-        <div class="text-2xl text-blue-600 font-bold">
-            ${{ number_format($producto->precio_normal, 2) }}
+        
+
+        <div class="flex items-center space-x-3">
+            <span class="text-3xl font-bold text-blue-600">Gs.{{ number_format($producto->precio_normal, 2) }}</span>
+            <span class="text-lg text-gray-400 line-through">Gs.{{ number_format($producto->precio_normal * 1.15, 2) }}</span>
         </div>
+
 
         <p class="text-gray-600">
             {{ $producto->descripcion ?? 'Sin descripción disponible.' }}
