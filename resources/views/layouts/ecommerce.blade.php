@@ -25,7 +25,7 @@
             </a>
             <div class="hidden md:flex space-x-6">
                 <a href="{{ route('e_inicio') }}" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Inicio</a>
-                <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Categorías</a>
+                <a href="{{ route('e_productos') }}" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Productos</a>
                 <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Ofertas</a>
             </div>
             <div class="flex items-center space-x-4">

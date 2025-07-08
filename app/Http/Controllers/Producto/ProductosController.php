@@ -301,9 +301,11 @@ class ProductosController extends Controller
             'preguntar_precio' => 'nullable|boolean',
             'disponible' => 'required',
             'tipo' => 'required',
-            'stock' => 'nullable|array',
-            'stock.*.deposito_id' => 'exists:depositos,id',
-            'stock.*.cantidad' => 'numeric|min:0',
+            /* 'stock' => 'nullable|array',
+            'stock.*.deposito_id' => 'exists:depositos,id', */
+            'stock' =>'nullable|numeric|min:0',
+            'deposito_id'=>'nullable|numeric|exists:depositos,id',
+            //'stock.*.cantidad' => 'numeric|min:0',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'atributos' => 'nullable|array',
@@ -341,13 +343,14 @@ class ProductosController extends Controller
         try {
             $producto = Producto::create($datos);
             if (!empty($req->stock)) {
-                foreach ($req->stock as $stock) {
-                    $producto->stock()->create([
-                        'producto_id' => $producto->id,
-                        'deposito_id' => $stock['deposito_id'],
-                        'cantidad' => $stock['cantidad']
-                    ]);
-                }
+                /* foreach ($req->stock as $stock) {
+                    
+                } */
+                $producto->stock()->create([
+                    'producto_id' => $producto->id,
+                    'deposito_id' => $req->deposito_id,
+                    'cantidad' => $req->stock
+                ]);
             }
             if (!empty($req->atributos)) {
                 foreach ($req->atributos as $itemAtributo) {
