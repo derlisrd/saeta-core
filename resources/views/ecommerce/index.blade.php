@@ -62,7 +62,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 @foreach ($productos as $producto)
                     <div class="bg-white  rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out border border-gray-200">
-                        <img src="{{  $producto->images->first()->miniatura ?? 'https://placehold.co/400x300/e0f2fe/0c4a6e?text=Producto' }}"
+                        <img src="{{  $producto->images->first()->url ?? 'https://placehold.co/400x300/e0f2fe/0c4a6e?text=Producto' }}"
                              alt="{{ $producto->nombre ?? 'Producto' }}"
                              class="w-full h-48 object-cover">
                         <div class="p-5">
