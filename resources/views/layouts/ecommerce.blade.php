@@ -23,7 +23,7 @@
                {{ $nombreTienda }}
             </a>
             <div class="hidden md:flex space-x-6">
-                <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Inicio</a>
+                <a href="{{ route('e_inicio') }}" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Inicio</a>
                 <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Categorías</a>
                 <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Ofertas</a>
             </div>
