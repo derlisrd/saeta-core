@@ -29,7 +29,12 @@ return [
     */
 
     'disks' => [
-
+        /* 'tenant' => [
+            'driver' => 'local',
+            'root' => storage_path('app/tenants/' . tenant('id')),
+            'url' => env('APP_URL') . '/storage/tenants/' . tenant('id'),
+            'visibility' => 'public',
+        ], */
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),

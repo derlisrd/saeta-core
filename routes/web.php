@@ -24,7 +24,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
         Route::view('/tienda','central.creartienda', ['centralDomain' => env('CENTRAL_DOMAIN')])->name('crear_tienda');
         Route::post('/tienda', [TiendaController::class, 'guardarTienda'])->name('guardar_tienda');
-        Route::get('/reparar',[TiendaController::class,'ensureStorageLink']);
+        
 
     Route::get('/logout',[AuthController::class,'logout'])->name('logout');
 
