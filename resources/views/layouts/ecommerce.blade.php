@@ -20,7 +20,7 @@
     <header class="bg-white  shadow-md py-4 px-6 md:px-10 rounded-b-lg">
         <nav class="flex justify-between items-center max-w-7xl mx-auto">
             <a href="/" class="text-xl font-bold text-gray-800 ">
-               {{ $nombreTienda }}
+               Tienda
             </a>
             <div class="hidden md:flex space-x-6">
                 <a href="{{ route('e_inicio') }}" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Inicio</a>
