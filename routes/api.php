@@ -97,8 +97,10 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('depositos')->group(function () {
         Route::get('/', [DepositosController::class, 'index']);
+        Route::get('/activo', [DepositosController::class, 'findActivo']);
+        Route::post('/activar', [DepositosController::class, 'activar']);
         Route::post('/', [DepositosController::class, 'addDeposito']);
-        Route::put('/{id}', [DepositosController::class, 'update']);
+        Route::put('/update/{id}', [DepositosController::class, 'update']);
         Route::get('/productos', [DepositosController::class, 'productosPorDeposito']);
     });
 

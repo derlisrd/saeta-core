@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Deposito;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class DepositosController extends Controller
@@ -84,6 +85,47 @@ class DepositosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Deposito actualizado',
+            'results' => $deposito
+        ]);
+    }
+
+
+    public function findActivo(Request $req){
+        
+        $depositos = Deposito::where('activo',1)->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Depositos encontrados',
+            'results' => $depositos
+        ]);
+    }
+
+    public function activar(Request $req){
+        
+        $validator = Validator::make($req->all(), [
+            'id' => 'required|exists:depositos,id'
+        ]);
+        if ($validator->fails()) 
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        
+    
+        DB::transaction(function () use ($req) {
+            // Desactivar todos
+            Deposito::query()->update(['activo' => 0]);
+            
+            // Activar el seleccionado
+            Deposito::where('id', $req->id)->update(['activo' => 1]);
+        });
+    
+        $deposito = Deposito::find($req->id);
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Depósito activado correctamente',
             'results' => $deposito
         ]);
     }
