@@ -26,7 +26,7 @@
                              alt="{{ $producto->nombre ?? 'Producto' }}"
                              class="w-full h-48 object-cover">
                         <div class="p-5">
-                            <a href="{{ route('details',$producto->id) }}" class="text-xl font-semibold text-gray-900  mb-2 truncate">{{ $producto->nombre ?? 'Nombre del Producto' }}</a>
+                            <a href="{{ route('e_details',$producto->id) }}" class="text-xl font-semibold text-gray-900  mb-2 truncate">{{ $producto->nombre ?? 'Nombre del Producto' }}</a>
                             <p class="text-gray-600  text-sm mb-3 line-clamp-2">{{ $producto->description ?? '' }}</p>
                             <div class="flex items-center justify-between flex-col">
                                 <span class="text-2xl font-bold text-blue-600 ">${{ number_format($producto->precio_normal ?? 0, 2) }}</span>
