@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('sucursal_id')->nullable()->constrained('sucursales');
             $table->string('nombre');
             $table->text('descripcion')->nullable();
+            $table->boolean('activo')->default(0);
             $table->timestamps();
             // $table->foreign('sucursal_id')->references('id')->on('sucursales');
         });

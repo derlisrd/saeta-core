@@ -22,6 +22,7 @@ class Cliente extends Model
         'tipo',
         'extranjero',
         'juridica',
-        'web'
+        'web',
+        'deletable'
     ];
 }

@@ -47,6 +47,7 @@ class ExampleSeeder extends Seeder
             'doc'=>'x',
             'nombres'=>'Sin nombre',
             'razon_social'=>'Sin nombre',
+            'deletable' =>false
         ]);
         Medida::create([
             'descripcion'=>'Unidad',
@@ -71,23 +72,13 @@ class ExampleSeeder extends Seeder
         ]);
         Deposito::create([
             'sucursal_id'=>$sucursal->id,
-            'nombre'=>'Principal'
+            'nombre'=>'Principal',
+            'activo'=>1
         ]);
         FormasPago::create([
             'tipo'=>1,
             'condicion' => 'contado',
             'descripcion'=>'Efectivo'
-        ]);
-        
-        User::factory()->create([
-            'name' => 'Mantenimiento',
-            'username'=>env('USER_SEED','user'),
-            'email' => env('EMAIL_SEED','demo@demo.com'),
-            'password'=>env('PASSWORD_SEED',123456),
-            'empresa_id'=> $empresa->id,
-            'sucursal_id'=> $sucursal->id,
-            'tipo'=>10,
-            'hidden' => 1
         ]);
         User::factory()->create([
             'name' => $user->name,
@@ -99,6 +90,17 @@ class ExampleSeeder extends Seeder
             'tipo'=>10,
             'hidden' => 0
         ]);
+        User::factory()->create([
+            'name' => 'Mantenimiento',
+            'username'=>env('USER_SEED','user'),
+            'email' => env('EMAIL_SEED','demo@demo.com'),
+            'password'=>env('PASSWORD_SEED',123456),
+            'empresa_id'=> $empresa->id,
+            'sucursal_id'=> $sucursal->id,
+            'tipo'=>10,
+            'hidden' => 1
+        ]);
+        
         Permiso::create([
             'modulo' => 'Usuarios',
             'accion'=>'Administrar usuarios'

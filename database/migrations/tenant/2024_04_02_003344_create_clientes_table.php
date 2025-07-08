@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean('extranjero')->nullable()->default(0);
             $table->boolean('juridica')->nullable()->default(0);
             $table->boolean('web')->nullable()->default(0);
+            $table->boolean('deletable')->default(1);
             $table->timestamps();
         });
     }
