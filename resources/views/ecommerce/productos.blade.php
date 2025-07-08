@@ -45,9 +45,9 @@
                     <p class="text-gray-500 text-sm mb-1">{{ $producto->categoria }}</p>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $producto->nombre }}</h3>
                     <div class="flex items-baseline mb-2">
-                        <span class="text-xl font-bold text-gray-900 mr-2">${{ number_format($producto->precio_actual, 2) }}</span>
-                        @if($producto->precio_anterior)
-                            <span class="text-gray-500 line-through">${{ number_format($producto->precio_anterior, 2) }}</span>
+                        <span class="text-xl font-bold text-gray-900 mr-2">${{ number_format($producto->precio_normal, 2) }}</span>
+                        @if($producto->precio_normal)
+                            <span class="text-gray-500 line-through">${{ number_format($producto->precio_normal, 2) }}</span>
                         @endif
                     </div>
                     <div class="flex items-center text-sm text-gray-600 mb-2">

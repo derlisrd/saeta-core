@@ -29,7 +29,7 @@
                             <a href="{{ route('e_details',$producto->id) }}" class="text-xl font-semibold text-gray-900  mb-2 truncate">{{ $producto->nombre ?? 'Nombre del Producto' }}</a>
                             <p class="text-gray-600  text-sm mb-3 line-clamp-2">{{ $producto->description ?? '' }}</p>
                             <div class="flex items-center justify-between flex-col">
-                                <span class="text-2xl font-bold text-blue-600 ">${{ number_format($producto->precio_normal ?? 0, 2) }}</span>
+                                <span class="text-2xl font-bold text-blue-600 ">Gs.{{ number_format($producto->precio_normal ?? 0, 2) }}</span>
                                 <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300 ease-in-out">
                                     Añadir al Carrito
                                 </button>
