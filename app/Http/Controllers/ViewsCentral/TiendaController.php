@@ -60,7 +60,7 @@ class TiendaController extends Controller
             // 3. Inicializar el contexto tenant
             tenancy()->initialize($tenant);
             // 4. Crear el enlace simbólico del storage para el tenant
-            //$this->createTenantStorageLink($tenant->id);
+            $this->createTenantStorageLink($tenant->id);
             // 4. Ejecutar el seeder
             (new ExampleSeeder)->run($user);
 
