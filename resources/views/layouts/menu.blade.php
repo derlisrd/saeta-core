@@ -13,9 +13,8 @@
         </a>
         @endguest
         @auth('admin')
-        <a href="{{ route('dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-full shadow-md transition duration-300 ease-in-out">
-            Dashboard
-        </a>
+        <a href="{{ route('dashboard') }}" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition duration-300 ease-in-out ">Dashboard</a>
+       
         <a href="{{ route('logout') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-full shadow-md transition duration-300 ease-in-out">
             Cerrar Sesión
         </a>
