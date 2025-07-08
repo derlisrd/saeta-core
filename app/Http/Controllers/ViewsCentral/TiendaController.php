@@ -114,14 +114,15 @@ class TiendaController extends Controller
     /**
      * Verifica y repara el enlace simbólico del storage para el tenant actual
      */
-    public function ensureStorageLink(): void
+    public function ensureStorageLink()
     {
         $tenant = tenant();
 
         if (!$tenant) {
-            return; // No hay tenant activo
+            return '<h1>No found</h1>';
         }
 
         $this->createTenantStorageLink($tenant->id);
+        return '<h1>reparado</h1>';
     }
 }
