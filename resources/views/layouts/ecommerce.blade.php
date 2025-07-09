@@ -29,12 +29,8 @@
                 <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">Ofertas</a>
             </div>
             <div class="flex items-center space-x-4">
-                <a href="#" class="text-gray-600  hover:text-blue-600  transition duration-300 ease-in-out">
-                    Carrito (0)
-                </a>
-                <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white  py-2 px-5 rounded-full shadow-md transition duration-300 ease-in-out">
-                    Mi Cuenta
-                </a>
+               
+               
             </div>
         </nav>
     </header>
@@ -42,7 +38,7 @@
     @yield('content')
 
     <footer class="bg-gray-100  py-6 text-center text-gray-500  text-sm rounded-t-lg mt-auto">
-        <p>&copy; 2025 Mi Tienda Online. Todos los derechos reservados.</p>
+        <p>&copy; 2025 Tienda creada con <a href="https://saeta.app">Saeta Tienda</a> hecho con ❤️</p>
     </footer>
 </body>
 

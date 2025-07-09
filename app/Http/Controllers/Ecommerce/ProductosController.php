@@ -11,9 +11,10 @@ class ProductosController extends Controller
     public function productos(){
         $productos = Producto::where('disponible', 1)
         ->where('tipo',1)
-        ->with('images')
-            ->select('id', 'nombre','codigo','precio_normal', 'descripcion', 'disponible','precio_descuento')
+        ->with(['category','images'])
+            ->select('id', 'nombre','codigo','precio_normal', 'descripcion', 'disponible','precio_descuento','tipo','precio_minimo','category_id')
         ->get();
+        //dd($productos);
         return view('ecommerce.productos', compact('productos'));
     }
 }
