@@ -35,7 +35,7 @@
                 x-show="cargando"
                 class="absolute inset-0 bg-white/60 flex items-center justify-center"
             >
-                <svg class="animate-spin h-10 w-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                <svg class="animate-spin h-10 w-10 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none"
                      viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10"
                             stroke="currentColor" stroke-width="4"></circle>
@@ -51,7 +51,7 @@
                 <img
                     src="{{ $imagen->miniatura }}"
                     alt="Miniatura"
-                    class="w-20 h-20 rounded-md object-cover border hover:ring-2 ring-blue-500 cursor-pointer"
+                    class="w-20 h-20 rounded-md object-cover border hover:ring-2 ring-gray-500 cursor-pointer"
                     @click="cambiarImagen('{{ $imagen->url }}')"
                 />
             @endforeach
@@ -65,8 +65,8 @@
         
 
         <div class="flex items-center space-x-3">
-            <span class="text-3xl font-bold text-blue-600">Gs.{{ number_format($producto->precio_normal, 2) }}</span>
-            <span class="text-lg text-gray-400 line-through">Gs.{{ number_format($producto->precio_normal * 1.15, 2) }}</span>
+            <span class="text-xl font-bold text-zinc-800">Gs.{{ number_format($producto->precio_normal,0,'','.') }}</span>
+            <span class="text-lg text-gray-400 line-through">Gs.{{ number_format($producto->precio_normal * 1.15, 0, '', '.') }}</span>
         </div>
 
 
@@ -74,8 +74,8 @@
             {{ $producto->descripcion ?? 'Sin descripción disponible.' }}
         </p>
 
-        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md mt-6">
-            Añadir al carrito
+        <button class="bg-gray-600 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-lg shadow-md mt-6">
+            Hacer pedido
         </button>
     </div>
 </div>
