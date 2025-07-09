@@ -58,7 +58,7 @@
                                 <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.425 8.214 1.196-5.952 5.792 1.408 8.179L12 18.083l-7.338 3.854 1.408-8.179-5.952-5.792 8.214-1.196L12 .587z"/></svg>
                             @endif
                         @endfor
-                        <span class="ml-2">{{ $producto->vendidos }} sold</span>
+                       
                     </div>
                 </div>
             </div>
