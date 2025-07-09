@@ -20,10 +20,10 @@
         </div>
         <div class="relative">
             <select class="appearance-none bg-white border border-gray-300 py-2 pl-3 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option>Latest</option>
+                <option>Ultimos</option>
                 <option>Price: Low to High</option>
                 <option>Price: High to Low</option>
-                <option>Most Popular</option>
+                <option>Mas popular</option>
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.757 7.586 5.343 9l4.5 4.5z"/></svg>
@@ -35,17 +35,15 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         @foreach ($productos as $producto)
             <div class="bg-white rounded-lg shadow-md overflow-hidden relative">
-                @if($producto->estado === 'SALE')
+                @if($producto->tipo === 1)
                     <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">SALE</span>
-                @elseif($producto->estado === 1)
-                    <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">NEW</span>
                 @endif
                 <img src="{{  $producto->images->first()->url ?? 'https://placehold.co/400x300/e0f2fe/0c4a6e?text=Producto' }}" alt="{{ $producto->nombre }}" class="w-full h-48 object-cover">
                 <div class="p-4">
                     <p class="text-gray-500 text-sm mb-1">{{ $producto->categoria }}</p>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $producto->nombre }}</h3>
                     <div class="flex items-baseline mb-2">
-                        <span class="text-xl font-bold text-gray-900 mr-2">Gs.{{ number_format($producto->precio_minimo, 2) }}</span>
+                        <span class="text-xl font-bold text-gray-900 mr-2">Gs.{{ number_format($producto->precio_normal, 2) }}</span>
                         @if($producto->precio_normal)
                             <span class="text-gray-500 line-through">Gs.{{ number_format($producto->precio_normal, 2) }}</span>
                         @endif
