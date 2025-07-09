@@ -20,17 +20,19 @@
         <h2 class="text-xl font-bold text-gray-700 mb-10">Nuestros Productos Destacados</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach ($productos as $producto )
-                <div class="flex flex-row gap-2">
-                    <div>
-                        <img 
-                        class="h-24 rounded-xl object-cover w-full"
-                        src="{{ $producto->images->first()->miniatura ?? 'https://via.placeholder.com/300' }}" />
+                <a href="{{ route('e_details',$producto->id) }}">
+                    <div class="flex flex-row gap-2">
+                        <div>
+                            <img 
+                            class="h-24 rounded-xl object-cover w-full"
+                            src="{{ $producto->images->first()->miniatura ?? 'https://placehold.co/100x100.png' }}" />
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-800">{{$producto->nombre}}</p>
+                            <p class="text-sm text-gray-600">Gs.{{ number_format($producto->precio_normal,0,',','.') }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-800">{{$producto->nombre}}</p>
-                        <p class="text-sm text-gray-600">Gs.{{ number_format($producto->precio_normal,0,',','.') }}</p>
-                    </div>
-                </div>
+                </a>
             @endforeach
         </div>
             
