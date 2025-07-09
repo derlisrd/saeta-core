@@ -32,21 +32,20 @@
     </div>
 
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         @foreach ($productos as $producto)
-            <div class="bg-white rounded-lg shadow-md overflow-hidden relative">
+            <a href="{{ route('e_details',$producto->id) }}">
+            <div class="bg-white rounded-xl cursor-pointer shadow-lg overflow-hidden relative">
                 @if($producto->tipo === 1)
-                    <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">SALE</span>
+                    <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">Promo</span>
                 @endif
                 <img src="{{  $producto->images->first()->url ?? 'https://placehold.co/400x300/e0f2fe/0c4a6e?text=Producto' }}" alt="{{ $producto->nombre }}" class="w-full h-48 object-cover">
                 <div class="p-4">
                     <p class="text-gray-500 text-sm mb-1">{{ $producto->categoria }}</p>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $producto->nombre }}</h3>
+                    <h3 class="text-sm text-gray-800 mb-2">{{ $producto->nombre }}</h3>
                     <div class="flex items-baseline mb-2">
-                        <span class="text-xl font-bold text-gray-900 mr-2">Gs.{{ number_format($producto->precio_normal, 2) }}</span>
-                        @if($producto->precio_normal)
-                            <span class="text-gray-500 line-through">Gs.{{ number_format($producto->precio_normal, 2) }}</span>
-                        @endif
+                        <span class="text-md font-semibold text-gray-900 mr-2">Gs.{{ number_format($producto->precio_normal,0,',','.') }}</span>
+                    
                     </div>
                     <div class="flex items-center text-sm text-gray-600 mb-2">
                         @for ($i = 0; $i < 5; $i++)
@@ -62,6 +61,7 @@
                     </div>
                 </div>
             </div>
+            </a>
         @endforeach
     </div>
 </div>
