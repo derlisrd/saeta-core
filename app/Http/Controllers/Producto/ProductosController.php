@@ -306,7 +306,7 @@ class ProductosController extends Controller
             'stock' =>'nullable|numeric|min:0',
             'deposito_id'=>'nullable|numeric|exists:depositos,id',
             //'stock.*.cantidad' => 'numeric|min:0',
-            'images' => 'nullable|array',
+            'images' => 'nullable|array|max:6',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'atributos' => 'nullable|array',
             'atributos.*.nombre' => 'required',
