@@ -5,7 +5,7 @@
 
 <div class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-10"
      x-data="{
-        imageActual: '{{ $producto->images->first()->url  ? url().$producto->images->first()->url   : 'https://placehold.co/600x400?text=Producto' }}',
+        imageActual: '{{ $producto->images->first()->url ?? 'https://placehold.co/600x400?text=Producto' }}',
         cargando: false,
         cambiarImagen(nuevaUrl) {
             this.cargando = true
