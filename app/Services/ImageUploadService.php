@@ -50,7 +50,7 @@ class ImageUploadService
             Storage::disk('public')->put($fullPath, $webpData);
 
             // Construir URL manualmente
-            return $this->buildTenantUrl($fullPath);
+            return $this->buildRelativePath($fullPath);
 
         } catch (\Throwable $th) {
             Log::error('Error al subir imagen: ' . $th->getMessage(), [
@@ -83,7 +83,7 @@ class ImageUploadService
             Storage::disk('public')->put($fullPath, $processedImage);
             
             // Usar el mismo método para construir la URL
-            return $this->buildTenantUrl($fullPath);
+            return $this->buildRelativePath($fullPath);
 
         } catch (\Throwable $th) {
             Log::error('Error al crear miniatura cuadrada: ' . $th->getMessage(), [
@@ -120,6 +120,15 @@ class ImageUploadService
             ]);
             return false;
         }
+    }
+
+    private function buildRelativePath(string $path): string
+    {
+        // Asegurar que el enlace simbólico existe
+        $this->ensureStorageLink();
+        
+        // Retornar solo la ruta relativa comenzando con /storage/
+        return '/storage/' . ltrim($path, '/');
     }
 
     /**
