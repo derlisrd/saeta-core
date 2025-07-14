@@ -5,8 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+//se Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -54,7 +54,7 @@ class UserController extends Controller
             'sucursal_id'=>$req->sucursal_id,
             'username' => $req->username,
             'email' => $req->email,
-            'password' => bcrypt($req->password),
+            'password' => Hash::make($req->password),
             'tipo'=> 1,
             'activo'=>1,
             'cambiar_password'=>true
@@ -72,15 +72,24 @@ class UserController extends Controller
             'id' => 'required|exists:users,id',
             'password' => 'required|string|min:6|confirmed',
         ]);
-        if ($validator->fails()) {
+        if ($validator->fails()) 
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first()
             ], 400);
+        
+        $user = $req->user;
+        
+        if($user->id !== $req->id && $user->tipo !== 10){
+            return response()->json([
+                'success' => false,
+                'message' => 'No puede modificar otro usuario'
+            ],400);
         }
 
+
         User::where('id', $req->id)->update([
-            'password' => bcrypt($req->password)
+            'password' => Hash::make($req->password)
         ]);
 
         return response()->json([
