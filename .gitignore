@@ -11,6 +11,7 @@
 .phpunit.result.cache
 Homestead.json
 composer.lock
+package-lock.json
 Homestead.yaml
 auth.json
 npm-debug.log
@@ -18,3 +19,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+.DS_Store
