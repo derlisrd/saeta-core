@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -78,7 +79,7 @@ class UserController extends Controller
                 'message' => $validator->errors()->first()
             ], 400);
         
-        $user = $req->user;
+        $user = $req->user();
         
         if($user->id !== $req->id && $user->tipo !== 10){
             return response()->json([
@@ -86,14 +87,23 @@ class UserController extends Controller
                 'message' => 'No puede modificar otro usuario'
             ],400);
         }
-
-
-        User::where('id', $req->id)->update([
-            'password' => Hash::make($req->password)
+        $usuario = User::find($req->id);
+        $usuario->password = Hash::make($req->password);
+        $usuario->save();
+        
+        Activity::create([
+            'user_id' => $req->user()->id,
+            'action' => 'users',
+            'description' => 'Cambio de contraseña',
+            'details' => 'Usuario modificado: ',
+            'browser' => $req->header('User-Agent'),
         ]);
+
+        
 
         return response()->json([
             'success' => true,
+            'results' => $usuario,
             'message' => 'Cambio de contraseña realizado correctamente'
         ]);
     }
