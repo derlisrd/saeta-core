@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->bigInteger('empresa_id')->after('id')->unsigned()->nullable();
             $table->foreign('empresa_id')->references('id')->on('empresa');
+            $table->bigInteger('sucursal_id')->after('id')->unsigned()->nullable();
+            $table->foreign('sucursal_id')->references('id')->on('sucursales');
+            
         });
     }
 
@@ -24,6 +27,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('empresa_id');
+            $table->dropColumn('sucursal_id');
         });
     }
 };
