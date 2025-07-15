@@ -22,7 +22,7 @@ class ExampleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run($user): void
+    public function run($user,$datosEmpresa): void
     {
         Impuesto::create([
             'descripcion'=>'Exenta',
@@ -55,10 +55,10 @@ class ExampleSeeder extends Seeder
             'default'=>true
         ]);
         $empresa = Empresa::create([
-            'nombre'=>'Nombre de empresa',
+            'nombre'=>$datosEmpresa->nombre,
             'ruc'=>'0000',
-            'telefono'=>'0983200900',
-            'direccion'=>'cde',
+            'telefono'=>'x',
+            'direccion'=>'direccion',
             'configurado'=>1,
             'licencia'=>Carbon::now()->addDays(30),
         ]);

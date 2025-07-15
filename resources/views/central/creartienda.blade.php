@@ -12,7 +12,6 @@
             </p>
         </div>
 
-        <!-- Mensajes de éxito o error (Laravel session messages) -->
         @if (session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
@@ -28,17 +27,33 @@
         <form action="{{ route('guardar_tienda') }}" method="POST" class="space-y-6">
             @csrf
 
-            <div>
-                <label for="domain" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre de la Tienda</label>
-                <input type="text" id="domain" name="domain" required autocomplete="organization"
+            <div class="flex flex-col">
+                <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre de la Tienda</label>
+                <input type="text" id="nombre" name="nombre" required autocomplete="off"
+                value="{{ old('nombre') }}"
                        class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400
                               focus:ring-blue-500 focus:border-blue-500 sm:text-sm
                               dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-500"
-                       placeholder="Ej: Mi Tienda Genial">
-                <!-- Dynamic domain preview -->
-                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    Tu tienda estará en: <span id="domain_preview" class="font-semibold text-blue-600 dark:text-blue-400"></span>
-                </p>
+                       placeholder="Ej: Mi Tienda Online">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="domain" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Dominio de la Tienda</label>
+                <div class="flex items-center">
+                    <input type="text" id="domain" name="domain" required autocomplete="off"
+                        placeholder="mitienda"
+                       class="flex-1 appearance-none block w-full px-4 py-2 border border-gray-300 rounded-l-md shadow-sm placeholder-gray-400
+                              focus:ring-blue-500 focus:border-blue-500 sm:text-sm
+                              dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-500"
+                       >
+                       {{-- This span will dynamically show the central domain --}}
+                       <span id="central_domain_display"
+                             class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm rounded-r-md
+                                    dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
+                           .saeta.app
+                       </span>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-4" >Será el link de tu tienda</p>
                 @error('domain')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -56,47 +71,5 @@
     </div>
 </main>
 
-
-<script>
-    // Get references to the input and the preview span
-    const storeNameInput = document.getElementById('domain');
-    const domainPreviewSpan = document.getElementById('domain_preview');
-
-    // Get the CENTRAL_DOMAIN from a Blade variable (assuming it's passed from the controller)
-    // Example: return view('store.create', ['centralDomain' => env('CENTRAL_DOMAIN')]);
-    const centralDomain = "{{ $centralDomain ?? 'tudominio.com' }}"; // Fallback if not passed
-
-    // Function to slugify text (mimics Laravel's Str::slug but without hyphens for spaces)
-    function slugify(text) {
-        return text
-            .toString()
-            .normalize('NFD') // Normalize diacritics
-            .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-            .toLowerCase()
-            .trim()
-            .replace(/\s+/g, '') // Reemplaza espacios con nada (los elimina)
-            .replace(/[^\w-]+/g, '') // Remove all non-word chars (except hyphens if they are already there)
-            .replace(/--+/g, '-'); // Replace multiple - with single - (less likely now, but good to keep)
-    }
-
-    // Update the preview on input
-    storeNameInput.addEventListener('input', function() {
-        const inputValue = this.value;
-        const slugifiedValue = slugify(inputValue);
-        domainPreviewSpan.textContent = `${slugifiedValue}.${centralDomain}`;
-    });
-
-    // Initialize the preview in case there's old input
-    document.addEventListener('DOMContentLoaded', function() {
-        const initialValue = storeNameInput.value;
-        if (initialValue) {
-            const slugifiedValue = slugify(initialValue);
-            domainPreviewSpan.textContent = `${slugifiedValue}.${centralDomain}`;
-        } else {
-            // Display only the central domain if no input yet
-            domainPreviewSpan.textContent = `.${centralDomain}`;
-        }
-    });
-</script>
 
 @endsection

@@ -24,7 +24,13 @@ class TiendaController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'domain' => 'required|unique:tenants,id'
+            'domain' => ['required', 'unique:tenants,id', 'regex:/^[a-zA-Z0-9]+$/'],
+            'nombre' =>'required'
+        ],[
+            'domain.required' => 'El campo de dominio es obligatorio. Por favor, ingresa un nombre para tu tienda.',
+            'domain.unique' => 'Este nombre de dominio ya está en uso. Por favor, elige otro.',
+            'domain.regex' => 'El dominio solo puede contener letras y números, sin espacios ni caracteres especiales.',
+            'nombre.required' => 'El nombre de la tienda es obligatorio. Por favor, ingresa un nombre para tu tienda.',
         ]);
 
         if ($validator->fails()) {
@@ -62,7 +68,7 @@ class TiendaController extends Controller
             // 4. Crear el enlace simbólico del storage para el tenant
             $this->createTenantStorageLink($tenant->id);
             // 4. Ejecutar el seeder
-            (new ExampleSeeder)->run($user);
+            (new ExampleSeeder)->run($user,$request);
 
             // 5. Finalizar el contexto tenant
             tenancy()->end();
