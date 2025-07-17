@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Database\Seeders\ExampleSeeder;
 use App\Models\Tenant;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Register extends Component
@@ -27,6 +29,8 @@ class Register extends Component
     public $plan_seleccionado = 1;
 
     public $logo;
+
+
 
 
     public function mount()
@@ -137,48 +141,113 @@ class Register extends Component
         RateLimiter::clear($key);
 
 
-        $userAdmin = Auth::guard('admin')->login($user);
-        // (Esto es útil si necesitas el token para el frontend o para otras APIs)
-        $token = JWTAuth::fromUser($user); // Genera el token a partir del objeto User
+        try {
 
-        if (!$token) {
-            return back()->with('error', 'No se pudo generar el token de autenticación. Por favor, inténtalo de nuevo.');
+
+            $userAdmin = Auth::guard('admin')->login($user);
+            // (Esto es útil si necesitas el token para el frontend o para otras APIs)
+            $token = JWTAuth::fromUser($user); // Genera el token a partir del objeto User
+
+            if (!$token) {
+                return back()->with('error', 'No se pudo generar el token de autenticación. Por favor, inténtalo de nuevo.');
+            }
+            // Si quieres guardar el token en sesión para usarlo en frontend Blade:
+            session(['jwt_token' => $token]);
+            $centralDomain = env('CENTRAL_DOMAIN');
+            $domain = strtolower($this->domain);
+            $fullDomain = $domain . '.' . $centralDomain;
+
+            $tenantData = [
+                'id' => $domain,
+                'user_id' => $user->id,
+            ];
+
+            // 1. Crear el tenant con información del usuario propietario
+            $tenant = Tenant::create($tenantData);
+
+            // 2. Asignar el dominio
+            $tenant->domains()->create([
+                'domain' => $fullDomain,
+                'plan_id' => $this->plan_seleccionado,
+                'user_id' => $user->id
+            ]);
+
+            // 3. Inicializar el contexto tenant
+            tenancy()->initialize($tenant);
+            // 4. Crear el enlace simbólico del storage para el tenant
+            $this->createTenantStorageLink($tenant->id);
+            // 4. Ejecutar el seeder
+            (new ExampleSeeder)->run($user, $this->store);
+
+            // 5. Finalizar el contexto tenant
+            tenancy()->end();
+
+
+
+
+            //session()->flash('success', '¡Registro completado exitosamente!');
+            return redirect()->to('/dashboard');
+        } catch (\Throwable $e) {
+
+
+            // Podés guardar el error en logs
+            Log::error('Error en registro de tenant', ['error' => $e->getMessage()]);
+
+            // Volver con mensaje
+            return redirect()->back()
+                ->with('error', 'Ocurrió un error durante el registro: ' . $e->getMessage())
+                ->withInput();
         }
-        // Si quieres guardar el token en sesión para usarlo en frontend Blade:
-        session(['jwt_token' => $token]);
+    }
 
-        session()->flash('success', '¡Registro completado exitosamente!');
-        $centralDomain = env('CENTRAL_DOMAIN');
-        $domain = strtolower($this->domain);
-        $fullDomain = $domain . '.' . $centralDomain;
+    private function createTenantStorageLink(string $tenantId): void
+    {
+        try {
+            // Rutas del storage del tenant
+            $tenantStoragePath = storage_path("app/public");
+            $tenantPublicPath = public_path('storage');
 
-        $tenantData = [
-            'id' => $domain,
-            'user_id' => $user->id,
-        ];
+            // Verificar que el directorio de storage existe
+            if (!file_exists($tenantStoragePath)) {
+                mkdir($tenantStoragePath, 0755, true);
+            }
 
-        // 1. Crear el tenant con información del usuario propietario
-        $tenant = Tenant::create($tenantData);
+            // Crear el enlace simbólico si no existe
+            if (!file_exists($tenantPublicPath)) {
+                if (symlink($tenantStoragePath, $tenantPublicPath)) {
+                    Log::info("Enlace simbólico creado para tenant: {$tenantId}");
+                } else {
+                    Log::warning("No se pudo crear el enlace simbólico para tenant: {$tenantId}");
+                }
+            } else {
+                // Verificar que el enlace existente apunta al lugar correcto
+                if (is_link($tenantPublicPath)) {
+                    $currentTarget = readlink($tenantPublicPath);
+                    if ($currentTarget !== $tenantStoragePath) {
+                        // El enlace existe pero apunta a otro lugar, recrearlo
+                        unlink($tenantPublicPath);
+                        symlink($tenantStoragePath, $tenantPublicPath);
+                        Log::info("Enlace simbólico actualizado para tenant: {$tenantId}");
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error("Error al crear enlace simbólico para tenant {$tenantId}: " . $e->getMessage());
+            // No lanzar excepción aquí para no interrumpir la creación del tenant
+        }
+    }
 
-        // 2. Asignar el dominio
-        $tenant->domains()->create([
-            'domain' => $fullDomain,
-            'plan_id' => 1,
-            'user_id' => $user->id
-        ]);
 
-        // 3. Inicializar el contexto tenant
-        tenancy()->initialize($tenant);
-        // 4. Crear el enlace simbólico del storage para el tenant
+    public function ensureStorageLink()
+    {
+        $tenant = tenant();
+
+        if (!$tenant) {
+            return '<h1>No found</h1>';
+        }
+
         $this->createTenantStorageLink($tenant->id);
-        // 4. Ejecutar el seeder
-        (new ExampleSeeder)->run($user, $this->store);
-
-        // 5. Finalizar el contexto tenant
-        tenancy()->end();
-
-
-        return redirect()->route('dashboard');
+        return '<h1>reparado</h1>';
     }
 
 
