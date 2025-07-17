@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Ecommerce;
 
 use App\Http\Controllers\Controller;
-use App\Models\Empresa;
 use App\Models\Option;
 use App\Models\Producto;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+
 
 class HomeController extends Controller
 {

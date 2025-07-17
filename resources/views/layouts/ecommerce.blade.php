@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda Online - Inicio</title>
+    <title>@yield('header_title', 'Tienda Online - Inicio')</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Font: Inter -->
@@ -21,7 +21,7 @@
     <header class="bg-white  shadow-md py-4 px-6 md:px-10 rounded-b-lg">
         <nav class="flex justify-between items-center max-w-7xl mx-auto">
             <a href="/" class="text-xl font-bold text-gray-800 ">
-               Tienda
+               @yield('title')
             </a>
             <div class="hidden md:flex space-x-6">
                 <a href="{{ route('e_inicio') }}" class="text-gray-600  hover:text-gray-200  transition duration-300 ease-in-out">Inicio</a>

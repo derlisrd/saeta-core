@@ -1,5 +1,8 @@
 @extends('layouts.ecommerce')
 
+@section('title', $options['title'] ?? 'Tienda Online')
+@section('header_title', $options['title'] ?? 'Tienda Online')
+
 @section('content')
     <section class="py-20 px-6 sm:px-10 rounded-lg shadow-xl mx-4 mt-8 max-w-7xl lg:mx-auto">
         <div class="max-w-4xl mx-auto text-center">
