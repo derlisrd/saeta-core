@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear una cuenta</title>
     @vite(['resources/css/app.css'])
-    @livewireStyles
+    <livewire:styles />
 </head>
 <body class='bg-gray-100 dark:bg-dark flex flex-col min-h-screen'>
     <div class="py-12">
@@ -23,6 +23,6 @@
         </div>
     </div>
 
-    @livewireScripts
+    <livewire:scripts />
 </body>
 </html>
