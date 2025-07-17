@@ -12,7 +12,8 @@ Route::middleware('guest:admin')->group(function () {
     Route::view('/login','central.login')->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login_submit');
     Route::view('/register','central.register')->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register_submit');
+    //Route::post('/register', [AuthController::class, 'register'])->name('register_submit');
+
 });
 
 Route::view('/contacto','central.contacto')->name('contacto');

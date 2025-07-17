@@ -22,7 +22,7 @@ class ExampleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run($user,$datosEmpresa): void
+    public function run($user,$nombreEmpresa): void
     {
         Impuesto::create([
             'descripcion'=>'Exenta',
@@ -55,7 +55,7 @@ class ExampleSeeder extends Seeder
             'default'=>true
         ]);
         $empresa = Empresa::create([
-            'nombre'=>$datosEmpresa->nombre,
+            'nombre'=>$nombreEmpresa,
             'ruc'=>'0000',
             'telefono'=>'x',
             'direccion'=>'direccion',
