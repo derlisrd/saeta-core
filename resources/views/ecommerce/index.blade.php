@@ -24,7 +24,7 @@
                     <div class="flex flex-row gap-2">
                         <div>
                             <img 
-                            class="h-24 rounded-xl object-cover w-full"
+                            class="h-full rounded-xl object-cover w-full min-w-24 max-h-24"
                             alt="{{ $producto->nombre }}"
                             src="{{ $producto->images->first()->miniatura ?? 'https://placehold.co/100x100.png' }}" />
                         </div>
