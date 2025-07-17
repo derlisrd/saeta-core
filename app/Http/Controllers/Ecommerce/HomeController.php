@@ -4,23 +4,29 @@ namespace App\Http\Controllers\Ecommerce;
 
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
+use App\Models\Option;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $products = Producto::with('images');
         $products = $products->where('disponible', 1)->get();
-        $nombreTienda = Empresa::find(1);
+        $options = Option::pluck('value', 'key');
 
-        return view('ecommerce.index',['productos'=>$products, 'nombreTienda'=>$nombreTienda->nombre]);
+        return view('ecommerce.index', [
+            'productos' => $products,
+            'options' => $options
+        ]);
     }
 
-    public function details(Request $req, $id){
-        $producto = Producto::where('id',$id)->with('images')->first();
+    public function details(Request $req, $id)
+    {
+        $producto = Producto::where('id', $id)->with('images')->first();
 
-        return view('ecommerce.details',['producto'=>$producto]);
+        return view('ecommerce.details', ['producto' => $producto]);
     }
 }

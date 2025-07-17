@@ -4,10 +4,10 @@
     <section class="py-20 px-6 sm:px-10 rounded-lg shadow-xl mx-4 mt-8 max-w-7xl lg:mx-auto">
         <div class="max-w-4xl mx-auto text-center">
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
-                Descubre Productos Increíbles 
+                {{ $options['title'] ?? 'Tienda virtual' }}
             </h1>
             <p class="text-lg sm:text-xl opacity-90 mb-8">
-                te ayudamos a crear tu amuleto, la joya personalizada perfecta para regalar. Hacemos grabados de dibujos a linea, fotos, fechas, palabras o frases.
+                {{ $options['description'] ?? 'Productos destacados en nuestra tienda' }}
             </p>
             <a href="{{ route('e_productos') }}" class="bg-white hover:bg-gray-100 font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
                 Ver Todos los Productos
