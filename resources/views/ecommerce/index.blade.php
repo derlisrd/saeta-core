@@ -29,7 +29,7 @@
                             src="{{ $producto->images->first()->miniatura ?? 'https://placehold.co/100x100.png' }}" />
                         </div>
                         <div>
-                            <p class="text-sm text-gray-800">{{$producto->nombre}}</p>
+                            <p class="text-sm text-gray-800">{{ Str::limit($producto->nombre, 25) }}</p>
                             <p class="text-sm text-gray-600">Gs.{{ number_format($producto->precio_normal,0,',','.') }}</p>
                         </div>
                     </div>
