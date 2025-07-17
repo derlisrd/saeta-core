@@ -149,11 +149,9 @@
                         <span wire:loading wire:target="nextStep">Cargando...</span>
                     </button>
                 @else
-                <button type="submit" class="p-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white
-                bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                finalizar
-            </button>
+                <button wire:loading.remove type="submit" class="p-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white
+                bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500">
+                Finalizar</button>
                 @endif
             </div>
         </form>
