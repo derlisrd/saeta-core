@@ -12,8 +12,8 @@
             <p class="text-lg sm:text-xl opacity-90 mb-8">
                 {{ $options['description'] ?? 'Productos destacados en nuestra tienda' }}
             </p>
-            <a href="{{ route('e_productos') }}" class="bg-white hover:bg-gray-100 font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
-                Ver Todos los Productos
+            <a href="{{ route('e_productos') }}" class="bg-white hover:bg-gray-100 font-bold py-3 px-8 rounded-xl text-md shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                Ver Productos
             </a>
         </div>
     </section>

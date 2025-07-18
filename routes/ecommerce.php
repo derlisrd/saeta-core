@@ -9,5 +9,6 @@ Route::get('/',[HomeController::class, 'index'])->name('e_inicio');
 Route::get('/details/{id}',[HomeController::class,'details'])->name('e_details');
 
 Route::get('/productos',[ProductosController::class,'productos'])->name('e_productos');
+Route::view('/contacto','ecommerce.contacto')->name('e_contacto');
 
 //Route::get('/reparar',[TiendaController::class,'ensureStorageLink']);

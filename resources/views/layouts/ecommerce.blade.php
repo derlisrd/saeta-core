@@ -17,7 +17,7 @@
 
 </head>
 <body>
-    <header class="bg-white shadow-md py-4 px-6 md:px-10 rounded-b-lg relative z-30">
+    <header class="fixed top-0 left-0 right-0 z-40 bg-white/30 backdrop-blur-md shadow-md py-4 px-6 md:px-10 rounded-b-lg">
         <nav class="flex justify-between items-center max-w-7xl mx-auto">
             <!-- Logo -->
             <a href="/" class="text-xl font-bold text-gray-800">
@@ -35,13 +35,12 @@
     
             <!-- Menú desktop -->
             <div class="hidden md:flex space-x-6">
-                <a href="{{ route('e_inicio') }}" class="text-gray-600 hover:text-gray-900 transition">Inicio</a>
-                <a href="{{ route('e_productos') }}" class="text-gray-600 hover:text-gray-900 transition">Productos</a>
-                <a href="{{ route('e_inicio') }}" class="text-gray-600 hover:text-gray-900 transition">Contacto</a>
+                <a href="{{ route('e_inicio') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Inicio</a>
+                <a href="{{ route('e_productos') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Productos</a>
+                <a href="{{ route('e_inicio') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Contacto</a>
             </div>
         </nav>
     </header>
-    
     <!-- Drawer móvil -->
     <div id="mobile-menu"
          class="fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden">
@@ -58,7 +57,7 @@
             <!-- Links -->
             <a href="{{ route('e_inicio') }}" class="block text-gray-700 hover:text-blue-600">Inicio</a>
             <a href="{{ route('e_productos') }}" class="block text-gray-700 hover:text-blue-600">Productos</a>
-            <a href="{{ route('e_inicio') }}" class="block text-gray-700 hover:text-blue-600">Contacto</a>
+            <a href="{{ route('e_contacto') }}" class="block text-gray-700 hover:text-blue-600">Contacto</a>
         </div>
     </div>
     
@@ -66,7 +65,9 @@
     <div id="menu-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-30 z-40 md:hidden"></div>
     
 
-    @yield('content')
+    <main class="mt-24" >
+        @yield('content')
+    </main>
 
     <footer class="bg-gray-100  py-6 text-center text-gray-500  text-xs rounded-t-lg mt-auto">
         <p>&copy; 2025 Tienda creada con <a href="https://saeta.app">Saeta Tienda</a> hecho con ❤️</p>

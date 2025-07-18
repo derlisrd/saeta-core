@@ -4,9 +4,9 @@
 @section('header_title', $options['title'] ?? 'Tienda Online')
 
 @section('content')
-<div class="container mx-auto px-4 py-8"> {{-- Centra el contenido y añade padding --}}
+<div class="container mx-auto px-4 py-8"> 
 
-    {{-- Encabezado con opciones de vista y filtro --}}
+  
     <div class="flex justify-between items-center mb-6">
         <div class="flex space-x-2">
             {{-- Botones de vista (grid/lista) --}}
@@ -35,7 +35,7 @@
     </div>
 
 
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         @foreach ($productos as $producto)
             <a href="{{ route('e_details',$producto->id) }}">
             <div class="bg-white rounded cursor-pointer overflow-hidden relative">
@@ -47,22 +47,17 @@
                 <div class="p-4">
                     <p class="text-gray-500 text-sm mb-1">{{ $producto->category->nombre }}</p>
                     <h3 class="text-xs text-gray-800 mb-2">{{ $producto->nombre }}</h3>
-                    <div class="flex items-baseline mb-2">
-                        <span class="text-sm font-semibold text-gray-700 mr-2">Gs.{{ number_format($producto->precio_normal,0,',','.') }}</span>
-                    
+                    <div class="flex flex-col items-baseline mb-2">
+                        
+                        @if($producto->descuento_activo === 1)
+                            <p class="text-sm text-gray-600 line-through mr-2">{{ number_format($producto->precio_normal,0,',','.') }}Gs.</p>
+                            <p class="text-sm text-gray-600 font-semibold text-red-600">{{ number_format($producto->precio_descuento,0,',','.') }}Gs.</p>
+                        @else
+                            <span class="text-sm text-gray-600">{{ number_format($producto->precio_normal,0,',','.')}} Gs.</span> 
+                        @endif
+                        
                     </div>
-                    <div class="flex items-center text-sm text-gray-600 mb-2">
-                        @for ($i = 0; $i < 5; $i++)
-                            @if ($i < floor($producto->estrellas))
-                                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.425 8.214 1.196-5.952 5.792 1.408 8.179L12 18.083l-7.338 3.854 1.408-8.179-5.952-5.792 8.214-1.196L12 .587z"/></svg>
-                            @elseif ($i < $producto->estrellas)
-                                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 18.083L4.662 21.937l1.408-8.179L.118 8.046l8.214-1.196L12 .587l3.668 7.425 8.214 1.196-5.952 5.792 1.408 8.179L12 18.083zM12 2.766l-3.322 6.71-7.409 1.077 5.35 5.21-.94 5.467L12 19.336l6.921 3.633-.94-5.467 5.35-5.21-7.409-1.077L12 2.766z"/></svg>
-                            @else
-                                <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.425 8.214 1.196-5.952 5.792 1.408 8.179L12 18.083l-7.338 3.854 1.408-8.179-5.952-5.792 8.214-1.196L12 .587z"/></svg>
-                            @endif
-                        @endfor
-                       
-                    </div>
+                   
                 </div>
             </div>
             </a>
