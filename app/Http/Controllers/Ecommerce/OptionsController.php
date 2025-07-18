@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Validator;
 
 class OptionsController extends Controller
 {
+    public function index(){
+        return response()->json([
+            'success'=>true,
+            'results'=>Option::all()
+        ]);
+    }
 
     public function find($key){
         $option = Option::where('key', $key)->first();

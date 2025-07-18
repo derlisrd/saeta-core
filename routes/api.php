@@ -8,6 +8,7 @@ use App\Http\Controllers\Config\EmpresaController;
 use App\Http\Controllers\Config\ImpresorasController;
 use App\Http\Controllers\Config\SucursalController;
 use App\Http\Controllers\Credito\CreditosController;
+use App\Http\Controllers\Ecommerce\OptionsController;
 use App\Http\Controllers\Factura\FacturasController;
 use App\Http\Controllers\Factura\FormasPagosController;
 use App\Http\Controllers\Factura\ImpuestosController;
@@ -168,6 +169,11 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', [SucursalController::class, 'index']);
     });
 
+    Route::prefix('options')->group(function(){
+        Route::get('/',[OptionsController::class,'index']);
+        Route::get('/find',[OptionsController::class,'find']);
+        Route::post('/',[OptionsController::class,'store']);
+    });
 
     Route::get('/refresh-token', [AuthController::class, 'refreshToken']);
     Route::get('/me', [UserController::class, 'me']);
