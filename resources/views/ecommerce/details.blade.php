@@ -1,5 +1,6 @@
 @extends('layouts.ecommerce') {{-- Solo si usás un layout base --}}
-
+@section('title', $options['title'] ?? 'Tienda Online')
+@section('header_title', $options['title'] ?? 'Tienda Online')
 @section('content')
 
 

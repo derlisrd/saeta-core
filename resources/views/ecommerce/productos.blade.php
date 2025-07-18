@@ -1,5 +1,8 @@
 @extends('layouts.ecommerce')
 
+@section('title', $options['title'] ?? 'Tienda Online')
+@section('header_title', $options['title'] ?? 'Tienda Online')
+
 @section('content')
 <div class="container mx-auto px-4 py-8"> {{-- Centra el contenido y añade padding --}}
 
@@ -36,16 +39,16 @@
         @foreach ($productos as $producto)
             <a href="{{ route('e_details',$producto->id) }}">
             <div class="bg-white rounded cursor-pointer overflow-hidden relative">
-                @if($producto->tipo === 1)
+                @if($producto->descuento_activo === 1)
                     <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">Promo</span>
                 @endif
                 <img src="{{  $producto->images->first()->url ?? 'https://placehold.co/400x300/e0f2fe/0c4a6e?text=Producto' }}" alt="{{ $producto->nombre }}" 
                 class="w-full h-48 object-cover rounded-lg">
                 <div class="p-4">
                     <p class="text-gray-500 text-sm mb-1">{{ $producto->category->nombre }}</p>
-                    <h3 class="text-sm text-gray-800 mb-2">{{ $producto->nombre }}</h3>
+                    <h3 class="text-xs text-gray-800 mb-2">{{ $producto->nombre }}</h3>
                     <div class="flex items-baseline mb-2">
-                        <span class="text-md font-semibold text-gray-700 mr-2">Gs.{{ number_format($producto->precio_normal,0,',','.') }}</span>
+                        <span class="text-sm font-semibold text-gray-700 mr-2">Gs.{{ number_format($producto->precio_normal,0,',','.') }}</span>
                     
                     </div>
                     <div class="flex items-center text-sm text-gray-600 mb-2">

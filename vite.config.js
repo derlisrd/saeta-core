@@ -13,5 +13,15 @@ export default defineConfig({
         postcss: {
           plugins: [tailwindcss()],
         },
-    }
+    },
+    build:{
+        emptyOutDir: true,
+        rollupOptions: {
+          output: {
+            chunkFileNames: "assets/[name].js",
+            entryFileNames: "assets/[name].js",
+            assetFileNames: "assets/[name].[ext]",
+          },
+        }
+      }
 });

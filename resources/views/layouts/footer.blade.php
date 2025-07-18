@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500 text-sm">
+        <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500 text-xs">
             &copy; {{ date('Y') }} Saeta Tienda. Todos los derechos reservados.
         </div>
     </div>
