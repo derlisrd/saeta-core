@@ -32,7 +32,7 @@
     </div>
 
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
         @foreach ($productos as $producto)
             <a href="{{ route('e_details',$producto->id) }}">
             <div class="bg-white rounded cursor-pointer overflow-hidden relative">
