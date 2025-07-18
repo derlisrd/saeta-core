@@ -147,6 +147,7 @@ class ClientesController extends Controller
             'nombres' => 'required',
             'apellidos' => 'nullable',
             'razon_social' => 'nullable',
+            'ciudad'=>'nullable|max:100',
             'direccion' => 'nullable',
             'telefono' => 'nullable',
             'email' => 'nullable|email|unique:clientes,email',
