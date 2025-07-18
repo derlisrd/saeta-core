@@ -175,6 +175,7 @@ class ClientesController extends Controller
             'apellidos' => $req->apellidos,
             'razon_social' => $razon_social,
             'direccion' => $req->direccion,
+            'ciudad' => $req->ciudad,
             'telefono' => $req->telefono,
             'email' => $req->email,
             'nacimiento' => $req->nacimiento,
