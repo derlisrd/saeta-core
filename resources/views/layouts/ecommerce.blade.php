@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('header_title', 'Tienda Online - Inicio')</title>
 
-    <link rel="stylesheet" href="{{ env('APP_URL') }}/build/assets/app.css"> 
-     {{-- @vite(['resources/css/app.css']) --}}
+    {{-- <link rel="stylesheet" href="{{ env('APP_URL') }}/build/assets/app.css">  --}}
+     @vite(['resources/css/app.css']) 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -20,7 +20,7 @@
     <header class="fixed top-0 left-0 right-0 z-40 bg-white/30 backdrop-blur-md shadow-md py-4 px-6 md:px-10 rounded-b-lg">
         <nav class="flex justify-between items-center max-w-7xl mx-auto">
             <!-- Logo -->
-            <a href="/" class="text-xl font-bold text-gray-800">
+            <a href="/" class="text-md md:text-xl font-bold text-gray-800">
                 @yield('title')
             </a>
     
@@ -38,6 +38,7 @@
             <div class="hidden md:flex space-x-6">
                 <div class="flex gap-4">
                     <a href="{{ route('e_inicio') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Inicio</a>
+                    <a href="{{ route('e_categorias') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Categorias</a>
                     <a href="{{ route('e_productos') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Productos</a>
                     <a href="{{ route('e_contacto') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Contacto</a>
                 </div>
@@ -61,9 +62,10 @@
             </button>
     
             <!-- Links -->
-            <a href="{{ route('e_inicio') }}" class="block text-gray-700 hover:text-blue-600">Inicio</a>
-            <a href="{{ route('e_productos') }}" class="block text-gray-700 hover:text-blue-600">Productos</a>
-            <a href="{{ route('e_contacto') }}" class="block text-gray-700 hover:text-blue-600">Contacto</a>
+            <a href="{{ route('e_inicio') }}" class="block text-gray-700 hover:text-blue-60 text-lg uppercase">Inicio</a>
+            <a href="{{ route('e_categorias') }}" class="block text-gray-700 hover:text-blue-600 text-lg uppercase">Categorias</a>
+            <a href="{{ route('e_productos') }}" class="block text-gray-700 hover:text-blue-600 text-lg uppercase">Productos</a>
+            <a href="{{ route('e_contacto') }}" class="block text-gray-700 hover:text-blue-600 text-lg uppercase">Contacto</a>
         </div>
     </div>
     
@@ -71,7 +73,7 @@
     <div id="menu-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-30 z-40 md:hidden"></div>
     
 
-    <main class="mt-12" >
+    <main class="mt-20" >
         @yield('content')
     </main>
 

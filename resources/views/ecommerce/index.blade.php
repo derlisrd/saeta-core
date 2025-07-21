@@ -7,9 +7,11 @@
     <section class="py-20 px-6 sm:px-10 rounded-lg shadow-xl mx-4 mt-8 max-w-7xl lg:mx-auto">
         <div class="max-w-4xl mx-auto text-center">
             @isset($options['logo'])
-                <img src="{{ $options['logo']}}" alt="Logo" class="w-48">
+                <div class="flex items-center mb-4 justify-center">
+                    <img src="{{ $options['logo']}}" alt="Logo" class="w-16 md:w-24">
+                </div>
             @endisset
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
+            <h1 class="text-2xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
                 {{ $options['title'] ?? 'Tienda virtual' }}
             </h1>
             <p class="text-lg sm:text-xl opacity-90 mb-8">
