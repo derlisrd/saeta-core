@@ -1,7 +1,7 @@
 @extends('layouts.ecommerce')
 
-@section('title', 'Contacto')
-@section('header_title', 'Contacto')
+@section('title', $options['title']  ?? 'Tienda Online')
+@section('header_title', $options['title'] . ' - ' . 'Contacto' ?? 'Tienda Online')
 
 @section('content')
     <section class="py-20 px-6 sm:px-10 rounded-lg shadow-xl mx-4 mt-8 max-w-4xl lg:mx-auto bg-white/80 backdrop-blur-md">
@@ -19,7 +19,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p><strong>WhatsApp:</strong> <a href="https://wa.me/595981123456" class="text-green-600 hover:underline">+595 981 123456</a></p>
+                    <p><strong>WhatsApp:</strong> <a href="https://wa.me/{{ $options['whatsapp'] ?? '+595981123456' }}" class="text-green-600 hover:underline">{{$options['whatsapp'] ?? '+595981123456' }}</a></p>
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p><strong>Teléfono:</strong> <a href="tel:+59521456789" class="text-blue-600 hover:underline">+595 21 456789</a></p>
+                    <p><strong>Teléfono:</strong> <a href="tel:{{ $options['telefono'] ?? '+59521456789' }}" class="text-blue-600 hover:underline"> {{ $options['telefono'] ?? '+59521456789' }} </a></p>
                 </div>
             </div>
 
@@ -43,7 +43,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p><strong>Dirección:</strong> Av. Principal 1234, Asunción, Paraguay</p>
+                    <p><strong>Dirección:</strong> {{ $options['direccion'] ?? 'Calle 123, Ciudad, País' }}</p>
                 </div>
             </div>
         </div>

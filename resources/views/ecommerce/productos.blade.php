@@ -51,7 +51,7 @@
                         
                         @if($producto->descuento_activo === 1)
                             <p class="text-sm text-gray-600 line-through mr-2">{{ number_format($producto->precio_normal,0,',','.') }}Gs.</p>
-                            <p class="text-sm text-gray-600 font-semibold text-red-600">{{ number_format($producto->precio_descuento,0,',','.') }}Gs.</p>
+                            <p class="text-sm  font-semibold text-red-600">{{ number_format($producto->precio_descuento,0,',','.') }}Gs.</p>
                         @else
                             <span class="text-sm text-gray-600">{{ number_format($producto->precio_normal,0,',','.')}} Gs.</span> 
                         @endif

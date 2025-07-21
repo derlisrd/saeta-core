@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('header_title', 'Tienda Online - Inicio')</title>
 
-    <link rel="stylesheet" href="{{ env('APP_URL') }}/build/assets/app.css"> 
-    {{-- @vite(['resources/css/app.css']) --}}
+    {{-- <link rel="stylesheet" href="{{ env('APP_URL') }}/build/assets/app.css">  --}}
+     @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -24,20 +24,26 @@
                 @yield('title')
             </a>
     
-            <!-- Botón hamburguesa -->
-            <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
+            <div class="md:hidden">
+            <button id="menu-toggle" class=" text-gray-700 focus:outline-none">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-menu-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" /></svg>
             </button>
+
+                <button>
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 17h-11v-14h-2" /><path d="M6 5l14 1l-1 7h-13" /></svg>
+                </button>
+            </div>
     
             <!-- Menú desktop -->
             <div class="hidden md:flex space-x-6">
-                <a href="{{ route('e_inicio') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Inicio</a>
-                <a href="{{ route('e_productos') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Productos</a>
-                <a href="{{ route('e_inicio') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Contacto</a>
+                <div class="flex gap-4">
+                    <a href="{{ route('e_inicio') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Inicio</a>
+                    <a href="{{ route('e_productos') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Productos</a>
+                    <a href="{{ route('e_contacto') }}" class="text-gray-600 hover:text-gray-900 transition text-sm">Contacto</a>
+                </div>
+                <button>
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 17h-11v-14h-2" /><path d="M6 5l14 1l-1 7h-13" /></svg>
+                </button>
             </div>
         </nav>
     </header>
@@ -61,11 +67,11 @@
         </div>
     </div>
     
-    <!-- Fondo oscuro (opcional) -->
+    <!-- Fondo oscuro  -->
     <div id="menu-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-30 z-40 md:hidden"></div>
     
 
-    <main class="mt-24" >
+    <main class="mt-12" >
         @yield('content')
     </main>
 

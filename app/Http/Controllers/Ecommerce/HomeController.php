@@ -25,7 +25,12 @@ class HomeController extends Controller
     public function details(Request $req, $id)
     {
         $producto = Producto::where('id', $id)->with('images')->first();
+        $options = Option::pluck('value', 'key');
+        return view('ecommerce.details', ['producto' => $producto, 'options' => $options]);
+    }
 
-        return view('ecommerce.details', ['producto' => $producto]);
+    public function contacto (){
+        $options = Option::pluck('value', 'key');
+        return view('ecommerce.contacto', ['options' => $options]);
     }
 }

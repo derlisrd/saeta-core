@@ -1,9 +1,8 @@
 @extends('layouts.ecommerce') {{-- Solo si usás un layout base --}}
-@section('title', $options['title'] ?? 'Tienda Online')
-@section('header_title', $options['title'] ?? 'Tienda Online')
+@section('title', $options['title']  ?? 'Tienda Online')
+@section('header_title', $options['title'] . ' - ' . $producto->nombre ?? 'Tienda Online')
+
 @section('content')
-
-
 <div class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-10"
      x-data="{
         imageActual: '{{ $producto->images->first() ? url('/') . $producto->images->first()->url :  'https://placehold.co/600x400?text=Producto' }}',
@@ -66,8 +65,13 @@
         
 
         <div class="flex items-center space-x-3">
-            <span class="text-xl font-bold text-zinc-800">Gs.{{ number_format($producto->precio_normal,0,'','.') }}</span>
-            <span class="text-lg text-gray-400 line-through">Gs.{{ number_format($producto->precio_normal * 1.15, 0, '', '.') }}</span>
+            
+            @if($producto->descuento_activo === 1)
+                            <p class="text-sm text-gray-600 line-through mr-2">{{ number_format($producto->precio_normal,0,',','.') }}Gs.</p>
+                            <p class="text-sm  font-semibold text-red-600">{{ number_format($producto->precio_descuento,0,',','.') }}Gs.</p>
+                        @else
+                            <span class="text-sm text-gray-600">{{ number_format($producto->precio_normal,0,',','.')}} Gs.</span> 
+                        @endif
         </div>
 
 
