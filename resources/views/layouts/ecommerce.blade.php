@@ -6,7 +6,7 @@
     <title>@yield('header_title', 'Tienda Online - Inicio')</title>
 
     <link rel="stylesheet" href="{{ env('APP_URL') }}/build/assets/app.css"> 
-    {{--  @vite(['resources/css/app.css'])  --}}
+     {{-- @vite(['resources/css/app.css'])  --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {

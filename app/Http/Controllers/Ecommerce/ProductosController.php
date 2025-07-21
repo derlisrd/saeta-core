@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ecommerce;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Option;
 use App\Models\Producto;
 use Illuminate\Http\Request;
@@ -24,8 +25,19 @@ class ProductosController extends Controller
 
     public function categorias(){
         $options = Option::pluck('value', 'key');
+
+        // Carga las categorías. Para cada categoría, carga sus productos disponibles.
+        // Y para cada producto, carga solo la primera imagen.
+        $categorias = Category::with(['productos' => function ($query) {
+            $query->where('disponible', 1)
+                  ->with(['images' => function ($query) {
+                      // Solo selecciona la URL y el product_id de la primera imagen
+                      $query->select('id', 'producto_id', 'miniatura')->orderBy('id')->limit(1);
+                  }]);
+        }])->get();
         return view('ecommerce.categorias', [
             'options' => $options,
+            'categorias' => $categorias
         ]);
     }
 }
