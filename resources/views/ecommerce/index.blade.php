@@ -6,6 +6,9 @@
 @section('content')
     <section class="py-20 px-6 sm:px-10 rounded-lg shadow-xl mx-4 mt-8 max-w-7xl lg:mx-auto">
         <div class="max-w-4xl mx-auto text-center">
+            @isset($options['logo'])
+                <img src="{{ $options['logo']}}" alt="Logo" class="w-48">
+            @endisset
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
                 {{ $options['title'] ?? 'Tienda virtual' }}
             </h1>
@@ -24,14 +27,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach ($productos as $producto )
                 <a href="{{ route('e_details',$producto->id) }}">
-                    <div class="flex flex-row gap-2">
-                        <div>
+                    <div class="flex flex-row gap-3">
+                        <div class="w-full max-w-24">
                             <img 
-                            class="h-full rounded-xl object-cover w-full max-w-24 max-h-24"
+                            class="rounded-xl object-cover  w-24 h-24"
                             alt="{{ $producto->nombre }}"
                             src="{{ $producto->images->first()->miniatura ?? 'https://placehold.co/100x100.png' }}" />
                         </div>
-                        <div>
+                        <div class="w-full">
                             <p class="text-sm text-gray-800">{{ Str::limit($producto->nombre, 25) }}</p>
                             <p class="text-sm text-gray-600">Gs.{{ number_format($producto->precio_normal,0,',','.') }}</p>
                         </div>
