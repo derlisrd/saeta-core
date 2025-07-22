@@ -221,6 +221,7 @@ class ProductosController extends Controller
             'productos.created_at',
             'productos.nombre',
             'productos.precio_descuento',
+            'productos.valor_comision',
             'productos.precio_normal',
             'productos.precio_minimo',
             'productos.descripcion',
