@@ -96,6 +96,7 @@ class ProductosController extends Controller
             'precio_minimo' => $producto->precio_minimo,
             'precio_descuento' => $producto->precio_descuento,
             'valor_comision' => $producto->valor_comision,
+            'porcentaje_comision'=> $producto->porcentaje_comision,
             'disponible' => $producto->disponible,
             'tipo' => $producto->tipo,
             'costo' => $producto->costo,
