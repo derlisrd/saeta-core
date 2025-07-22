@@ -17,6 +17,7 @@ class PedidoItems extends Model
         'impuesto_id',
         'cantidad',
         'precio',
+        'comision',
         'descuento',
         'total'
     ];

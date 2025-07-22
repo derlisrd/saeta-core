@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('deposito_id')->constrained('depositos');
             $table->float('cantidad');
             $table->float('precio');
+            $table->float('comision')->nullable();
             $table->float('descuento');
             $table->float('total');
             $table->foreign('producto_id')->references('id')->on('productos');

@@ -129,7 +129,7 @@ class PedidosController extends Controller
     {
         // Validar los datos de entrada
         $validatorPedido = Validator::make($req->all(), [
-            //'cliente_id' => 'required|exists:clientes,id',
+            'caja_id' => 'nullable',
             'moneda_id' => 'required|exists:monedas,id',
             'aplicar_impuesto' => 'required|boolean',
             'condicion' => 'required|in:0,1',
@@ -145,6 +145,7 @@ class PedidosController extends Controller
             'items.*.precio' => 'required|numeric|min:0',
             'items.*.descuento' => 'required|numeric|min:0',
             'items.*.total' => 'required|numeric|min:0',
+            'items.*.comision'=>'nullable|numeric|min:0'
         ]);
 
         // Validar cliente_id cuando tipo es 1 (a crédito)
@@ -218,7 +219,7 @@ class PedidosController extends Controller
             Movimiento::create([
                 'user_id'=>$user->id,
                 'pedido_id' =>$pedido->id,
-                'caja_id'=>null,
+                'caja_id'=>$req->caja_id,
                 'descripcion'=> 'Pedido de venta',
                 'valor' =>$importe_final,
                 'forma_transaccion'=>1,
@@ -231,6 +232,7 @@ class PedidosController extends Controller
                     'impuesto_id' => $item['impuesto_id'],
                     'deposito_id' => $item['deposito_id'],
                     'cantidad' => $item['cantidad'],
+                    'comision'=> $item['comision'],
                     'precio' => $item['precio'],
                     'descuento' => $item['descuento'],
                     'total' => $item['total'],
