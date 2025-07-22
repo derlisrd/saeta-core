@@ -59,6 +59,7 @@ class ProductosController extends Controller
             'productos.disponible',
             'productos.tipo',
             'productos.valor_comision',
+            'productos.porcentaje_comision',
             'productos.costo',
             'productos.category_id',
             'productos.impuesto_id',
