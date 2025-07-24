@@ -15,7 +15,10 @@
                 <a href="#" class="block">
                     
 
-                    <img src="https://placehold.co/100x100.png" alt="Portada de la categoría {{ $categoria->nombre }}" class="w-full h-48 object-cover">
+                    <img 
+                    src="{{ $categoria->images->first()->miniatura ?? 'https://placehold.co/100x100.png' }}"
+                    
+                    alt="Portada de la categoría {{ $categoria->nombre }}" class="w-full h-48 object-cover">
                 </a>
                 <div class="p-4">
                     <h2 class="text-xl mb-2">{{ $categoria->nombre }}</h2>
