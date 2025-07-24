@@ -22,7 +22,8 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'id',
         'user_id',
         'data',
-        'tenancy_db_name'
+        'tenancy_db_name',
+        'plan_id'
     ];
 
     public function user()

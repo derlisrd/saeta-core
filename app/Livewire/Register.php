@@ -28,10 +28,6 @@ class Register extends Component
     public $plan_seleccionado = 1;
 
     public $logo;
-
-
-
-
     public function mount()
     {
         $this->currentStep = 1;
@@ -159,7 +155,7 @@ class Register extends Component
             $tenantData = [
                 'id' => $domain,
                 'user_id' => $user->id,
-                'plan_seleccionado'=>$this->plan_seleccionado
+                'plan_id'=>$this->plan_seleccionado
             ];
 
             // 1. Crear el tenant con información del usuario propietario
