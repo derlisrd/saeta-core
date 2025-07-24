@@ -13,12 +13,10 @@
         @foreach($categorias as $categoria)
             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                 <a href="#" class="block">
-                    
-
                     <img 
-                    src="{{ $categoria->productos->images->miniatura ?? 'https://placehold.co/100x100.png' }}"
-                    
-                    alt="Portada de la categoría {{ $categoria->nombre }}" class="w-full h-48 object-cover">
+                        src="{{ $categoria->productos->first()->images->first()->miniatura ?? 'https://placehold.co/100x100.png' }}"
+                        alt="Portada de la categoría {{ $categoria->nombre }}" 
+                        class="w-full h-48 object-cover">
                 </a>
                 <div class="p-4">
                     <h2 class="text-xl mb-2">{{ $categoria->nombre }}</h2>
