@@ -16,7 +16,7 @@
                     
 
                     <img 
-                    src="{{ $categoria->images->miniatura ?? 'https://placehold.co/100x100.png' }}"
+                    src="{{ $categoria->productos->images->miniatura ?? 'https://placehold.co/100x100.png' }}"
                     
                     alt="Portada de la categoría {{ $categoria->nombre }}" class="w-full h-48 object-cover">
                 </a>
