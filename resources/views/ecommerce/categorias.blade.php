@@ -36,7 +36,7 @@
                 <div class="p-4">
                     <h2 class="text-xl mb-2">{{ $categoria->nombre }}</h2>
                     <p class="text-gray-600 text-sm">{{ Str::limit($categoria->descripcion, 70) }}</p> {{-- Muestra una descripción limitada --}}
-                    <a href="#" class="mt-4 inline-block text-indigo-600 hover:text-indigo-800 font-medium">Ver productos</a>
+                    <a href="{{ route('e_productos_categorias',$categoria->id) }}"class="mt-4 inline-block text-indigo-600 hover:text-indigo-800 font-medium">Ver productos</a>
                 </div>
             </div>
         @endforeach
