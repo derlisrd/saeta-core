@@ -37,6 +37,7 @@ class ProductosController extends Controller
                       $query->select('id', 'producto_id', 'miniatura')->orderBy('id')->limit(1);
                   }]);
         }])->get();
+        dd($categorias);
         return view('ecommerce.categorias', [
             'options' => $options,
             'categorias' => $categorias
