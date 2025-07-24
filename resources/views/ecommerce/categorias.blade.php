@@ -9,7 +9,7 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-semibold mb-6">Nuestras Categorías</h1>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
         @foreach($categorias as $categoria)
             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                 @php
@@ -27,7 +27,7 @@
                             }
                         }
                     @endphp
-                <a href="#" class="block">
+                <a href="{{ route('e_productos_categorias',$categoria->id) }}" class="block">
                     <img
                     src="{{ $imageUrl }}"
                     alt="Portada de la categoría {{ $categoria->nombre }}"

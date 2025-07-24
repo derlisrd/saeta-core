@@ -40,4 +40,15 @@ class ProductosController extends Controller
             'categorias' => $categorias
         ]);
     }
+
+    public function productosPorCategorias($id){
+        $options = Option::pluck('value', 'key');
+        $producto = Producto::where('category_id', $id)->get();
+
+        return view('ecommerce.categorias.productos', [
+            'options' => $options,
+            'productos' => $producto
+        ]);
+
+    }
 }
