@@ -183,11 +183,6 @@ Route::middleware(['auth:api'])->group(function () {
 
 
 
+
 //Route::fallback(function () {return response()->json(['success' => false, 'message' => 'Not found route.'], 404);});
 
-Route::get('/debug-db', function () {
-    return [
-        'db'        => DB::connection()->getDatabaseName(),
-        'tenant_id' => tenant('id'),
-    ];
-});

@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Database\Seeders\ExampleSeeder;
 use App\Models\Tenant;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
@@ -160,6 +159,7 @@ class Register extends Component
             $tenantData = [
                 'id' => $domain,
                 'user_id' => $user->id,
+                'plan_seleccionado'=>$this->plan_seleccionado
             ];
 
             // 1. Crear el tenant con información del usuario propietario
@@ -181,9 +181,6 @@ class Register extends Component
 
             // 5. Finalizar el contexto tenant
             tenancy()->end();
-
-
-
 
             //session()->flash('success', '¡Registro completado exitosamente!');
             return redirect()->to('/dashboard');

@@ -30,5 +30,8 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         return $this->belongsTo(User::class);
     }
 
-
+    public static function getDataColumn(): string
+    {
+        return 'data';
+    }
 }
