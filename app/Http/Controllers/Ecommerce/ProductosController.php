@@ -28,7 +28,9 @@ class ProductosController extends Controller
 
         // Carga las categorías. Para cada categoría, carga sus productos disponibles.
         // Y para cada producto, carga solo la primera imagen.
-        $categorias = Category::with(['productos' => function ($query) {
+        $categorias = Category::
+        where('publicado',1)->
+        with(['productos' => function ($query) {
             $query->where('disponible', 1)
                   ->with(['images' => function ($query) {
                       // Solo selecciona la URL y el product_id de la primera imagen
