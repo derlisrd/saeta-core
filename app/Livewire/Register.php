@@ -97,7 +97,7 @@ class Register extends Component
             );
         } elseif ($this->currentStep == 3) {
             $this->validate([
-                'plan_seleccionado' => 'required|in:1,2',
+                'plan_seleccionado' => 'required|exists:planes,id',
             ]);
         }
     }
@@ -112,7 +112,7 @@ class Register extends Component
             'password' => 'required|string|min:6',
             'store' => 'required|string|max:255',
             'domain' => ['required', 'unique:tenants,id', 'regex:/^[a-zA-Z0-9]+$/'],
-            'plan_seleccionado' => 'required|in:1,2',
+            'plan_seleccionado' => 'required|exists:planes,id',
             'logo' => 'nullable|image|max:2048',
         ]);
 

@@ -25,7 +25,7 @@ class CreateDomainsTable extends Migration
             $table->timestamps();
             $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('plan_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('plan_id')->references('id')->on('planes')->onDelete('set null');
         });
     }
 

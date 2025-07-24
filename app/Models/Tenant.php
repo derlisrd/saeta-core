@@ -21,9 +21,9 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     protected $fillable = [
         'id',
         'user_id',
+        'plan_id',
         'data',
         'tenancy_db_name',
-        'plan_id'
     ];
 
     public function user()

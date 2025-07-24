@@ -183,7 +183,7 @@ class ExampleSeeder extends Seeder
             ['value' => 'Tu tienda online', 'key' => 'descripcion'],
             ['value' => '1234567890', 'key' => 'telefono'],
             ['key' => 'whatsapp', 'value' => '000000'],
-            ['value' => '', 'key' => 'logo'],
+            ['value' => 'https://placehold.co/300x200/000000/FFFFFF/jpg', 'key' => 'logo'],
             ['value' => 'Paraguay', 'key' => 'direccion'],
         ];
 

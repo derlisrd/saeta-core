@@ -22,7 +22,10 @@ class DatabaseSeeder extends Seeder
             ExampleSeeder::class,
         ]); */
         Plan::create([
-            'nombre'=>'Gratuito', 'precio'=>0, 'descripcion'=>'Plan gratuito'
+            'nombre'=>'Gratuito', 'precio'=>0, 'descripcion'=>'Plan gratuito',
+        ]);
+        Plan::create([
+            'nombre'=>'De pago', 'precio'=>80000, 'descripcion'=>'Plan de pago',
         ]);
     }
 }
