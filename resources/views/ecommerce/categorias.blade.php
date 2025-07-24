@@ -12,11 +12,26 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         @foreach($categorias as $categoria)
             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                @php
+                        $imageUrl = 'https://placehold.co/100x100.png'; // Imagen por defecto
+
+                        // Verificar si la categoría tiene productos
+                        if ($categoria->productos->isNotEmpty()) {
+                            // Obtener el primer producto de la categoría
+                            $primerProducto = $categoria->productos->first();
+
+                            // Verificar si el primer producto tiene imágenes
+                            if ($primerProducto->images->isNotEmpty()) {
+                                // Obtener la URL de la miniatura de la primera imagen del producto
+                                $imageUrl = $primerProducto->images->first()->miniatura;
+                            }
+                        }
+                    @endphp
                 <a href="#" class="block">
-                    <img 
-                        src="{{ $categoria->productos->first()->images->first()->miniatura ?? 'https://placehold.co/100x100.png' }}"
-                        alt="Portada de la categoría {{ $categoria->nombre }}" 
-                        class="w-full h-48 object-cover">
+                    <img
+                    src="{{ $imageUrl }}"
+                    alt="Portada de la categoría {{ $categoria->nombre }}"
+                    class="w-full h-48 object-cover">
                 </a>
                 <div class="p-4">
                     <h2 class="text-xl mb-2">{{ $categoria->nombre }}</h2>
